@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  corpus-platform:
+    build: .
+    container_name: unified-corpus-platform
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+      - ./corpus_platform.db:/app/corpus_platform.db
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    command: python web_dashboard.py
+
+  # Optional: Run pipeline as separate service
+  corpus-pipeline:
+    build: .
+    container_name: corpus-pipeline-worker
+    volumes:
+      - ./data:/app/data
+      - ./corpus_platform.db:/app/corpus_platform.db
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    command: python unified_corpus_platform.py --cycles 0 --delay 30
+    depends_on:
+      - corpus-platform

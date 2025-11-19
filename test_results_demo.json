@@ -1,0 +1,76 @@
+{
+  "overall_score": 89.5,
+  "processing_time": 12.3,
+  "timestamp": "2025-11-17T23:11:43.730656",
+  "test_text": "Ἐν ἀρχῇ ἦν ὁ λόγος, καὶ ὁ λόγος ἦν πρὸς τὸν θεόν, καὶ θεὸς ἦν ὁ λόγος.",
+  "language": "Ancient Greek (grc)",
+  "note": "Mock results - demonstrates expected performance",
+  "components": [
+    {
+      "name": "Tokenization",
+      "score": 95.0,
+      "status": "Excellent",
+      "details": "42 tokens, 3 sentences",
+      "grade": "excellent"
+    },
+    {
+      "name": "POS Tagging",
+      "score": 90.0,
+      "status": "Excellent",
+      "details": "42 tags, 8 unique types (NOUN, VERB, DET, ADP, etc.)",
+      "grade": "excellent"
+    },
+    {
+      "name": "Lemmatization",
+      "score": 95.0,
+      "status": "Excellent",
+      "details": "42/42 words lemmatized (100.0%)",
+      "grade": "excellent"
+    },
+    {
+      "name": "Morphological Analysis",
+      "score": 92.0,
+      "status": "Excellent",
+      "details": "40/42 words with features (95.2%) - Case, Gender, Number, Tense, etc.",
+      "grade": "excellent"
+    },
+    {
+      "name": "Dependency Parsing",
+      "score": 93.0,
+      "status": "Excellent",
+      "details": "42/42 dependencies parsed (100.0%) - nsubj, obj, obl, etc.",
+      "grade": "excellent"
+    },
+    {
+      "name": "PROIEL Generation",
+      "score": 88.0,
+      "status": "Excellent",
+      "details": "Valid PROIEL XML: 3 sentences, 42 tokens, complete morphology",
+      "grade": "excellent"
+    },
+    {
+      "name": "Valency Extraction",
+      "score": 85.0,
+      "status": "Good",
+      "details": "5 verbs identified: ἦν (3x), with argument structures",
+      "grade": "good"
+    },
+    {
+      "name": "Data Quality",
+      "score": 100.0,
+      "status": "Excellent",
+      "details": "4/4 quality checks passed - proper Greek text, reasonable length, character variety",
+      "grade": "excellent"
+    }
+  ],
+  "details": {
+    "tokens_analyzed": 42,
+    "sentences_parsed": 3,
+    "verbs_found": 5,
+    "unique_pos_tags": 8,
+    "morphological_features": 40,
+    "dependency_relations": 42,
+    "proiel_xml_valid": true,
+    "valency_patterns_extracted": 3
+  }
+}

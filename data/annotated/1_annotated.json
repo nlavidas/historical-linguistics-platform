@@ -1,0 +1,2754 @@
+{
+  "sentences": [
+    {
+      "text": "[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.596309.svg)](https://doi.org/10.5281/zenodo.596309)\n[![Hook Coverage](https://ci.perseids.org/api/hook/v2.0/badges/PerseusDL/canonical-greekLit/coverage.svg)](https://ci.perseids.org/repo/PerseusDL/canonical-greekLit)\n[![Hook Texts](https://ci.perseids.org/api/hook/v2.0/badges/PerseusDL/canonical-greekLit/texts.svg)](https://ci.perseids.org/repo/PerseusDL/canonical-greekLit)\n[![Hook Metadata](https://ci.perseids.org/api/hook/v2.0/badges/PerseusDL/canonical-greekLit/metadata.svg)](https://ci.perseids.org/repo/PerseusDL/canonical-greekLit)\n[![Total words](https://ci.perseids.org/api/hook/v2.0/badges/PerseusDL/canonical-greekLit/words.svg)](https://ci.perseids.org/repo/PerseusDL/canonical-greekLit)\n[![Greek Words](https://ci.perseids.org/api/hook/v2.0/badges/PerseusDL/canonical-greekLit/words.svg?lang=grc)](https://ci.perseids.org/repo/PerseusDL/canonical-greekLit)",
+      "tokens": [
+        {
+          "text": "[",
+          "lemma": "[",
+          "upos": "PUNCT",
+          "xpos": "-LRB-",
+          "feats": null,
+          "head": 3,
+          "deprel": "punct"
+        },
+        {
+          "text": "![",
+          "lemma": "![",
+          "upos": "PUNCT",
+          "xpos": "NFP",
+          "feats": null,
+          "head": 3,
+          "deprel": "punct"
+        },
+        {
+          "text": "DOI",
+          "lemma": "DOI",
+          "upos": "PROPN",
+          "xpos": "NNP",
+          "feats": "Number=Sing",
+          "head": 0,
+          "deprel": "root"
+        },
+        {
+          "text": "]",
+          "lemma": "]",
+          "upos": "PUNCT",
+          "xpos": "-RRB-",
+          "feats": null,
+          "head": 3,
+          "deprel": "punct"
+        },
+        {
+          "text": "(",
+          "lemma": "(",
+          "upos": "PUNCT",
+          "xpos": "-LRB-",
+          "feats": null,
+          "head": 6,
+          "deprel": "punct"
+        },
+        {
+          "text": "https://zenodo.org/badge/DOI/10.5281/zenodo.596309.svg)](https://doi.org/10.5281/zenodo.596309)",
+          "lemma": "https://zenodo.org/badge/DOI/10.5281/zenodo.596309.svg)](https://doi.org/10.5281/zenodo.596309)",
+          "upos": "PROPN",
+          "xpos": "ADD",
+          "feats": null,
+          "head": 3,
+          "deprel": "list"
+        },
+        {
+          "text": "[",
+          "lemma": "[",
+          "upos": "PUNCT",
+          "xpos": "-LRB-",
+          "feats": null,
+          "head": 10,
+          "deprel": "punct"
+        },
+        {
+          "text": "![",
+          "lemma": "![",
+          "upos": "PUNCT",
+          "xpos": "NFP",
+          "feats": null,
+          "head": 10,
+          "deprel": "punct"
+        },
+        {
+          "text": "Hook",
+          "lemma": "Hook",
+          "upos": "PROPN",
+          "xpos": "NNP",
+          "feats": "Number=Sing",
+          "head": 10,
+          "deprel": "compound"
+        },
+        {
+          "text": "Coverage",
+          "lemma": "Coverage",
+          "upos": "PROPN",
+          "xpos": "NNP",
+          "feats": "Number=Sing",
+          "head": 3,
+          "deprel": "list"
+        },
+        {
+          "text": "]",
+          "lemma": "]",
+          "upos": "PUNCT",
+          "xpos": "-RRB-",
+          "feats": null,
+          "head": 10,
+          "deprel": "punct"
+        },
+        {
+          "text": "(",
+          "lemma": "(",
+          "upos": "PUNCT",
+          "xpos": "-LRB-",
+          "feats": null,
+          "head": 13,
+          "deprel": "punct"
+        },
+        {
+          "text": "https://ci.perseids.org/api/hook/v2.0/badges/PerseusDL/canonical-greekLit/coverage.svg)](https://ci.perseids.org/repo/PerseusDL/canonical-greekLit)",
+          "lemma": "https://ci.perseids.org/api/hook/v2.0/badges/PerseusDL/canonical-greekLit/coverage.svg)](https://ci.perseids.org/repo/PerseusDL/canonical-greekLit)",
+          "upos": "PROPN",
+          "xpos": "ADD",
+          "feats": "Number=Sing",
+          "head": 3,
+          "deprel": "list"
+        },
+        {
+          "text": "[",
+          "lemma": "[",
+          "upos": "PUNCT",
+          "xpos": "-LRB-",
+          "feats": null,
+          "head": 17,
+          "deprel": "punct"
+        },
+        {
+          "text": "![",
+          "lemma": "![",
+          "upos": "PUNCT",
+          "xpos": "NFP",
+          "feats": null,
+          "head": 17,
+          "deprel": "punct"
+        },
+        {
+          "text": "Hook",
+          "lemma": "hook",
+          "upos": "NOUN",
+          "xpos": "NN",
+          "feats": "Number=Sing",
+          "head": 17,
+          "deprel": "compound"
+        },
+        {
+          "text": "Texts",
+          "lemma": "Text",
+          "upos": "PROPN",
+          "xpos": "NNPS",
+          "feats": "Number=Plur",
+          "head": 3,
+          "deprel": "list"
+        },
+        {
+          "text": "]",
+          "lemma": "]",
+          "upos": "PUNCT",
+          "xpos": "-RRB-",
+          "feats": null,
+          "head": 17,
+          "deprel": "punct"
+        },
+        {
+          "text": "(",
+          "lemma": "(",
+          "upos": "PUNCT",
+          "xpos": "-LRB-",
+          "feats": null,
+          "head": 20,
+          "deprel": "punct"
+        },
+        {
+          "text": "https://ci.perseids.org/api/hook/v2.0/badges/PerseusDL/canonical-greekLit/texts.svg)](https://ci.perseids.org/repo/PerseusDL/canonical-greekLit)",
+          "lemma": "https://ci.perseids.org/api/hook/v2.0/badges/PerseusDL/canonical-greekLit/texts.svg)](https://ci.perseids.org/repo/PerseusDL/canonical-greekLit)",
+          "upos": "PROPN",
+          "xpos": "ADD",
+          "feats": "Number=Sing",
+          "head": 3,
+          "deprel": "list"
+        },
+        {
+          "text": "[",
+          "lemma": "[",
+          "upos": "PUNCT",
+          "xpos": "-LRB-",
+          "feats": null,
+          "head": 24,
+          "deprel": "punct"
+        },
+        {
+          "text": "![",
+          "lemma": "![",
+          "upos": "PUNCT",
+          "xpos": "NFP",
+          "feats": null,
+          "head": 24,
+          "deprel": "punct"
+        },
+        {
+          "text": "Hook",
+          "lemma": "Hook",
+          "upos": "PROPN",
+          "xpos": "NNP",
+          "feats": "Number=Sing",
+          "head": 24,
+          "deprel": "compound"
+        },
+        {
+          "text": "Metadata",
+          "lemma": "Metadata",
+          "upos": "PROPN",
+          "xpos": "NNP",
+          "feats": "Number=Sing",
+          "head": 20,
+          "deprel": "appos"
+        },
+        {
+          "text": "]",
+          "lemma": "]",
+          "upos": "PUNCT",
+          "xpos": "-RRB-",
+          "feats": null,
+          "head": 24,
+          "deprel": "punct"
+        },
+        {
+          "text": "(",
+          "lemma": "(",
+          "upos": "PUNCT",
+          "xpos": "-LRB-",
+          "feats": null,
+          "head": 27,
+          "deprel": "punct"
+        },
+        {
+          "text": "https://ci.perseids.org/api/hook/v2.0/badges/PerseusDL/canonical-greekLit/metadata.svg)](https://ci.perseids.org/repo/PerseusDL/canonical-greekLit)",
+          "lemma": "https://ci.perseids.org/api/hook/v2.0/badges/PerseusDL/canonical-greekLit/metadata.svg)](https://ci.perseids.org/repo/PerseusDL/canonical-greekLit)",
+          "upos": "PROPN",
+          "xpos": "ADD",
+          "feats": null,
+          "head": 3,
+          "deprel": "list"
+        },
+        {
+          "text": "[",
+          "lemma": "[",
+          "upos": "PUNCT",
+          "xpos": "-LRB-",
+          "feats": null,
+          "head": 31,
+          "deprel": "punct"
+        },
+        {
+          "text": "![",
+          "lemma": "![",
+          "upos": "PUNCT",
+          "xpos": "NFP",
+          "feats": null,
+          "head": 31,
+          "deprel": "punct"
+        },
+        {
+          "text": "Total",
+          "lemma": "total",
+          "upos": "ADJ",
+          "xpos": "JJ",
+          "feats": "Degree=Pos",
+          "head": 31,
+          "deprel": "amod"
+        },
+        {
+          "text": "words",
+          "lemma": "word",
+          "upos": "NOUN",
+          "xpos": "NNS",
+          "feats": "Number=Plur",
+          "head": 3,
+          "deprel": "list"
+        },
+        {
+          "text": "]",
+          "lemma": "]",
+          "upos": "PUNCT",
+          "xpos": "-RRB-",
+          "feats": null,
+          "head": 31,
+          "deprel": "punct"
+        },
+        {
+          "text": "(",
+          "lemma": "(",
+          "upos": "PUNCT",
+          "xpos": "-LRB-",
+          "feats": null,
+          "head": 34,
+          "deprel": "punct"
+        },
+        {
+          "text": "https://ci.perseids.org/api/hook/v2.0/badges/PerseusDL/canonical-greekLit/words.svg)](https://ci.perseids.org/repo/PerseusDL/canonical-greekLit)",
+          "lemma": "https://ci.perseids.org/api/hook/v2.0/badges/PerseusDL/canonical-greekLit/words.svg)](https://ci.perseids.org/repo/PerseusDL/canonical-greekLit)",
+          "upos": "PROPN",
+          "xpos": "ADD",
+          "feats": "Number=Sing",
+          "head": 27,
+          "deprel": "dep"
+        },
+        {
+          "text": "[",
+          "lemma": "[",
+          "upos": "PUNCT",
+          "xpos": "-LRB-",
+          "feats": null,
+          "head": 38,
+          "deprel": "punct"
+        },
+        {
+          "text": "![",
+          "lemma": "![",
+          "upos": "PUNCT",
+          "xpos": "NFP",
+          "feats": null,
+          "head": 38,
+          "deprel": "punct"
+        },
+        {
+          "text": "Greek",
+          "lemma": "Greek",
+          "upos": "ADJ",
+          "xpos": "JJ",
+          "feats": "Degree=Pos",
+          "head": 38,
+          "deprel": "amod"
+        },
+        {
+          "text": "Words",
+          "lemma": "Word",
+          "upos": "PROPN",
+          "xpos": "NNPS",
+          "feats": "Number=Plur",
+          "head": 34,
+          "deprel": "appos"
+        },
+        {
+          "text": "]",
+          "lemma": "]",
+          "upos": "PUNCT",
+          "xpos": "-RRB-",
+          "feats": null,
+          "head": 38,
+          "deprel": "punct"
+        },
+        {
+          "text": "(",
+          "lemma": "(",
+          "upos": "PUNCT",
+          "xpos": "-LRB-",
+          "feats": null,
+          "head": 41,
+          "deprel": "punct"
+        },
+        {
+          "text": "https://ci.perseids.org/api/hook/v2.0/badges/PerseusDL/canonical-greekLit/words.svg?lang=grc)](https://ci.perseids.org/repo/PerseusDL/canonical-greekLit)",
+          "lemma": "https://ci.perseids.org/api/hook/v2.0/badges/PerseusDL/canonical-greekLit/words.svg?lang=grc)](https://ci.perseids.org/repo/PerseusDL/canonical-greekLit)",
+          "upos": "PROPN",
+          "xpos": "ADD",
+          "feats": null,
+          "head": 3,
+          "deprel": "list"
+        }
+      ]
+    },
+    {
+      "text": "Canonical - Greek Literature\n=========",
+      "tokens": [
+        {
+          "text": "Canonical",
+          "lemma": "Canonical",
+          "upos": "ADJ",
+          "xpos": "JJ",
+          "feats": "Degree=Pos",
+          "head": 3,
+          "deprel": "amod"
+        },
+        {
+          "text": "-",
+          "lemma": "-",
+          "upos": "PUNCT",
+          "xpos": "HYPH",
+          "feats": null,
+          "head": 1,
+          "deprel": "punct"
+        },
+        {
+          "text": "Greek",
+          "lemma": "Greek",
+          "upos": "ADJ",
+          "xpos": "JJ",
+          "feats": "Degree=Pos",
+          "head": 4,
+          "deprel": "amod"
+        },
+        {
+          "text": "Literature",
+          "lemma": "literature",
+          "upos": "NOUN",
+          "xpos": "NN",
+          "feats": "Number=Sing",
+          "head": 0,
+          "deprel": "root"
+        },
+        {
+          "text": "=========",
+          "lemma": "=========",
+          "upos": "PUNCT",
+          "xpos": "-RRB-",
+          "feats": null,
+          "head": 4,
+          "deprel": "punct"
+        }
+      ]
+    },
+    {
+      "text": "This will be the base repo for all text and annotation data published in the PDL.",
+      "tokens": [
+        {
+          "text": "This",
+          "lemma": "this",
+          "upos": "PRON",
+          "xpos": "DT",
+          "feats": "Number=Sing|PronType=Dem",
+          "head": 6,
+          "deprel": "nsubj"
+        },
+        {
+          "text": "will",
+          "lemma": "will",
+          "upos": "AUX",
+          "xpos": "MD",
+          "feats": "VerbForm=Fin",
+          "head": 6,
+          "deprel": "aux"
+        },
+        {
+          "text": "be",
+          "lemma": "be",
+          "upos": "AUX",
+          "xpos": "VB",
+          "feats": "VerbForm=Inf",
+          "head": 6,
+          "deprel": "cop"
+        },
+        {
+          "text": "the",
+          "lemma": "the",
+          "upos": "DET",
+          "xpos": "DT",
+          "feats": "Definite=Def|PronType=Art",
+          "head": 6,
+          "deprel": "det"
+        },
+        {
+          "text": "base",
+          "lemma": "base",
+          "upos": "NOUN",
+          "xpos": "NN",
+          "feats": "Number=Sing",
+          "head": 6,
+          "deprel": "compound"
+        },
+        {
+          "text": "repo",
+          "lemma": "repo",
+          "upos": "NOUN",
+          "xpos": "NN",
+          "feats": "Number=Sing",
+          "head": 0,
+          "deprel": "root"
+        },
+        {
+          "text": "for",
+          "lemma": "for",
+          "upos": "ADP",
+          "xpos": "IN",
+          "feats": null,
+          "head": 12,
+          "deprel": "case"
+        },
+        {
+          "text": "all",
+          "lemma": "all",
+          "upos": "DET",
+          "xpos": "DT",
+          "feats": "PronType=Tot",
+          "head": 12,
+          "deprel": "det"
+        },
+        {
+          "text": "text",
+          "lemma": "text",
+          "upos": "NOUN",
+          "xpos": "NN",
+          "feats": "Number=Sing",
+          "head": 12,
+          "deprel": "compound"
+        },
+        {
+          "text": "and",
+          "lemma": "and",
+          "upos": "CCONJ",
+          "xpos": "CC",
+          "feats": null,
+          "head": 11,
+          "deprel": "cc"
+        },
+        {
+          "text": "annotation",
+          "lemma": "annotation",
+          "upos": "NOUN",
+          "xpos": "NN",
+          "feats": "Number=Sing",
+          "head": 9,
+          "deprel": "conj"
+        },
+        {
+          "text": "data",
+          "lemma": "datum",
+          "upos": "NOUN",
+          "xpos": "NNS",
+          "feats": "Number=Plur",
+          "head": 6,
+          "deprel": "nmod"
+        },
+        {
+          "text": "published",
+          "lemma": "publish",
+          "upos": "VERB",
+          "xpos": "VBN",
+          "feats": "Tense=Past|VerbForm=Part|Voice=Pass",
+          "head": 12,
+          "deprel": "acl"
+        },
+        {
+          "text": "in",
+          "lemma": "in",
+          "upos": "ADP",
+          "xpos": "IN",
+          "feats": null,
+          "head": 16,
+          "deprel": "case"
+        },
+        {
+          "text": "the",
+          "lemma": "the",
+          "upos": "DET",
+          "xpos": "DT",
+          "feats": "Definite=Def|PronType=Art",
+          "head": 16,
+          "deprel": "det"
+        },
+        {
+          "text": "PDL",
+          "lemma": "pdl",
+          "upos": "NOUN",
+          "xpos": "NN",
+          "feats": "Number=Sing",
+          "head": 13,
+          "deprel": "obl"
+        },
+        {
+          "text": ".",
+          "lemma": ".",
+          "upos": "PUNCT",
+          "xpos": ".",
+          "feats": null,
+          "head": 6,
+          "deprel": "punct"
+        }
+      ]
+    },
+    {
+      "text": "Please note: this is a work in progress.",
+      "tokens": [
+        {
+          "text": "Please",
+          "lemma": "please",
+          "upos": "INTJ",
+          "xpos": "UH",
+          "feats": null,
+          "head": 2,
+          "deprel": "discourse"
+        },
+        {
+          "text": "note",
+          "lemma": "note",
+          "upos": "VERB",
+          "xpos": "VB",
+          "feats": "Mood=Imp|VerbForm=Fin",
+          "head": 0,
+          "deprel": "root"
+        },
+        {
+          "text": ":",
+          "lemma": ":",
+          "upos": "PUNCT",
+          "xpos": ":",
+          "feats": null,
+          "head": 7,
+          "deprel": "punct"
+        },
+        {
+          "text": "this",
+          "lemma": "this",
+          "upos": "PRON",
+          "xpos": "DT",
+          "feats": "Number=Sing|PronType=Dem",
+          "head": 7,
+          "deprel": "nsubj"
+        },
+        {
+          "text": "is",
+          "lemma": "be",
+          "upos": "AUX",
+          "xpos": "VBZ",
+          "feats": "Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin",
+          "head": 7,
+          "deprel": "cop"
+        },
+        {
+          "text": "a",
+          "lemma": "a",
+          "upos": "DET",
+          "xpos": "DT",
+          "feats": "Definite=Ind|PronType=Art",
+          "head": 7,
+          "deprel": "det"
+        },
+        {
+          "text": "work",
+          "lemma": "work",
+          "upos": "NOUN",
+          "xpos": "NN",
+          "feats": "Number=Sing",
+          "head": 2,
+          "deprel": "parataxis"
+        },
+        {
+          "text": "in",
+          "lemma": "in",
+          "upos": "ADP",
+          "xpos": "IN",
+          "feats": null,
+          "head": 9,
+          "deprel": "case"
+        },
+        {
+          "text": "progress",
+          "lemma": "progress",
+          "upos": "NOUN",
+          "xpos": "NN",
+          "feats": "Number=Sing",
+          "head": 7,
+          "deprel": "nmod"
+        },
+        {
+          "text": ".",
+          "lemma": ".",
+          "upos": "PUNCT",
+          "xpos": ".",
+          "feats": null,
+          "head": 2,
+          "deprel": "punct"
+        }
+      ]
+    },
+    {
+      "text": "Not all headers have been checked for accuracy.",
+      "tokens": [
+        {
+          "text": "Not",
+          "lemma": "not",
+          "upos": "PART",
+          "xpos": "RB",
+          "feats": "Polarity=Neg",
+          "head": 3,
+          "deprel": "advmod"
+        },
+        {
+          "text": "all",
+          "lemma": "all",
+          "upos": "DET",
+          "xpos": "DT",
+          "feats": "PronType=Tot",
+          "head": 3,
+          "deprel": "det"
+        },
+        {
+          "text": "headers",
+          "lemma": "header",
+          "upos": "NOUN",
+          "xpos": "NNS",
+          "feats": "Number=Plur",
+          "head": 6,
+          "deprel": "nsubj:pass"
+        },
+        {
+          "text": "have",
+          "lemma": "have",
+          "upos": "AUX",
+          "xpos": "VBP",
+          "feats": "Mood=Ind|Number=Plur|Person=3|Tense=Pres|VerbForm=Fin",
+          "head": 6,
+          "deprel": "aux"
+        },
+        {
+          "text": "been",
+          "lemma": "be",
+          "upos": "AUX",
+          "xpos": "VBN",
+          "feats": "Tense=Past|VerbForm=Part",
+          "head": 6,
+          "deprel": "aux:pass"
+        },
+        {
+          "text": "checked",
+          "lemma": "check",
+          "upos": "VERB",
+          "xpos": "VBN",
+          "feats": "Tense=Past|VerbForm=Part|Voice=Pass",
+          "head": 0,
+          "deprel": "root"
+        },
+        {
+          "text": "for",
+          "lemma": "for",
+          "upos": "ADP",
+          "xpos": "IN",
+          "feats": null,
+          "head": 8,
+          "deprel": "case"
+        },
+        {
+          "text": "accuracy",
+          "lemma": "accuracy",
+          "upos": "NOUN",
+          "xpos": "NN",
+          "feats": "Number=Sing",
+          "head": 6,
+          "deprel": "obl"
+        },
+        {
+          "text": ".",
+          "lemma": ".",
+          "upos": "PUNCT",
+          "xpos": ".",
+          "feats": null,
+          "head": 6,
+          "deprel": "punct"
+        }
+      ]
+    },
+    {
+      "text": "Changes may be made at any time to any files and data.",
+      "tokens": [
+        {
+          "text": "Changes",
+          "lemma": "change",
+          "upos": "NOUN",
+          "xpos": "NNS",
+          "feats": "Number=Plur",
+          "head": 4,
+          "deprel": "nsubj:pass"
+        },
+        {
+          "text": "may",
+          "lemma": "may",
+          "upos": "AUX",
+          "xpos": "MD",
+          "feats": "VerbForm=Fin",
+          "head": 4,
+          "deprel": "aux"
+        },
+        {
+          "text": "be",
+          "lemma": "be",
+          "upos": "AUX",
+          "xpos": "VB",
+          "feats": "VerbForm=Inf",
+          "head": 4,
+          "deprel": "aux:pass"
+        },
+        {
+          "text": "made",
+          "lemma": "make",
+          "upos": "VERB",
+          "xpos": "VBN",
+          "feats": "Tense=Past|VerbForm=Part|Voice=Pass",
+          "head": 0,
+          "deprel": "root"
+        },
+        {
+          "text": "at",
+          "lemma": "at",
+          "upos": "ADP",
+          "xpos": "IN",
+          "feats": null,
+          "head": 7,
+          "deprel": "case"
+        },
+        {
+          "text": "any",
+          "lemma": "any",
+          "upos": "DET",
+          "xpos": "DT",
+          "feats": "PronType=Ind",
+          "head": 7,
+          "deprel": "det"
+        },
+        {
+          "text": "time",
+          "lemma": "time",
+          "upos": "NOUN",
+          "xpos": "NN",
+          "feats": "Number=Sing",
+          "head": 4,
+          "deprel": "obl"
+        },
+        {
+          "text": "to",
+          "lemma": "to",
+          "upos": "ADP",
+          "xpos": "IN",
+          "feats": null,
+          "head": 10,
+          "deprel": "case"
+        },
+        {
+          "text": "any",
+          "lemma": "any",
+          "upos": "DET",
+          "xpos": "DT",
+          "feats": "PronType=Ind",
+          "head": 10,
+          "deprel": "det"
+        },
+        {
+          "text": "files",
+          "lemma": "file",
+          "upos": "NOUN",
+          "xpos": "NNS",
+          "feats": "Number=Plur",
+          "head": 4,
+          "deprel": "obl"
+        },
+        {
+          "text": "and",
+          "lemma": "and",
+          "upos": "CCONJ",
+          "xpos": "CC",
+          "feats": null,
+          "head": 12,
+          "deprel": "cc"
+        },
+        {
+          "text": "data",
+          "lemma": "datum",
+          "upos": "NOUN",
+          "xpos": "NNS",
+          "feats": "Number=Plur",
+          "head": 10,
+          "deprel": "conj"
+        },
+        {
+          "text": ".",
+          "lemma": ".",
+          "upos": "PUNCT",
+          "xpos": ".",
+          "feats": null,
+          "head": 4,
+          "deprel": "punct"
+        }
+      ]
+    },
+    {
+      "text": "**Please [read the Wiki](https://github.com/PerseusDL/canonical-greekLit/wiki) for information on contacting us and submitting corrections, etc.**",
+      "tokens": [
+        {
+          "text": "**",
+          "lemma": "**",
+          "upos": "PUNCT",
+          "xpos": "NFP",
+          "feats": null,
+          "head": 4,
+          "deprel": "punct"
+        },
+        {
+          "text": "Please",
+          "lemma": "please",
+          "upos": "INTJ",
+          "xpos": "UH",
+          "feats": null,
+          "head": 4,
+          "deprel": "discourse"
+        },
+        {
+          "text": "[",
+          "lemma": "[",
+          "upos": "PUNCT",
+          "xpos": "-LRB-",
+          "feats": null,
+          "head": 4,
+          "deprel": "punct"
+        },
+        {
+          "text": "read",
+          "lemma": "read",
+          "upos": "VERB",
+          "xpos": "VB",
+          "feats": "Mood=Imp|VerbForm=Fin",
+          "head": 0,
+          "deprel": "root"
+        },
+        {
+          "text": "the",
+          "lemma": "the",
+          "upos": "DET",
+          "xpos": "DT",
+          "feats": "Definite=Def|PronType=Art",
+          "head": 6,
+          "deprel": "det"
+        },
+        {
+          "text": "Wiki",
+          "lemma": "Wiki",
+          "upos": "PROPN",
+          "xpos": "NNP",
+          "feats": "Number=Sing",
+          "head": 4,
+          "deprel": "obj"
+        },
+        {
+          "text": "]",
+          "lemma": "]",
+          "upos": "PUNCT",
+          "xpos": "-RRB-",
+          "feats": null,
+          "head": 4,
+          "deprel": "punct"
+        },
+        {
+          "text": "(",
+          "lemma": "(",
+          "upos": "PUNCT",
+          "xpos": "-LRB-",
+          "feats": null,
+          "head": 9,
+          "deprel": "punct"
+        },
+        {
+          "text": "https://github.com/PerseusDL/canonical-greekLit/wiki)",
+          "lemma": "https://github.com/PerseusDL/canonical-greekLit/wiki)",
+          "upos": "PROPN",
+          "xpos": "ADD",
+          "feats": "Number=Sing",
+          "head": 4,
+          "deprel": "parataxis"
+        },
+        {
+          "text": "for",
+          "lemma": "for",
+          "upos": "ADP",
+          "xpos": "IN",
+          "feats": null,
+          "head": 11,
+          "deprel": "case"
+        },
+        {
+          "text": "information",
+          "lemma": "information",
+          "upos": "NOUN",
+          "xpos": "NN",
+          "feats": "Number=Sing",
+          "head": 9,
+          "deprel": "nmod"
+        },
+        {
+          "text": "on",
+          "lemma": "on",
+          "upos": "SCONJ",
+          "xpos": "IN",
+          "feats": null,
+          "head": 13,
+          "deprel": "mark"
+        },
+        {
+          "text": "contacting",
+          "lemma": "contact",
+          "upos": "VERB",
+          "xpos": "VBG",
+          "feats": "VerbForm=Ger",
+          "head": 11,
+          "deprel": "acl"
+        },
+        {
+          "text": "us",
+          "lemma": "we",
+          "upos": "PRON",
+          "xpos": "PRP",
+          "feats": "Case=Acc|Number=Plur|Person=1|PronType=Prs",
+          "head": 13,
+          "deprel": "obj"
+        },
+        {
+          "text": "and",
+          "lemma": "and",
+          "upos": "CCONJ",
+          "xpos": "CC",
+          "feats": null,
+          "head": 16,
+          "deprel": "cc"
+        },
+        {
+          "text": "submitting",
+          "lemma": "submitt",
+          "upos": "VERB",
+          "xpos": "VBG",
+          "feats": "VerbForm=Ger",
+          "head": 13,
+          "deprel": "conj"
+        },
+        {
+          "text": "corrections",
+          "lemma": "correction",
+          "upos": "NOUN",
+          "xpos": "NNS",
+          "feats": "Number=Plur",
+          "head": 16,
+          "deprel": "obj"
+        },
+        {
+          "text": ",",
+          "lemma": ",",
+          "upos": "PUNCT",
+          "xpos": ",",
+          "feats": null,
+          "head": 19,
+          "deprel": "punct"
+        },
+        {
+          "text": "etc",
+          "lemma": "etc.",
+          "upos": "NOUN",
+          "xpos": "FW",
+          "feats": "Abbr=Yes|Number=Plur",
+          "head": 17,
+          "deprel": "conj"
+        },
+        {
+          "text": ".**",
+          "lemma": ".**",
+          "upos": "PUNCT",
+          "xpos": ".",
+          "feats": null,
+          "head": 4,
+          "deprel": "punct"
+        }
+      ]
+    },
+    {
+      "text": "Tufts University holds the overall copyright to the Perseus Digital Library; the materials therein\n(including all texts, translations, images, descriptions, drawings, etc.) are provided for the\npersonal use of students, scholars, and the public.",
+      "tokens": [
+        {
+          "text": "Tufts",
+          "lemma": "Tuft",
+          "upos": "PROPN",
+          "xpos": "NNP",
+          "feats": "Number=Sing",
+          "head": 2,
+          "deprel": "compound"
+        },
+        {
+          "text": "University",
+          "lemma": "University",
+          "upos": "PROPN",
+          "xpos": "NNP",
+          "feats": "Number=Sing",
+          "head": 3,
+          "deprel": "nsubj"
+        },
+        {
+          "text": "holds",
+          "lemma": "hold",
+          "upos": "VERB",
+          "xpos": "VBZ",
+          "feats": "Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin",
+          "head": 0,
+          "deprel": "root"
+        },
+        {
+          "text": "the",
+          "lemma": "the",
+          "upos": "DET",
+          "xpos": "DT",
+          "feats": "Definite=Def|PronType=Art",
+          "head": 6,
+          "deprel": "det"
+        },
+        {
+          "text": "overall",
+          "lemma": "overall",
+          "upos": "ADJ",
+          "xpos": "JJ",
+          "feats": "Degree=Pos",
+          "head": 6,
+          "deprel": "amod"
+        },
+        {
+          "text": "copyright",
+          "lemma": "copyright",
+          "upos": "NOUN",
+          "xpos": "NN",
+          "feats": "Number=Sing",
+          "head": 3,
+          "deprel": "obj"
+        },
+        {
+          "text": "to",
+          "lemma": "to",
+          "upos": "ADP",
+          "xpos": "IN",
+          "feats": null,
+          "head": 11,
+          "deprel": "case"
+        },
+        {
+          "text": "the",
+          "lemma": "the",
+          "upos": "DET",
+          "xpos": "DT",
+          "feats": "Definite=Def|PronType=Art",
+          "head": 11,
+          "deprel": "det"
+        },
+        {
+          "text": "Perseus",
+          "lemma": "Perseus",
+          "upos": "PROPN",
+          "xpos": "NNP",
+          "feats": "Number=Sing",
+          "head": 11,
+          "deprel": "compound"
+        },
+        {
+          "text": "Digital",
+          "lemma": "digital",
+          "upos": "ADJ",
+          "xpos": "JJ",
+          "feats": "Degree=Pos",
+          "head": 11,
+          "deprel": "amod"
+        },
+        {
+          "text": "Library",
+          "lemma": "Library",
+          "upos": "PROPN",
+          "xpos": "NNP",
+          "feats": "Number=Sing",
+          "head": 3,
+          "deprel": "obl"
+        },
+        {
+          "text": ";",
+          "lemma": ";",
+          "upos": "PUNCT",
+          "xpos": ":",
+          "feats": null,
+          "head": 32,
+          "deprel": "punct"
+        },
+        {
+          "text": "the",
+          "lemma": "the",
+          "upos": "DET",
+          "xpos": "DT",
+          "feats": "Definite=Def|PronType=Art",
+          "head": 14,
+          "deprel": "det"
+        },
+        {
+          "text": "materials",
+          "lemma": "material",
+          "upos": "NOUN",
+          "xpos": "NNS",
+          "feats": "Number=Plur",
+          "head": 32,
+          "deprel": "nsubj:pass"
+        },
+        {
+          "text": "therein",
+          "lemma": "therein",
+          "upos": "ADV",
+          "xpos": "RB",
+          "feats": null,
+          "head": 32,
+          "deprel": "advmod"
+        },
+        {
+          "text": "(",
+          "lemma": "(",
+          "upos": "PUNCT",
+          "xpos": "-LRB-",
+          "feats": null,
+          "head": 19,
+          "deprel": "punct"
+        },
+        {
+          "text": "including",
+          "lemma": "include",
+          "upos": "VERB",
+          "xpos": "VBG",
+          "feats": "Tense=Pres|VerbForm=Part",
+          "head": 19,
+          "deprel": "case"
+        },
+        {
+          "text": "all",
+          "lemma": "all",
+          "upos": "DET",
+          "xpos": "DT",
+          "feats": "PronType=Tot",
+          "head": 19,
+          "deprel": "det"
+        },
+        {
+          "text": "texts",
+          "lemma": "text",
+          "upos": "NOUN",
+          "xpos": "NNS",
+          "feats": "Number=Plur",
+          "head": 14,
+          "deprel": "nmod"
+        },
+        {
+          "text": ",",
+          "lemma": ",",
+          "upos": "PUNCT",
+          "xpos": ",",
+          "feats": null,
+          "head": 21,
+          "deprel": "punct"
+        },
+        {
+          "text": "translations",
+          "lemma": "translation",
+          "upos": "NOUN",
+          "xpos": "NNS",
+          "feats": "Number=Plur",
+          "head": 19,
+          "deprel": "conj"
+        },
+        {
+          "text": ",",
+          "lemma": ",",
+          "upos": "PUNCT",
+          "xpos": ",",
+          "feats": null,
+          "head": 23,
+          "deprel": "punct"
+        },
+        {
+          "text": "images",
+          "lemma": "image",
+          "upos": "NOUN",
+          "xpos": "NNS",
+          "feats": "Number=Plur",
+          "head": 19,
+          "deprel": "conj"
+        },
+        {
+          "text": ",",
+          "lemma": ",",
+          "upos": "PUNCT",
+          "xpos": ",",
+          "feats": null,
+          "head": 25,
+          "deprel": "punct"
+        },
+        {
+          "text": "descriptions",
+          "lemma": "description",
+          "upos": "NOUN",
+          "xpos": "NNS",
+          "feats": "Number=Plur",
+          "head": 19,
+          "deprel": "conj"
+        },
+        {
+          "text": ",",
+          "lemma": ",",
+          "upos": "PUNCT",
+          "xpos": ",",
+          "feats": null,
+          "head": 27,
+          "deprel": "punct"
+        },
+        {
+          "text": "drawings",
+          "lemma": "drawing",
+          "upos": "NOUN",
+          "xpos": "NNS",
+          "feats": "Number=Plur",
+          "head": 19,
+          "deprel": "conj"
+        },
+        {
+          "text": ",",
+          "lemma": ",",
+          "upos": "PUNCT",
+          "xpos": ",",
+          "feats": null,
+          "head": 29,
+          "deprel": "punct"
+        },
+        {
+          "text": "etc.",
+          "lemma": "etc.",
+          "upos": "NOUN",
+          "xpos": "FW",
+          "feats": "Abbr=Yes|Number=Plur",
+          "head": 19,
+          "deprel": "conj"
+        },
+        {
+          "text": ")",
+          "lemma": ")",
+          "upos": "PUNCT",
+          "xpos": "-RRB-",
+          "feats": null,
+          "head": 19,
+          "deprel": "punct"
+        },
+        {
+          "text": "are",
+          "lemma": "be",
+          "upos": "AUX",
+          "xpos": "VBP",
+          "feats": "Mood=Ind|Number=Plur|Person=3|Tense=Pres|VerbForm=Fin",
+          "head": 32,
+          "deprel": "aux:pass"
+        },
+        {
+          "text": "provided",
+          "lemma": "provide",
+          "upos": "VERB",
+          "xpos": "VBN",
+          "feats": "Tense=Past|VerbForm=Part|Voice=Pass",
+          "head": 3,
+          "deprel": "conj"
+        },
+        {
+          "text": "for",
+          "lemma": "for",
+          "upos": "ADP",
+          "xpos": "IN",
+          "feats": null,
+          "head": 36,
+          "deprel": "case"
+        },
+        {
+          "text": "the",
+          "lemma": "the",
+          "upos": "DET",
+          "xpos": "DT",
+          "feats": "Definite=Def|PronType=Art",
+          "head": 36,
+          "deprel": "det"
+        },
+        {
+          "text": "personal",
+          "lemma": "personal",
+          "upos": "ADJ",
+          "xpos": "JJ",
+          "feats": "Degree=Pos",
+          "head": 36,
+          "deprel": "amod"
+        },
+        {
+          "text": "use",
+          "lemma": "use",
+          "upos": "NOUN",
+          "xpos": "NN",
+          "feats": "Number=Sing",
+          "head": 32,
+          "deprel": "obl"
+        },
+        {
+          "text": "of",
+          "lemma": "of",
+          "upos": "ADP",
+          "xpos": "IN",
+          "feats": null,
+          "head": 38,
+          "deprel": "case"
+        },
+        {
+          "text": "students",
+          "lemma": "student",
+          "upos": "NOUN",
+          "xpos": "NNS",
+          "feats": "Number=Plur",
+          "head": 36,
+          "deprel": "nmod"
+        },
+        {
+          "text": ",",
+          "lemma": ",",
+          "upos": "PUNCT",
+          "xpos": ",",
+          "feats": null,
+          "head": 40,
+          "deprel": "punct"
+        },
+        {
+          "text": "scholars",
+          "lemma": "scholar",
+          "upos": "NOUN",
+          "xpos": "NNS",
+          "feats": "Number=Plur",
+          "head": 38,
+          "deprel": "conj"
+        },
+        {
+          "text": ",",
+          "lemma": ",",
+          "upos": "PUNCT",
+          "xpos": ",",
+          "feats": null,
+          "head": 44,
+          "deprel": "punct"
+        },
+        {
+          "text": "and",
+          "lemma": "and",
+          "upos": "CCONJ",
+          "xpos": "CC",
+          "feats": null,
+          "head": 44,
+          "deprel": "cc"
+        },
+        {
+          "text": "the",
+          "lemma": "the",
+          "upos": "DET",
+          "xpos": "DT",
+          "feats": "Definite=Def|PronType=Art",
+          "head": 44,
+          "deprel": "det"
+        },
+        {
+          "text": "public",
+          "lemma": "public",
+          "upos": "NOUN",
+          "xpos": "NN",
+          "feats": "Number=Sing",
+          "head": 38,
+          "deprel": "conj"
+        },
+        {
+          "text": ".",
+          "lemma": ".",
+          "upos": "PUNCT",
+          "xpos": ".",
+          "feats": null,
+          "head": 3,
+          "deprel": "punct"
+        }
+      ]
+    },
+    {
+      "text": "Materials within the Perseus DL have varying copyright status: please contact the project for more information\nabout a specific component or object.",
+      "tokens": [
+        {
+          "text": "Materials",
+          "lemma": "material",
+          "upos": "NOUN",
+          "xpos": "NNS",
+          "feats": "Number=Plur",
+          "head": 6,
+          "deprel": "nsubj"
+        },
+        {
+          "text": "within",
+          "lemma": "within",
+          "upos": "ADP",
+          "xpos": "IN",
+          "feats": null,
+          "head": 5,
+          "deprel": "case"
+        },
+        {
+          "text": "the",
+          "lemma": "the",
+          "upos": "DET",
+          "xpos": "DT",
+          "feats": "Definite=Def|PronType=Art",
+          "head": 5,
+          "deprel": "det"
+        },
+        {
+          "text": "Perseus",
+          "lemma": "Perseus",
+          "upos": "PROPN",
+          "xpos": "NNP",
+          "feats": "Number=Sing",
+          "head": 5,
+          "deprel": "compound"
+        },
+        {
+          "text": "DL",
+          "lemma": "dl",
+          "upos": "NOUN",
+          "xpos": "NN",
+          "feats": "Number=Sing",
+          "head": 1,
+          "deprel": "nmod"
+        },
+        {
+          "text": "have",
+          "lemma": "have",
+          "upos": "VERB",
+          "xpos": "VBP",
+          "feats": "Mood=Ind|Number=Plur|Person=3|Tense=Pres|VerbForm=Fin",
+          "head": 0,
+          "deprel": "root"
+        },
+        {
+          "text": "varying",
+          "lemma": "vary",
+          "upos": "VERB",
+          "xpos": "VBG",
+          "feats": "VerbForm=Ger",
+          "head": 9,
+          "deprel": "amod"
+        },
+        {
+          "text": "copyright",
+          "lemma": "copyright",
+          "upos": "NOUN",
+          "xpos": "NN",
+          "feats": "Number=Sing",
+          "head": 9,
+          "deprel": "compound"
+        },
+        {
+          "text": "status",
+          "lemma": "status",
+          "upos": "NOUN",
+          "xpos": "NN",
+          "feats": "Number=Sing",
+          "head": 6,
+          "deprel": "obj"
+        },
+        {
+          "text": ":",
+          "lemma": ":",
+          "upos": "PUNCT",
+          "xpos": ":",
+          "feats": null,
+          "head": 12,
+          "deprel": "punct"
+        },
+        {
+          "text": "please",
+          "lemma": "please",
+          "upos": "INTJ",
+          "xpos": "UH",
+          "feats": null,
+          "head": 12,
+          "deprel": "discourse"
+        },
+        {
+          "text": "contact",
+          "lemma": "contact",
+          "upos": "VERB",
+          "xpos": "VB",
+          "feats": "Mood=Imp|VerbForm=Fin",
+          "head": 6,
+          "deprel": "parataxis"
+        },
+        {
+          "text": "the",
+          "lemma": "the",
+          "upos": "DET",
+          "xpos": "DT",
+          "feats": "Definite=Def|PronType=Art",
+          "head": 14,
+          "deprel": "det"
+        },
+        {
+          "text": "project",
+          "lemma": "project",
+          "upos": "NOUN",
+          "xpos": "NN",
+          "feats": "Number=Sing",
+          "head": 12,
+          "deprel": "obj"
+        },
+        {
+          "text": "for",
+          "lemma": "for",
+          "upos": "ADP",
+          "xpos": "IN",
+          "feats": null,
+          "head": 17,
+          "deprel": "case"
+        },
+        {
+          "text": "more",
+          "lemma": "more",
+          "upos": "ADJ",
+          "xpos": "JJR",
+          "feats": "Degree=Cmp",
+          "head": 17,
+          "deprel": "amod"
+        },
+        {
+          "text": "information",
+          "lemma": "information",
+          "upos": "NOUN",
+          "xpos": "NN",
+          "feats": "Number=Sing",
+          "head": 12,
+          "deprel": "obl"
+        },
+        {
+          "text": "about",
+          "lemma": "about",
+          "upos": "ADP",
+          "xpos": "IN",
+          "feats": null,
+          "head": 21,
+          "deprel": "case"
+        },
+        {
+          "text": "a",
+          "lemma": "a",
+          "upos": "DET",
+          "xpos": "DT",
+          "feats": "Definite=Ind|PronType=Art",
+          "head": 21,
+          "deprel": "det"
+        },
+        {
+          "text": "specific",
+          "lemma": "specific",
+          "upos": "ADJ",
+          "xpos": "JJ",
+          "feats": "Degree=Pos",
+          "head": 21,
+          "deprel": "amod"
+        },
+        {
+          "text": "component",
+          "lemma": "component",
+          "upos": "NOUN",
+          "xpos": "NN",
+          "feats": "Number=Sing",
+          "head": 17,
+          "deprel": "nmod"
+        },
+        {
+          "text": "or",
+          "lemma": "or",
+          "upos": "CCONJ",
+          "xpos": "CC",
+          "feats": null,
+          "head": 23,
+          "deprel": "cc"
+        },
+        {
+          "text": "object",
+          "lemma": "object",
+          "upos": "NOUN",
+          "xpos": "NN",
+          "feats": "Number=Sing",
+          "head": 21,
+          "deprel": "conj"
+        },
+        {
+          "text": ".",
+          "lemma": ".",
+          "upos": "PUNCT",
+          "xpos": ".",
+          "feats": null,
+          "head": 6,
+          "deprel": "punct"
+        }
+      ]
+    },
+    {
+      "text": "Copyright is protected by the copyright laws of the United States and\nthe Universal Copyright Convention.",
+      "tokens": [
+        {
+          "text": "Copyright",
+          "lemma": "copyright",
+          "upos": "NOUN",
+          "xpos": "NN",
+          "feats": "Number=Sing",
+          "head": 3,
+          "deprel": "nsubj:pass"
+        },
+        {
+          "text": "is",
+          "lemma": "be",
+          "upos": "AUX",
+          "xpos": "VBZ",
+          "feats": "Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin",
+          "head": 3,
+          "deprel": "aux:pass"
+        },
+        {
+          "text": "protected",
+          "lemma": "protect",
+          "upos": "VERB",
+          "xpos": "VBN",
+          "feats": "Tense=Past|VerbForm=Part|Voice=Pass",
+          "head": 0,
+          "deprel": "root"
+        },
+        {
+          "text": "by",
+          "lemma": "by",
+          "upos": "ADP",
+          "xpos": "IN",
+          "feats": null,
+          "head": 7,
+          "deprel": "case"
+        },
+        {
+          "text": "the",
+          "lemma": "the",
+          "upos": "DET",
+          "xpos": "DT",
+          "feats": "Definite=Def|PronType=Art",
+          "head": 7,
+          "deprel": "det"
+        },
+        {
+          "text": "copyright",
+          "lemma": "copyright",
+          "upos": "NOUN",
+          "xpos": "NN",
+          "feats": "Number=Sing",
+          "head": 7,
+          "deprel": "compound"
+        },
+        {
+          "text": "laws",
+          "lemma": "law",
+          "upos": "NOUN",
+          "xpos": "NNS",
+          "feats": "Number=Plur",
+          "head": 3,
+          "deprel": "obl:agent"
+        },
+        {
+          "text": "of",
+          "lemma": "of",
+          "upos": "ADP",
+          "xpos": "IN",
+          "feats": null,
+          "head": 11,
+          "deprel": "case"
+        },
+        {
+          "text": "the",
+          "lemma": "the",
+          "upos": "DET",
+          "xpos": "DT",
+          "feats": "Definite=Def|PronType=Art",
+          "head": 11,
+          "deprel": "det"
+        },
+        {
+          "text": "United",
+          "lemma": "Unite",
+          "upos": "VERB",
+          "xpos": "NNP",
+          "feats": "Tense=Past|VerbForm=Part",
+          "head": 11,
+          "deprel": "amod"
+        },
+        {
+          "text": "States",
+          "lemma": "State",
+          "upos": "PROPN",
+          "xpos": "NNPS",
+          "feats": "Number=Plur",
+          "head": 7,
+          "deprel": "nmod"
+        },
+        {
+          "text": "and",
+          "lemma": "and",
+          "upos": "CCONJ",
+          "xpos": "CC",
+          "feats": null,
+          "head": 16,
+          "deprel": "cc"
+        },
+        {
+          "text": "the",
+          "lemma": "the",
+          "upos": "DET",
+          "xpos": "DT",
+          "feats": "Definite=Def|PronType=Art",
+          "head": 16,
+          "deprel": "det"
+        },
+        {
+          "text": "Universal",
+          "lemma": "Universal",
+          "upos": "ADJ",
+          "xpos": "NNP",
+          "feats": "Degree=Pos",
+          "head": 15,
+          "deprel": "amod"
+        },
+        {
+          "text": "Copyright",
+          "lemma": "copyright",
+          "upos": "PROPN",
+          "xpos": "NNP",
+          "feats": "Number=Sing",
+          "head": 16,
+          "deprel": "compound"
+        },
+        {
+          "text": "Convention",
+          "lemma": "Convention",
+          "upos": "PROPN",
+          "xpos": "NNP",
+          "feats": "Number=Sing",
+          "head": 11,
+          "deprel": "conj"
+        },
+        {
+          "text": ".",
+          "lemma": ".",
+          "upos": "PUNCT",
+          "xpos": ".",
+          "feats": null,
+          "head": 3,
+          "deprel": "punct"
+        }
+      ]
+    },
+    {
+      "text": "Unless otherwise indicated, all contents of this repository are licensed under a\nCreative Commons Attribution-ShareAlike 4.0 International License.",
+      "tokens": [
+        {
+          "text": "Unless",
+          "lemma": "unless",
+          "upos": "SCONJ",
+          "xpos": "IN",
+          "feats": null,
+          "head": 3,
+          "deprel": "mark"
+        },
+        {
+          "text": "otherwise",
+          "lemma": "otherwise",
+          "upos": "ADV",
+          "xpos": "RB",
+          "feats": null,
+          "head": 3,
+          "deprel": "advmod"
+        },
+        {
+          "text": "indicated",
+          "lemma": "indicate",
+          "upos": "VERB",
+          "xpos": "VBN",
+          "feats": "Tense=Past|VerbForm=Part|Voice=Pass",
+          "head": 11,
+          "deprel": "advcl"
+        },
+        {
+          "text": ",",
+          "lemma": ",",
+          "upos": "PUNCT",
+          "xpos": ",",
+          "feats": null,
+          "head": 3,
+          "deprel": "punct"
+        },
+        {
+          "text": "all",
+          "lemma": "all",
+          "upos": "DET",
+          "xpos": "DT",
+          "feats": "PronType=Tot",
+          "head": 6,
+          "deprel": "det"
+        },
+        {
+          "text": "contents",
+          "lemma": "content",
+          "upos": "NOUN",
+          "xpos": "NNS",
+          "feats": "Number=Plur",
+          "head": 11,
+          "deprel": "nsubj:pass"
+        },
+        {
+          "text": "of",
+          "lemma": "of",
+          "upos": "ADP",
+          "xpos": "IN",
+          "feats": null,
+          "head": 9,
+          "deprel": "case"
+        },
+        {
+          "text": "this",
+          "lemma": "this",
+          "upos": "DET",
+          "xpos": "DT",
+          "feats": "Number=Sing|PronType=Dem",
+          "head": 9,
+          "deprel": "det"
+        },
+        {
+          "text": "repository",
+          "lemma": "repository",
+          "upos": "NOUN",
+          "xpos": "NN",
+          "feats": "Number=Sing",
+          "head": 6,
+          "deprel": "nmod"
+        },
+        {
+          "text": "are",
+          "lemma": "be",
+          "upos": "AUX",
+          "xpos": "VBP",
+          "feats": "Mood=Ind|Number=Plur|Person=3|Tense=Pres|VerbForm=Fin",
+          "head": 11,
+          "deprel": "aux:pass"
+        },
+        {
+          "text": "licensed",
+          "lemma": "license",
+          "upos": "VERB",
+          "xpos": "VBN",
+          "feats": "Tense=Past|VerbForm=Part|Voice=Pass",
+          "head": 0,
+          "deprel": "root"
+        },
+        {
+          "text": "under",
+          "lemma": "under",
+          "upos": "ADP",
+          "xpos": "IN",
+          "feats": null,
+          "head": 21,
+          "deprel": "case"
+        },
+        {
+          "text": "a",
+          "lemma": "a",
+          "upos": "DET",
+          "xpos": "DT",
+          "feats": "Definite=Ind|PronType=Art",
+          "head": 21,
+          "deprel": "det"
+        },
+        {
+          "text": "Creative",
+          "lemma": "Creative",
+          "upos": "ADJ",
+          "xpos": "NNP",
+          "feats": "Degree=Pos",
+          "head": 15,
+          "deprel": "amod"
+        },
+        {
+          "text": "Commons",
+          "lemma": "Commons",
+          "upos": "PROPN",
+          "xpos": "NNP",
+          "feats": "Number=Sing",
+          "head": 21,
+          "deprel": "compound"
+        },
+        {
+          "text": "Attribution",
+          "lemma": "Attribution",
+          "upos": "PROPN",
+          "xpos": "NNP",
+          "feats": "Number=Sing",
+          "head": 18,
+          "deprel": "compound"
+        },
+        {
+          "text": "-",
+          "lemma": "-",
+          "upos": "PUNCT",
+          "xpos": "HYPH",
+          "feats": null,
+          "head": 16,
+          "deprel": "punct"
+        },
+        {
+          "text": "ShareAlike",
+          "lemma": "ShareAlike",
+          "upos": "PROPN",
+          "xpos": "NNP",
+          "feats": "Number=Sing",
+          "head": 21,
+          "deprel": "compound"
+        },
+        {
+          "text": "4.0",
+          "lemma": "4.0",
+          "upos": "NUM",
+          "xpos": "CD",
+          "feats": "NumForm=Digit|NumType=Frac",
+          "head": 18,
+          "deprel": "dep"
+        },
+        {
+          "text": "International",
+          "lemma": "International",
+          "upos": "ADJ",
+          "xpos": "NNP",
+          "feats": "Degree=Pos",
+          "head": 21,
+          "deprel": "amod"
+        },
+        {
+          "text": "License",
+          "lemma": "License",
+          "upos": "PROPN",
+          "xpos": "NNP",
+          "feats": "Number=Sing",
+          "head": 11,
+          "deprel": "obl"
+        },
+        {
+          "text": ".",
+          "lemma": ".",
+          "upos": "PUNCT",
+          "xpos": ".",
+          "feats": null,
+          "head": 11,
+          "deprel": "punct"
+        }
+      ]
+    },
+    {
+      "text": "You must  offer Perseus\nany modifications you make.",
+      "tokens": [
+        {
+          "text": "You",
+          "lemma": "you",
+          "upos": "PRON",
+          "xpos": "PRP",
+          "feats": "Case=Nom|Person=2|PronType=Prs",
+          "head": 3,
+          "deprel": "nsubj"
+        },
+        {
+          "text": "must",
+          "lemma": "must",
+          "upos": "AUX",
+          "xpos": "MD",
+          "feats": "VerbForm=Fin",
+          "head": 3,
+          "deprel": "aux"
+        },
+        {
+          "text": "offer",
+          "lemma": "offer",
+          "upos": "VERB",
+          "xpos": "VB",
+          "feats": "VerbForm=Inf",
+          "head": 0,
+          "deprel": "root"
+        },
+        {
+          "text": "Perseus",
+          "lemma": "Perseus",
+          "upos": "PROPN",
+          "xpos": "NNP",
+          "feats": "Number=Sing",
+          "head": 3,
+          "deprel": "iobj"
+        },
+        {
+          "text": "any",
+          "lemma": "any",
+          "upos": "DET",
+          "xpos": "DT",
+          "feats": "PronType=Ind",
+          "head": 6,
+          "deprel": "det"
+        },
+        {
+          "text": "modifications",
+          "lemma": "modification",
+          "upos": "NOUN",
+          "xpos": "NNS",
+          "feats": "Number=Plur",
+          "head": 3,
+          "deprel": "obj"
+        },
+        {
+          "text": "you",
+          "lemma": "you",
+          "upos": "PRON",
+          "xpos": "PRP",
+          "feats": "Case=Nom|Person=2|PronType=Prs",
+          "head": 8,
+          "deprel": "nsubj"
+        },
+        {
+          "text": "make",
+          "lemma": "make",
+          "upos": "VERB",
+          "xpos": "VBP",
+          "feats": "Mood=Ind|Number=Sing|Person=2|Tense=Pres|VerbForm=Fin",
+          "head": 6,
+          "deprel": "acl:relcl"
+        },
+        {
+          "text": ".",
+          "lemma": ".",
+          "upos": "PUNCT",
+          "xpos": ".",
+          "feats": null,
+          "head": 3,
+          "deprel": "punct"
+        }
+      ]
+    },
+    {
+      "text": "Perseus provides credit for all accepted changes.",
+      "tokens": [
+        {
+          "text": "Perseus",
+          "lemma": "Perseus",
+          "upos": "PROPN",
+          "xpos": "NNP",
+          "feats": "Number=Sing",
+          "head": 2,
+          "deprel": "nsubj"
+        },
+        {
+          "text": "provides",
+          "lemma": "provide",
+          "upos": "VERB",
+          "xpos": "VBZ",
+          "feats": "Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin",
+          "head": 0,
+          "deprel": "root"
+        },
+        {
+          "text": "credit",
+          "lemma": "credit",
+          "upos": "NOUN",
+          "xpos": "NN",
+          "feats": "Number=Sing",
+          "head": 2,
+          "deprel": "obj"
+        },
+        {
+          "text": "for",
+          "lemma": "for",
+          "upos": "ADP",
+          "xpos": "IN",
+          "feats": null,
+          "head": 7,
+          "deprel": "case"
+        },
+        {
+          "text": "all",
+          "lemma": "all",
+          "upos": "DET",
+          "xpos": "DT",
+          "feats": "PronType=Tot",
+          "head": 7,
+          "deprel": "det"
+        },
+        {
+          "text": "accepted",
+          "lemma": "accept",
+          "upos": "VERB",
+          "xpos": "VBN",
+          "feats": "Tense=Past|VerbForm=Part|Voice=Pass",
+          "head": 7,
+          "deprel": "amod"
+        },
+        {
+          "text": "changes",
+          "lemma": "change",
+          "upos": "NOUN",
+          "xpos": "NNS",
+          "feats": "Number=Plur",
+          "head": 2,
+          "deprel": "obl"
+        },
+        {
+          "text": ".",
+          "lemma": ".",
+          "upos": "PUNCT",
+          "xpos": ".",
+          "feats": null,
+          "head": 2,
+          "deprel": "punct"
+        }
+      ]
+    },
+    {
+      "text": "# Installing on exist-db\n- Install `ant`\n- Run `ant` at the root of this repository.",
+      "tokens": [
+        {
+          "text": "#",
+          "lemma": "#",
+          "upos": "SYM",
+          "xpos": "NN",
+          "feats": "Number=Sing",
+          "head": 0,
+          "deprel": "root"
+        },
+        {
+          "text": "Installing",
+          "lemma": "install",
+          "upos": "VERB",
+          "xpos": "VBG",
+          "feats": "VerbForm=Ger",
+          "head": 1,
+          "deprel": "acl"
+        },
+        {
+          "text": "on",
+          "lemma": "on",
+          "upos": "ADP",
+          "xpos": "IN",
+          "feats": null,
+          "head": 4,
+          "deprel": "case"
+        },
+        {
+          "text": "exist",
+          "lemma": "exist",
+          "upos": "NOUN",
+          "xpos": "NN",
+          "feats": "Number=Sing",
+          "head": 2,
+          "deprel": "obl"
+        },
+        {
+          "text": "-",
+          "lemma": "-",
+          "upos": "PUNCT",
+          "xpos": "HYPH",
+          "feats": null,
+          "head": 6,
+          "deprel": "punct"
+        },
+        {
+          "text": "db",
+          "lemma": "db",
+          "upos": "X",
+          "xpos": "FW",
+          "feats": null,
+          "head": 4,
+          "deprel": "flat"
+        },
+        {
+          "text": "-",
+          "lemma": "-",
+          "upos": "PUNCT",
+          "xpos": "HYPH",
+          "feats": null,
+          "head": 8,
+          "deprel": "punct"
+        },
+        {
+          "text": "Install",
+          "lemma": "Install",
+          "upos": "X",
+          "xpos": "FW",
+          "feats": null,
+          "head": 4,
+          "deprel": "flat"
+        },
+        {
+          "text": "`",
+          "lemma": "`",
+          "upos": "PUNCT",
+          "xpos": "``",
+          "feats": null,
+          "head": 10,
+          "deprel": "punct"
+        },
+        {
+          "text": "ant",
+          "lemma": "ant",
+          "upos": "X",
+          "xpos": "FW",
+          "feats": null,
+          "head": 4,
+          "deprel": "flat"
+        },
+        {
+          "text": "`",
+          "lemma": "`",
+          "upos": "PUNCT",
+          "xpos": "``",
+          "feats": null,
+          "head": 13,
+          "deprel": "punct"
+        },
+        {
+          "text": "-",
+          "lemma": "-",
+          "upos": "PUNCT",
+          "xpos": "HYPH",
+          "feats": null,
+          "head": 13,
+          "deprel": "punct"
+        },
+        {
+          "text": "Run",
+          "lemma": "run",
+          "upos": "X",
+          "xpos": "FW",
+          "feats": null,
+          "head": 10,
+          "deprel": "flat"
+        },
+        {
+          "text": "`",
+          "lemma": "`",
+          "upos": "PUNCT",
+          "xpos": "``",
+          "feats": null,
+          "head": 15,
+          "deprel": "punct"
+        },
+        {
+          "text": "ant",
+          "lemma": "ant",
+          "upos": "X",
+          "xpos": "FW",
+          "feats": null,
+          "head": 10,
+          "deprel": "flat"
+        },
+        {
+          "text": "`",
+          "lemma": "`",
+          "upos": "PUNCT",
+          "xpos": "''",
+          "feats": null,
+          "head": 15,
+          "deprel": "punct"
+        },
+        {
+          "text": "at",
+          "lemma": "at",
+          "upos": "ADP",
+          "xpos": "IN",
+          "feats": null,
+          "head": 19,
+          "deprel": "case"
+        },
+        {
+          "text": "the",
+          "lemma": "the",
+          "upos": "DET",
+          "xpos": "DT",
+          "feats": "Definite=Def|PronType=Art",
+          "head": 19,
+          "deprel": "det"
+        },
+        {
+          "text": "root",
+          "lemma": "root",
+          "upos": "NOUN",
+          "xpos": "NN",
+          "feats": "Number=Sing",
+          "head": 2,
+          "deprel": "obl"
+        },
+        {
+          "text": "of",
+          "lemma": "of",
+          "upos": "ADP",
+          "xpos": "IN",
+          "feats": null,
+          "head": 22,
+          "deprel": "case"
+        },
+        {
+          "text": "this",
+          "lemma": "this",
+          "upos": "DET",
+          "xpos": "DT",
+          "feats": "Number=Sing|PronType=Dem",
+          "head": 22,
+          "deprel": "det"
+        },
+        {
+          "text": "repository",
+          "lemma": "repository",
+          "upos": "NOUN",
+          "xpos": "NN",
+          "feats": "Number=Sing",
+          "head": 19,
+          "deprel": "nmod"
+        },
+        {
+          "text": ".",
+          "lemma": ".",
+          "upos": "PUNCT",
+          "xpos": ".",
+          "feats": null,
+          "head": 1,
+          "deprel": "punct"
+        }
+      ]
+    },
+    {
+      "text": "-",
+      "tokens": [
+        {
+          "text": "-",
+          "lemma": "-",
+          "upos": "PUNCT",
+          "xpos": "NFP",
+          "feats": null,
+          "head": 0,
+          "deprel": "root"
+        }
+      ]
+    },
+    {
+      "text": "In the package manager of your existDB install, select your .xar file and upload it.",
+      "tokens": [
+        {
+          "text": "In",
+          "lemma": "in",
+          "upos": "ADP",
+          "xpos": "IN",
+          "feats": null,
+          "head": 4,
+          "deprel": "case"
+        },
+        {
+          "text": "the",
+          "lemma": "the",
+          "upos": "DET",
+          "xpos": "DT",
+          "feats": "Definite=Def|PronType=Art",
+          "head": 4,
+          "deprel": "det"
+        },
+        {
+          "text": "package",
+          "lemma": "package",
+          "upos": "NOUN",
+          "xpos": "NN",
+          "feats": "Number=Sing",
+          "head": 4,
+          "deprel": "compound"
+        },
+        {
+          "text": "manager",
+          "lemma": "manager",
+          "upos": "NOUN",
+          "xpos": "NN",
+          "feats": "Number=Sing",
+          "head": 10,
+          "deprel": "obl"
+        },
+        {
+          "text": "of",
+          "lemma": "of",
+          "upos": "ADP",
+          "xpos": "IN",
+          "feats": null,
+          "head": 8,
+          "deprel": "case"
+        },
+        {
+          "text": "your",
+          "lemma": "your",
+          "upos": "PRON",
+          "xpos": "PRP$",
+          "feats": "Case=Gen|Person=2|Poss=Yes|PronType=Prs",
+          "head": 8,
+          "deprel": "nmod:poss"
+        },
+        {
+          "text": "existDB",
+          "lemma": "existDB",
+          "upos": "NOUN",
+          "xpos": "NN",
+          "feats": "Number=Sing",
+          "head": 8,
+          "deprel": "compound"
+        },
+        {
+          "text": "install",
+          "lemma": "install",
+          "upos": "NOUN",
+          "xpos": "NN",
+          "feats": "Number=Sing",
+          "head": 4,
+          "deprel": "nmod"
+        },
+        {
+          "text": ",",
+          "lemma": ",",
+          "upos": "PUNCT",
+          "xpos": ",",
+          "feats": null,
+          "head": 4,
+          "deprel": "punct"
+        },
+        {
+          "text": "select",
+          "lemma": "select",
+          "upos": "VERB",
+          "xpos": "VB",
+          "feats": "Mood=Imp|Person=2|VerbForm=Fin",
+          "head": 0,
+          "deprel": "root"
+        },
+        {
+          "text": "your",
+          "lemma": "your",
+          "upos": "PRON",
+          "xpos": "PRP$",
+          "feats": "Case=Gen|Person=2|Poss=Yes|PronType=Prs",
+          "head": 13,
+          "deprel": "nmod:poss"
+        },
+        {
+          "text": ".xar",
+          "lemma": ".xar",
+          "upos": "NOUN",
+          "xpos": "NN",
+          "feats": "Number=Sing",
+          "head": 13,
+          "deprel": "compound"
+        },
+        {
+          "text": "file",
+          "lemma": "file",
+          "upos": "NOUN",
+          "xpos": "NN",
+          "feats": "Number=Sing",
+          "head": 10,
+          "deprel": "obj"
+        },
+        {
+          "text": "and",
+          "lemma": "and",
+          "upos": "CCONJ",
+          "xpos": "CC",
+          "feats": null,
+          "head": 15,
+          "deprel": "cc"
+        },
+        {
+          "text": "upload",
+          "lemma": "upload",
+          "upos": "VERB",
+          "xpos": "VB",
+          "feats": "Mood=Imp|VerbForm=Fin",
+          "head": 10,
+          "deprel": "conj"
+        },
+        {
+          "text": "it",
+          "lemma": "it",
+          "upos": "PRON",
+          "xpos": "PRP",
+          "feats": "Case=Acc|Gender=Neut|Number=Sing|Person=3|PronType=Prs",
+          "head": 15,
+          "deprel": "obj"
+        },
+        {
+          "text": ".",
+          "lemma": ".",
+          "upos": "PUNCT",
+          "xpos": ".",
+          "feats": null,
+          "head": 10,
+          "deprel": "punct"
+        }
+      ]
+    },
+    {
+      "text": "-",
+      "tokens": [
+        {
+          "text": "-",
+          "lemma": "-",
+          "upos": "PUNCT",
+          "xpos": "NFP",
+          "feats": null,
+          "head": 0,
+          "deprel": "root"
+        }
+      ]
+    },
+    {
+      "text": "You have now the Perseus Canonical Greek Lit installed in your repository.",
+      "tokens": [
+        {
+          "text": "You",
+          "lemma": "you",
+          "upos": "PRON",
+          "xpos": "PRP",
+          "feats": "Case=Nom|Person=2|PronType=Prs",
+          "head": 2,
+          "deprel": "nsubj"
+        },
+        {
+          "text": "have",
+          "lemma": "have",
+          "upos": "VERB",
+          "xpos": "VBP",
+          "feats": "Mood=Ind|Number=Sing|Person=2|Tense=Pres|VerbForm=Fin",
+          "head": 0,
+          "deprel": "root"
+        },
+        {
+          "text": "now",
+          "lemma": "now",
+          "upos": "ADV",
+          "xpos": "RB",
+          "feats": null,
+          "head": 2,
+          "deprel": "advmod"
+        },
+        {
+          "text": "the",
+          "lemma": "the",
+          "upos": "DET",
+          "xpos": "DT",
+          "feats": "Definite=Def|PronType=Art",
+          "head": 8,
+          "deprel": "det"
+        },
+        {
+          "text": "Perseus",
+          "lemma": "Perseus",
+          "upos": "PROPN",
+          "xpos": "NNP",
+          "feats": "Number=Sing",
+          "head": 8,
+          "deprel": "compound"
+        },
+        {
+          "text": "Canonical",
+          "lemma": "Canonical",
+          "upos": "ADJ",
+          "xpos": "JJ",
+          "feats": "Degree=Pos",
+          "head": 8,
+          "deprel": "amod"
+        },
+        {
+          "text": "Greek",
+          "lemma": "Greek",
+          "upos": "ADJ",
+          "xpos": "JJ",
+          "feats": "Degree=Pos",
+          "head": 8,
+          "deprel": "amod"
+        },
+        {
+          "text": "Lit",
+          "lemma": "lit",
+          "upos": "NOUN",
+          "xpos": "NN",
+          "feats": "Number=Sing",
+          "head": 2,
+          "deprel": "obj"
+        },
+        {
+          "text": "installed",
+          "lemma": "install",
+          "upos": "VERB",
+          "xpos": "VBN",
+          "feats": "Tense=Past|VerbForm=Part|Voice=Pass",
+          "head": 8,
+          "deprel": "acl"
+        },
+        {
+          "text": "in",
+          "lemma": "in",
+          "upos": "ADP",
+          "xpos": "IN",
+          "feats": null,
+          "head": 12,
+          "deprel": "case"
+        },
+        {
+          "text": "your",
+          "lemma": "your",
+          "upos": "PRON",
+          "xpos": "PRP$",
+          "feats": "Case=Gen|Person=2|Poss=Yes|PronType=Prs",
+          "head": 12,
+          "deprel": "nmod:poss"
+        },
+        {
+          "text": "repository",
+          "lemma": "repository",
+          "upos": "NOUN",
+          "xpos": "NN",
+          "feats": "Number=Sing",
+          "head": 9,
+          "deprel": "obl"
+        },
+        {
+          "text": ".",
+          "lemma": ".",
+          "upos": "PUNCT",
+          "xpos": ".",
+          "feats": null,
+          "head": 2,
+          "deprel": "punct"
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "language": "en",
+    "model": "stanza",
+    "processing_time": 13.112176
+  }
+}

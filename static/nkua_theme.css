@@ -1,0 +1,13 @@
+/* NKUA Official Colors */
+:root {
+  --nkua-blue: #00205B;
+  --nkua-light: #E6E6EA;
+  --nkua-accent: #9D2235;
+}
+
+.academic-header {
+  background: var(--nkua-blue);
+  color: white;
+  padding: 1rem;
+  font-family: 'Times New Roman', serif;
+}

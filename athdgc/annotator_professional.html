@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AthDGC Multi-AI PROIEL Annotator | HFRI-NKUA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .annotation-token {
+            transition: all 0.2s ease;
+        }
+        .annotation-token:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .loading-spinner {
+            border: 3px solid #f3f4f6;
+            border-top: 3px solid #2563eb;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .model-checkbox:checked + label {
+            background-color: #2563eb;
+            color: white;
+            border-color: #2563eb;
+        }
+        .tooltip {
+            position: relative;
+        }
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            background-color: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            text-align: left;
+            border-radius: 6px;
+            padding: 10px 14px;
+            position: absolute;
+            z-index: 100;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 13px;
+        }
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <header class="bg-gradient-to-r from-blue-900 to-blue-700 text-white shadow-lg">
+        <div class="container mx-auto px-6 py-6">
+            <h1 class="text-3xl font-bold">AthDGC Multi-AI PROIEL Annotator</h1>
+            <p class="text-blue-100 mt-2">Professional Diachronic Linguistics Analysis Platform</p>
+            <div class="mt-3 text-sm text-blue-200">
+                <span>HFRI-NKUA Platform v3.0.0</span> |
+                <a href="/" class="hover:underline">Dashboard</a> |
+                <a href="/docs" class="hover:underline">API Documentation</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-8 max-w-7xl">
+        
+        <!-- AI Model Selection -->
+        <section class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4 text-gray-800">Select Open-Source AI Models</h2>
+            <p class="text-sm text-gray-600 mb-4">Choose multiple models for parallel processing and comparative analysis</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+                <!-- Hugging Face Models -->
+                <div class="border-2 border-green-500 rounded-lg p-4">
+                    <h3 class="font-semibold text-green-700 mb-3">Hugging Face Models</h3>
+                    <label class="flex items-center mb-2">
+                        <input type="checkbox" class="model-checkbox" value="xlm-roberta-base" checked>
+                        <span class="ml-2 text-sm">XLM-RoBERTa Base (Multilingual)</span>
+                    </label>
+                    <label class="flex items-center mb-2">
+                        <input type="checkbox" class="model-checkbox" value="mbert">
+                        <span class="ml-2 text-sm">mBERT (Google Multilingual BERT)</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" class="model-checkbox" value="xlm-mlm">
+                        <span class="ml-2 text-sm">XLM-MLM-100 (100 Languages)</span>
+                    </label>
+                </div>
+
+                <!-- Ollama Models -->
+                <div class="border-2 border-blue-500 rounded-lg p-4">
+                    <h3 class="font-semibold text-blue-700 mb-3">Ollama Local LLMs</h3>
+                    <label class="flex items-center mb-2">
+                        <input type="checkbox" class="model-checkbox" value="llama3.2" checked>
+                        <span class="ml-2 text-sm">Llama 3.2 (Meta)</span>
+                    </label>
+                    <label class="flex items-center mb-2">
+                        <input type="checkbox" class="model-checkbox" value="llama3.1">
+                        <span class="ml-2 text-sm">Llama 3.1 (Meta)</span>
+                    </label>
+                    <label class="flex items-center mb-2">
+                        <input type="checkbox" class="model-checkbox" value="mistral">
+                        <span class="ml-2 text-sm">Mistral AI</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" class="model-checkbox" value="mixtral">
+                        <span class="ml-2 text-sm">Mixtral 8x7B</span>
+                    </label>
+                </div>
+
+                <!-- Machine Learning Models -->
+                <div class="border-2 border-orange-500 rounded-lg p-4">
+                    <h3 class="font-semibold text-orange-700 mb-3">Machine Learning Models</h3>
+                    <label class="flex items-center mb-2">
+                        <input type="checkbox" class="model-checkbox" value="spacy" checked>
+                        <span class="ml-2 text-sm">spaCy (Industrial NLP)</span>
+                    </label>
+                    <label class="flex items-center mb-2">
+                        <input type="checkbox" class="model-checkbox" value="sklearn">
+                        <span class="ml-2 text-sm">Scikit-learn (Classical ML)</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" class="model-checkbox" value="ensemble">
+                        <span class="ml-2 text-sm">Ensemble (Best Accuracy)</span>
+                    </label>
+                </div>
+
+                <!-- Advanced Options -->
+                <div class="border-2 border-purple-500 rounded-lg p-4">
+                    <h3 class="font-semibold text-purple-700 mb-3">Advanced Options</h3>
+                    <label class="flex items-center mb-2">
+                        <input type="checkbox" id="parallelProcessing" checked>
+                        <span class="ml-2 text-sm">Parallel Processing</span>
+                    </label>
+                    <label class="flex items-center mb-2">
+                        <input type="checkbox" id="consensusMode">
+                        <span class="ml-2 text-sm">Consensus Analysis</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" id="compareResults" checked>
+                        <span class="ml-2 text-sm">Compare Model Results</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="flex gap-2">
+                <button onclick="selectAllModels()" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-sm">
+                    Select All
+                </button>
+                <button onclick="deselectAllModels()" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded text-sm">
+                    Deselect All
+                </button>
+                <button onclick="selectRecommended()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm">
+                    Recommended
+                </button>
+            </div>
+        </section>
+
+        <!-- Configuration -->
+        <section class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4 text-gray-800">Annotation Configuration</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Language & Period</label>
+                    <select id="languageSelect" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <optgroup label="Greek">
+                            <option value="grc-archaic">Ancient Greek (Archaic)</option>
+                            <option value="grc-classical" selected>Ancient Greek (Classical)</option>
+                            <option value="grc-hellenistic">Ancient Greek (Hellenistic)</option>
+                            <option value="grc-koine">Koine Greek</option>
+                            <option value="el">Modern Greek</option>
+                        </optgroup>
+                        <optgroup label="English">
+                            <option value="ang">Old English</option>
+                            <option value="enm">Middle English</option>
+                            <option value="en-early">Early Modern English</option>
+                            <option value="en">Modern English</option>
+                        </optgroup>
+                        <optgroup label="Latin & Romance">
+                            <option value="la">Classical Latin</option>
+                            <option value="la-vulgar">Vulgar Latin</option>
+                            <option value="fro">Old French</option>
+                            <option value="frm">Middle French</option>
+                            <option value="fr">Modern French</option>
+                        </optgroup>
+                        <optgroup label="Germanic">
+                            <option value="got">Gothic</option>
+                            <option value="non">Old Norse</option>
+                            <option value="goh">Old High German</option>
+                            <option value="gmh">Middle High German</option>
+                            <option value="de">Modern German</option>
+                        </optgroup>
+                        <optgroup label="Slavic">
+                            <option value="cu">Old Church Slavonic</option>
+                            <option value="ru">Russian</option>
+                            <option value="pl">Polish</option>
+                            <option value="cs">Czech</option>
+                        </optgroup>
+                        <optgroup label="Indo-Iranian">
+                            <option value="sa">Sanskrit</option>
+                            <option value="sa-vedic">Vedic Sanskrit</option>
+                            <option value="pi">Pali</option>
+                            <option value="fa">Persian</option>
+                        </optgroup>
+                        <optgroup label="Celtic">
+                            <option value="sga">Old Irish</option>
+                            <option value="wlm">Middle Welsh</option>
+                        </optgroup>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Detail Level</label>
+                    <select id="detailLevel" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="basic">Basic (POS + Lemma)</option>
+                        <option value="standard" selected>Standard (Morphology + Syntax)</option>
+                        <option value="full">Full PROIEL (Complete Analysis)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Framework</label>
+                    <select id="framework" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="proiel" selected>PROIEL</option>
+                        <option value="ud">Universal Dependencies</option>
+                        <option value="conll">CoNLL-U</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- Input -->
+        <section class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4 text-gray-800">Input Text</h2>
+            
+            <textarea id="inputText"
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-y min-h-32"
+                      placeholder="Enter text for annotation (e.g., Ancient Greek: Ἐν ἀρχῇ ἦν ὁ λόγος)"></textarea>
+
+            <div class="mt-4 flex flex-wrap gap-3">
+                <button id="annotateBtn" onclick="annotateText()" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium shadow-md hover:shadow-lg transition-all">
+                    Annotate with Selected Models
+                </button>
+                <button onclick="clearAll()" class="px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-medium">
+                    Clear
+                </button>
+                <button onclick="loadExample()" class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium">
+                    Load Example
+                </button>
+            </div>
+        </section>
+
+        <!-- Processing Status -->
+        <div id="processingStatus" class="hidden bg-white rounded-lg shadow-md p-6 mb-6">
+            <div class="flex items-center">
+                <div class="loading-spinner mr-4"></div>
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800">Processing with Multi-AI Engine</h3>
+                    <p class="text-sm text-gray-600" id="statusText">Initializing parallel annotation...</p>
+                    <div id="modelStatusList" class="mt-3 space-y-2"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <section id="resultsSection" class="hidden bg-white rounded-lg shadow-md p-6 mb-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold text-gray-800">Annotation Results</h2>
+                <button onclick="exportResults()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm">
+                    Export Results
+                </button>
+            </div>
+
+            <!-- View Tabs -->
+            <div class="flex gap-2 mb-4 border-b border-gray-200">
+                <button class="view-tab active px-4 py-2 text-sm font-medium border-b-2 border-blue-600 text-blue-600" data-view="comparison" onclick="switchView('comparison')">
+                    Model Comparison
+                </button>
+                <button class="view-tab px-4 py-2 text-sm font-medium border-b-2 border-transparent hover:border-gray-300" data-view="detailed" onclick="switchView('detailed')">
+                    Detailed View
+                </button>
+                <button class="view-tab px-4 py-2 text-sm font-medium border-b-2 border-transparent hover:border-gray-300" data-view="raw" onclick="switchView('raw')">
+                    Raw Data
+                </button>
+            </div>
+
+            <div id="comparisonView" class="view-content">
+                <div id="comparisonContent" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            </div>
+
+            <div id="detailedView" class="view-content hidden">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Select Model:</label>
+                    <select id="modelSelector" class="px-3 py-2 border border-gray-300 rounded-lg" onchange="updateDetailedView()"></select>
+                </div>
+                <div id="detailedContent"></div>
+            </div>
+
+            <div id="rawView" class="view-content hidden">
+                <pre id="rawData" class="bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto text-sm"></pre>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 mt-12">
+        <div class="container mx-auto px-6 py-6">
+            <div class="text-sm">
+                <p class="font-semibold">Athens Digital Glossa Chronos (AthDGC) v3.0.0</p>
+                <p class="mt-2">National and Kapodistrian University of Athens (NKUA)</p>
+                <p>Hellenic Foundation for Research and Innovation (HFRI)</p>
+                <p class="mt-2">Principal Investigator: Prof. Nikolaos Lavidas</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let currentResults = null;
+        
+        const examples = {
+            'grc-classical': 'Ἐν ἀρχῇ ἦν ὁ λόγος, καὶ ὁ λόγος ἦν πρὸς τὸν θεόν',
+            'grc-archaic': 'μῆνιν ἄειδε θεὰ Πηληϊάδεω Ἀχιλῆος',
+            'en': 'The quick brown fox jumps over the lazy dog',
+            'la': 'Gallia est omnis divisa in partes tres',
+            'fr': 'Le renard brun rapide saute par-dessus le chien paresseux'
+        };
+
+        function selectAllModels() {
+            document.querySelectorAll('.model-checkbox').forEach(cb => cb.checked = true);
+        }
+
+        function deselectAllModels() {
+            document.querySelectorAll('.model-checkbox').forEach(cb => cb.checked = false);
+        }
+
+        function selectRecommended() {
+            deselectAllModels();
+            document.querySelector('[value="xlm-roberta-base"]').checked = true;
+            document.querySelector('[value="llama3.2"]').checked = true;
+            document.querySelector('[value="spacy"]').checked = true;
+            document.querySelector('[value="ensemble"]').checked = true;
+        }
+
+        async function annotateText() {
+            const text = document.getElementById('inputText').value.trim();
+            if (!text) {
+                alert('Please enter text to annotate');
+                return;
+            }
+
+            const selectedModels = Array.from(document.querySelectorAll('.model-checkbox:checked'))
+                .map(cb => cb.value);
+            
+            if (selectedModels.length === 0) {
+                alert('Please select at least one AI model');
+                return;
+            }
+
+            const language = document.getElementById('languageSelect').value;
+            const framework = document.getElementById('framework').value;
+            const detailLevel = document.getElementById('detailLevel').value;
+
+            // Show processing
+            document.getElementById('processingStatus').classList.remove('hidden');
+            document.getElementById('resultsSection').classList.add('hidden');
+            document.getElementById('statusText').textContent = `Processing with ${selectedModels.length} models...`;
+            
+            // Show model status
+            const statusList = document.getElementById('modelStatusList');
+            statusList.innerHTML = selectedModels.map(model => 
+                `<div id="status-${model}" class="text-sm text-gray-600">
+                    <span class="inline-block w-2 h-2 bg-yellow-500 rounded-full mr-2"></span>${model}: Processing...
+                </div>`
+            ).join('');
+
+            try {
+                const response = await fetch('/api/athdgc/annotate/multi-ai', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        text: text,
+                        language: language,
+                        framework: framework,
+                        detail_level: detailLevel,
+                        models: selectedModels
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+                currentResults = data;
+                displayResults(data);
+
+            } catch (error) {
+                alert('Annotation error: ' + error.message);
+                console.error(error);
+            } finally {
+                document.getElementById('processingStatus').classList.add('hidden');
+            }
+        }
+
+        function displayResults(data) {
+            document.getElementById('resultsSection').classList.remove('hidden');
+            
+            // Populate model selector
+            const selector = document.getElementById('modelSelector');
+            selector.innerHTML = data.models_used.map(model => 
+                `<option value="${model}">${model}</option>`
+            ).join('');
+
+            // Display comparison view
+            displayComparisonView(data);
+            displayRawView(data);
+            
+            document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function displayComparisonView(data) {
+            const container = document.getElementById('comparisonContent');
+            container.innerHTML = '';
+
+            Object.entries(data.results).forEach(([model, result]) => {
+                const card = document.createElement('div');
+                card.className = 'border-2 rounded-lg p-4';
+                
+                if (result.status === 'success') {
+                    card.classList.add('border-green-500');
+                    const sentences = result.data.sentences || [];
+                    const tokensHtml = sentences.flatMap(s => s.tokens || [])
+                        .map(t => `<span class="annotation-token tooltip inline-block bg-gray-100 px-2 py-1 rounded mr-1 mb-1 cursor-pointer">
+                            ${t.form}
+                            <span class="tooltip-text">${t.lemma} (${t.pos})</span>
+                        </span>`).join('');
+                    
+                    card.innerHTML = `
+                        <h3 class="font-semibold text-green-700 mb-2">${model}</h3>
+                        <div class="text-sm">${tokensHtml || '<p class="text-gray-500">No tokens</p>'}</div>
+                    `;
+                } else {
+                    card.classList.add('border-red-500');
+                    card.innerHTML = `
+                        <h3 class="font-semibold text-red-700 mb-2">${model}</h3>
+                        <p class="text-sm text-red-600">Error: ${result.error}</p>
+                    `;
+                }
+                
+                container.appendChild(card);
+            });
+        }
+
+        function displayRawView(data) {
+            document.getElementById('rawData').textContent = JSON.stringify(data, null, 2);
+        }
+
+        function switchView(viewName) {
+            document.querySelectorAll('.view-tab').forEach(tab => {
+                if (tab.dataset.view === viewName) {
+                    tab.classList.add('active', 'border-blue-600', 'text-blue-600');
+                    tab.classList.remove('border-transparent');
+                } else {
+                    tab.classList.remove('active', 'border-blue-600', 'text-blue-600');
+                    tab.classList.add('border-transparent');
+                }
+            });
+
+            document.querySelectorAll('.view-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            document.getElementById(`${viewName}View`).classList.remove('hidden');
+        }
+
+        function loadExample() {
+            const lang = document.getElementById('languageSelect').value;
+            const example = examples[lang] || examples['grc-classical'];
+            document.getElementById('inputText').value = example;
+        }
+
+        function clearAll() {
+            document.getElementById('inputText').value = '';
+            document.getElementById('resultsSection').classList.add('hidden');
+            currentResults = null;
+        }
+
+        function exportResults() {
+            if (!currentResults) {
+                alert('No results to export');
+                return;
+            }
+
+            const blob = new Blob([JSON.stringify(currentResults, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `multi-ai-annotation-${Date.now()}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>

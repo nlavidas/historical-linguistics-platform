@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proiel>
+  <annotation>
+    <relations>
+      <value tag="sub" summary="Subject"/>
+      <value tag="obj" summary="Object"/>
+      <value tag="obl" summary="Oblique"/>
+      <value tag="pred" summary="Predicate"/>
+      <value tag="atr" summary="Attribute"/>
+      <value tag="adv" summary="Adverbial"/>
+    </relations>
+  </annotation>
+  
+  <source id="sample-greek" language="grc">
+    <title>Sample Greek Text</title>
+    <citation-part>Sample Classical Greek</citation-part>
+  </source>
+  
+  <div>
+    <!-- Sample sentence 1: Simple transitive -->
+    <sentence id="s1" status-id="reviewed">
+      <token id="t1" form="ὁ" lemma="ὁ" postag="l-s---mn-" head-id="t2" relation="atr"/>
+      <token id="t2" form="ἀνήρ" lemma="ἀνήρ" postag="n-s---mn-" head-id="t3" relation="sub"/>
+      <token id="t3" form="γράφει" lemma="γράφω" postag="v3spia---" relation="pred"/>
+      <token id="t4" form="τὸν" lemma="ὁ" postag="l-s---ma-" head-id="t5" relation="atr"/>
+      <token id="t5" form="λόγον" lemma="λόγος" postag="n-s---ma-" head-id="t3" relation="obj"/>
+    </sentence>
+    
+    <!-- Sample sentence 2: Ditransitive -->
+    <sentence id="s2" status-id="reviewed">
+      <token id="t6" form="ὁ" lemma="ὁ" postag="l-s---mn-" head-id="t7" relation="atr"/>
+      <token id="t7" form="διδάσκαλος" lemma="διδάσκαλος" postag="n-s---mn-" head-id="t8" relation="sub"/>
+      <token id="t8" form="δίδωσι" lemma="δίδωμι" postag="v3spia---" relation="pred"/>
+      <token id="t9" form="τῷ" lemma="ὁ" postag="l-s---md-" head-id="t10" relation="atr"/>
+      <token id="t10" form="μαθητῇ" lemma="μαθητής" postag="n-s---md-" head-id="t8" relation="obj"/>
+      <token id="t11" form="τὸ" lemma="ὁ" postag="l-s---na-" head-id="t12" relation="atr"/>
+      <token id="t12" form="βιβλίον" lemma="βιβλίον" postag="n-s---na-" head-id="t8" relation="obj"/>
+    </sentence>
+    
+    <!-- Sample sentence 3: Verb with oblique argument -->
+    <sentence id="s3" status-id="reviewed">
+      <token id="t13" form="ὁ" lemma="ὁ" postag="l-s---mn-" head-id="t14" relation="atr"/>
+      <token id="t14" form="στρατηγός" lemma="στρατηγός" postag="n-s---mn-" head-id="t15" relation="sub"/>
+      <token id="t15" form="πορεύεται" lemma="πορεύομαι" postag="v3spie---" relation="pred"/>
+      <token id="t16" form="εἰς" lemma="εἰς" postag="r--------" head-id="t18" relation="adv"/>
+      <token id="t17" form="τὴν" lemma="ὁ" postag="l-s---fa-" head-id="t18" relation="atr"/>
+      <token id="t18" form="πόλιν" lemma="πόλις" postag="n-s---fa-" head-id="t15" relation="obl"/>
+    </sentence>
+    
+    <!-- Sample sentence 4: Complex predicate -->
+    <sentence id="s4" status-id="reviewed">
+      <token id="t19" form="οἱ" lemma="ὁ" postag="l-p---mn-" head-id="t20" relation="atr"/>
+      <token id="t20" form="πολῖται" lemma="πολίτης" postag="n-p---mn-" head-id="t21" relation="sub"/>
+      <token id="t21" form="νομίζουσι" lemma="νομίζω" postag="v3ppia---" relation="pred"/>
+      <token id="t22" form="τὸν" lemma="ὁ" postag="l-s---ma-" head-id="t23" relation="atr"/>
+      <token id="t23" form="ἄνδρα" lemma="ἀνήρ" postag="n-s---ma-" head-id="t21" relation="obj"/>
+      <token id="t24" form="σοφὸν" lemma="σοφός" postag="a-s---ma-" head-id="t25" relation="atr"/>
+      <token id="t25" form="εἶναι" lemma="εἰμί" postag="v--pna---" head-id="t21" relation="obj"/>
+    </sentence>
+    
+    <!-- Sample sentence 5: Intransitive -->
+    <sentence id="s5" status-id="reviewed">
+      <token id="t26" form="ἡ" lemma="ὁ" postag="l-s---fn-" head-id="t27" relation="atr"/>
+      <token id="t27" form="γυνή" lemma="γυνή" postag="n-s---fn-" head-id="t28" relation="sub"/>
+      <token id="t28" form="ἔρχεται" lemma="ἔρχομαι" postag="v3spie---" relation="pred"/>
+    </sentence>
+  </div>
+</proiel>

@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AthDGC Multi-AI PROIEL Annotator - HFRI-NKUA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#5D5CDE',
+                        'primary-dark': '#4A49B8'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .annotation-token {
+            transition: all 0.2s ease;
+        }
+        .annotation-token:hover {
+            transform: translateY(-2px);
+        }
+        .loading-spinner {
+            border: 3px solid rgba(93, 92, 222, 0.1);
+            border-top: 3px solid #5D5CDE;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .tooltip {
+            position: relative;
+        }
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            background-color: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            text-align: left;
+            border-radius: 6px;
+            padding: 8px 12px;
+            position: absolute;
+            z-index: 100;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 12px;
+        }
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+        .ai-status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 4px;
+        }
+        .ai-status-pending { background-color: #fbbf24; }
+        .ai-status-processing { background-color: #3b82f6; animation: pulse 1.5s ease-in-out infinite; }
+        .ai-status-complete { background-color: #10b981; }
+        .ai-status-error { background-color: #ef4444; }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-primary to-primary-dark text-white shadow-lg">
+        <div class="container mx-auto px-4 py-6">
+            <h1 class="text-3xl md:text-4xl font-bold">🤖 AthDGC Multi-AI PROIEL Annotator</h1>
+            <p class="text-sm md:text-base mt-2 opacity-90">HFRI-NKUA Platform - Autonomous Diachronic Linguistics Analysis</p>
+            <div class="mt-2 text-sm opacity-75">
+                <a href="/" class="hover:underline">← Back to Dashboard</a> | 
+                <a href="/docs" class="hover:underline">API Docs</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="container mx-auto px-4 py-8 max-w-7xl">
+        
+        <!-- Configuration Panel -->
+        <section class="bg-gray-50 dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4 flex items-center">
+                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+                Configuration
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <!-- Language Selection -->
+                <div>
+                    <label class="block text-sm font-medium mb-2">Language & Period</label>
+                    <select id="languageSelect" class="w-full px-4 py-2 text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent">
+                        <optgroup label="Greek">
+                            <option value="grc-archaic">Ancient Greek (Archaic)</option>
+                            <option value="grc-classical" selected>Ancient Greek (Classical)</option>
+                            <option value="grc-hellenistic">Ancient Greek (Hellenistic)</option>
+                            <option value="grc-koine">Koine Greek</option>
+                            <option value="el">Modern Greek</option>
+                        </optgroup>
+                        <optgroup label="English">
+                            <option value="ang">Old English</option>
+                            <option value="enm">Middle English</option>
+                            <option value="en-early">Early Modern English</option>
+                            <option value="en">Modern English</option>
+                        </optgroup>
+                        <optgroup label="Latin & Romance">
+                            <option value="la">Classical Latin</option>
+                            <option value="la-vulgar">Vulgar Latin</option>
+                            <option value="fro">Old French</option>
+                            <option value="frm">Middle French</option>
+                            <option value="fr">Modern French</option>
+                        </optgroup>
+                        <optgroup label="Germanic">
+                            <option value="got">Gothic</option>
+                            <option value="non">Old Norse</option>
+                            <option value="goh">Old High German</option>
+                            <option value="gmh">Middle High German</option>
+                            <option value="de">Modern German</option>
+                        </optgroup>
+                        <optgroup label="Slavic">
+                            <option value="cu">Old Church Slavonic</option>
+                            <option value="ru">Russian</option>
+                            <option value="pl">Polish</option>
+                            <option value="cs">Czech</option>
+                        </optgroup>
+                        <optgroup label="Indo-Iranian">
+                            <option value="sa">Sanskrit</option>
+                            <option value="sa-vedic">Vedic Sanskrit</option>
+                            <option value="pi">Pali</option>
+                            <option value="fa">Persian</option>
+                        </optgroup>
+                        <optgroup label="Celtic">
+                            <option value="sga">Old Irish</option>
+                            <option value="wlm">Middle Welsh</option>
+                        </optgroup>
+                    </select>
+                </div>
+
+                <!-- Detail Level -->
+                <div>
+                    <label class="block text-sm font-medium mb-2">Annotation Detail</label>
+                    <select id="detailLevel" class="w-full px-4 py-2 text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent">
+                        <option value="basic">Basic (POS + Lemma)</option>
+                        <option value="standard" selected>Standard (Morphology + Syntax)</option>
+                        <option value="full">Full PROIEL (Complete)</option>
+                    </select>
+                </div>
+
+                <!-- Framework -->
+                <div>
+                    <label class="block text-sm font-medium mb-2">Annotation Framework</label>
+                    <select id="framework" class="w-full px-4 py-2 text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent">
+                        <option value="proiel" selected>PROIEL</option>
+                        <option value="ud">Universal Dependencies</option>
+                        <option value="conll">CoNLL-U</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- Input Section -->
+        <section class="bg-gray-50 dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4 flex items-center">
+                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                </svg>
+                Input Text
+            </h2>
+
+            <textarea id="inputText"
+                      class="w-full px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent resize-y min-h-32"
+                      placeholder="Enter text to annotate (e.g., 'Ἐν ἀρχῇ ἦν ὁ λόγος')"></textarea>
+
+            <div class="mt-4 flex flex-wrap gap-3">
+                <button id="annotateBtn" class="px-6 py-3 bg-primary hover:bg-primary-dark text-white rounded-lg font-medium transition-colors flex items-center shadow-md hover:shadow-lg">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                    Annotate with Multi-AI
+                </button>
+                <button id="clearBtn" class="px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white rounded-lg font-medium transition-colors flex items-center shadow-md">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                    Clear
+                </button>
+                <button id="exampleBtn" class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors flex items-center shadow-md">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                    </svg>
+                    Load Example
+                </button>
+            </div>
+        </section>
+
+        <!-- Processing Status -->
+        <div id="processingStatus" class="hidden bg-gray-50 dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+            <div class="flex items-center justify-center">
+                <div class="loading-spinner mr-4"></div>
+                <div>
+                    <h3 class="text-lg font-semibold">Processing with AthDGC Multi-AI Engine...</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400" id="statusText">Initializing analysis...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <section id="resultsSection" class="hidden bg-gray-50 dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6 fade-in">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    PROIEL Annotation Results
+                </h2>
+                <div class="flex gap-2">
+                    <button id="exportBtn" class="px-4 py-2 bg-primary hover:bg-primary-dark text-white rounded-lg font-medium transition-colors flex items-center text-sm shadow-md">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                        </svg>
+                        Export
+                    </button>
+                </div>
+            </div>
+
+            <div id="annotationContent"></div>
+        </section>
+    </main>
+
+    <script>
+        // Dark mode
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+
+        // State
+        let currentAnnotation = null;
+
+        // Examples
+        const examples = {
+            'grc-classical': 'Ἐν ἀρχῇ ἦν ὁ λόγος, καὶ ὁ λόγος ἦν πρὸς τὸν θεόν',
+            'grc-archaic': 'μῆνιν ἄειδε θεὰ Πηληϊάδεω Ἀχιλῆος',
+            'en': 'The quick brown fox jumps over the lazy dog',
+            'ang': 'Hwæt! We Gardena in geardagum',
+            'enm': 'Whan that Aprill with his shoures soote',
+            'la': 'Gallia est omnis divisa in partes tres',
+            'fr': 'Le renard brun rapide saute par-dessus le chien paresseux'
+        };
+
+        // Event listeners
+        document.getElementById('annotateBtn').addEventListener('click', annotateText);
+        document.getElementById('clearBtn').addEventListener('click', clearAll);
+        document.getElementById('exampleBtn').addEventListener('click', loadExample);
+        document.getElementById('exportBtn').addEventListener('click', exportAnnotation);
+
+        async function annotateText() {
+            const text = document.getElementById('inputText').value.trim();
+            if (!text) {
+                alert('Please enter text to annotate');
+                return;
+            }
+
+            const language = document.getElementById('languageSelect').value;
+            const framework = document.getElementById('framework').value;
+            const detailLevel = document.getElementById('detailLevel').value;
+
+            // Show processing
+            document.getElementById('processingStatus').classList.remove('hidden');
+            document.getElementById('resultsSection').classList.add('hidden');
+            document.getElementById('statusText').textContent = 'Running PROIEL processor...';
+
+            try {
+                // Call AthDGC backend
+                const formData = new FormData();
+                
+                // Create minimal PROIEL XML
+                const proielXML = createProielXML(text, language);
+                const blob = new Blob([proielXML], { type: 'text/xml' });
+                formData.append('file', blob, 'input.xml');
+
+                const response = await fetch('/api/athdgc/proiel/annotate', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Annotation failed');
+                }
+
+                currentAnnotation = await response.json();
+                displayResults(currentAnnotation);
+
+            } catch (error) {
+                alert('Error: ' + error.message);
+            } finally {
+                document.getElementById('processingStatus').classList.add('hidden');
+            }
+        }
+
+        function createProielXML(text, language) {
+            return `<?xml version="1.0" encoding="UTF-8"?>
+<proiel>
+  <source id="input" language="${language}">
+    <title>User Input</title>
+  </source>
+  <div>
+    <sentence id="s1" status-id="unannotated">
+      <token form="${text}" />
+    </sentence>
+  </div>
+</proiel>`;
+        }
+
+        function displayResults(data) {
+            const container = document.getElementById('annotationContent');
+            container.innerHTML = '';
+
+            if (!data.sentences || data.sentences.length === 0) {
+                container.innerHTML = '<p class="text-gray-500">No annotation data available</p>';
+                return;
+            }
+
+            data.sentences.forEach((sentence, idx) => {
+                const sentDiv = document.createElement('div');
+                sentDiv.className = 'bg-white dark:bg-gray-700 p-6 rounded-lg shadow-sm mb-4';
+
+                const title = document.createElement('div');
+                title.className = 'text-sm font-medium text-gray-600 dark:text-gray-400 mb-4';
+                title.textContent = `Sentence ${idx + 1}`;
+                sentDiv.appendChild(title);
+
+                const tokensContainer = document.createElement('div');
+                tokensContainer.className = 'flex flex-wrap gap-4';
+
+                sentence.tokens.forEach(token => {
+                    const tokenDiv = document.createElement('div');
+                    tokenDiv.className = 'annotation-token tooltip cursor-pointer';
+
+                    const tokenCard = document.createElement('div');
+                    tokenCard.className = 'bg-gray-50 dark:bg-gray-800 border-2 border-primary/30 rounded-lg p-3 hover:border-primary hover:shadow-md transition-all';
+
+                    const formDiv = document.createElement('div');
+                    formDiv.className = 'text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1';
+                    formDiv.textContent = token.form;
+
+                    const lemmaDiv = document.createElement('div');
+                    lemmaDiv.className = 'text-xs text-gray-600 dark:text-gray-400';
+                    lemmaDiv.textContent = `${token.lemma} (${token.pos})`;
+
+                    tokenCard.appendChild(formDiv);
+                    tokenCard.appendChild(lemmaDiv);
+
+                    const tooltip = document.createElement('span');
+                    tooltip.className = 'tooltip-text';
+                    tooltip.innerHTML = formatTooltip(token);
+
+                    tokenDiv.appendChild(tokenCard);
+                    tokenDiv.appendChild(tooltip);
+                    tokensContainer.appendChild(tokenDiv);
+                });
+
+                sentDiv.appendChild(tokensContainer);
+                container.appendChild(sentDiv);
+            });
+
+            document.getElementById('resultsSection').classList.remove('hidden');
+            document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function formatTooltip(token) {
+            let html = `<strong>${token.form}</strong><br/>`;
+            html += `Lemma: ${token.lemma}<br/>`;
+            html += `POS: ${token.pos}<br/>`;
+            
+            if (token.features && Object.keys(token.features).length > 0) {
+                html += `Features: ${Object.entries(token.features).map(([k,v]) => `${k}=${v}`).join(', ')}<br/>`;
+            }
+            
+            if (token.head !== undefined) {
+                html += `Head: ${token.head}`;
+                if (token.relation) html += ` (${token.relation})`;
+            }
+            
+            return html;
+        }
+
+        function loadExample() {
+            const lang = document.getElementById('languageSelect').value;
+            const example = examples[lang] || examples['grc-classical'];
+            document.getElementById('inputText').value = example;
+        }
+
+        function clearAll() {
+            document.getElementById('inputText').value = '';
+            document.getElementById('resultsSection').classList.add('hidden');
+            currentAnnotation = null;
+        }
+
+        function exportAnnotation() {
+            if (!currentAnnotation) {
+                alert('No annotation to export');
+                return;
+            }
+
+            const json = JSON.stringify(currentAnnotation, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'proiel-annotation.json';
+            a.click();
+            URL.createObjectURL(url);
+        }
+    </script>
+</body>
+</html>

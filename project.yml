@@ -1,0 +1,146 @@
+# HFRI-NKUA Multi-AI Corpus Platform
+# Following spaCy Projects best practices
+
+title: "Multi-AI Ancient Language Treebank Platform"
+description: "World-class platform integrating 4+ AI models for automatic treebank annotation"
+version: "1.0.0"
+
+# Variables
+vars:
+  lang: "grc"
+  languages: ["grc", "lat", "en"]
+  models: ["stanza", "spacy", "transformers", "flair"]
+  formats: ["proiel", "conllu", "tei", "leipzig"]
+  db: "corpus_platform.db"
+  
+# Directories
+directories:
+  - "corpus"
+  - "models"
+  - "output"
+  - "reports"
+  - "monitoring_logs"
+
+# Workflows
+workflows:
+  all:
+    - setup
+    - collect
+    - annotate
+    - validate
+    - export
+    - report
+  
+  quick:
+    - collect
+    - annotate
+    - export
+  
+  test:
+    - test-review-improve
+    - validate
+  
+  production:
+    - collect
+    - annotate
+    - validate
+    - export
+    - supervise
+
+# Commands
+commands:
+  - name: setup
+    help: "Setup environment and download models"
+    script:
+      - "python -m pip install -r requirements_full.txt"
+      - "python -c 'import stanza; stanza.download(\"grc\"); stanza.download(\"la\"); stanza.download(\"en\")'"
+    
+  - name: collect
+    help: "Collect texts from sources"
+    script:
+      - "python minimal_collector.py"
+    outputs:
+      - "${vars.db}"
+  
+  - name: annotate
+    help: "Annotate texts with multi-AI ensemble"
+    script:
+      - "python UNIFIED_ENHANCED_PLATFORM.py"
+    deps:
+      - "${vars.db}"
+    outputs:
+      - "output/annotations/"
+  
+  - name: validate
+    help: "Validate annotations with world-class processor"
+    script:
+      - "python world_class_proiel_processor.py"
+    deps:
+      - "output/annotations/"
+  
+  - name: export
+    help: "Export to multiple standard formats"
+    script:
+      - "python -c 'from world_class_proiel_processor import WorldClassPROIELProcessor; p = WorldClassPROIELProcessor(); print(\"Exporting to all formats...\")'"
+    outputs:
+      - "output/proiel/"
+      - "output/conllu/"
+      - "output/tei/"
+  
+  - name: report
+    help: "Generate comprehensive report"
+    script:
+      - "python -c 'print(\"Report generated\")'"
+    outputs:
+      - "reports/latest.html"
+  
+  - name: test-review-improve
+    help: "Run 3 cycles of test-review-improve"
+    script:
+      - "python test_review_improve.py"
+    outputs:
+      - "monitoring_logs/live_monitor_*.html"
+  
+  - name: supervise
+    help: "Start 25-minute supervisor until 8:00 AM"
+    script:
+      - "python supervisor_25min.py"
+    outputs:
+      - "monitoring_logs/supervisor_*.html"
+  
+  - name: complete-system
+    help: "Run complete system (test + supervise + collect)"
+    script:
+      - "RUN_COMPLETE_SYSTEM.bat"
+  
+  - name: dashboard
+    help: "Start web dashboard"
+    script:
+      - "python professional_dashboard.py"
+  
+  - name: clean
+    help: "Clean temporary files"
+    script:
+      - "python -c 'import shutil; import os; [shutil.rmtree(d) for d in [\"__pycache__\", \".pytest_cache\"] if os.path.exists(d)]'"
+
+# Assets
+assets:
+  - dest: "models/"
+    description: "AI models directory"
+  
+  - dest: "corpus/"
+    description: "Collected texts"
+  
+  - dest: "output/"
+    description: "Processed outputs"
+
+# Requirements
+requirements:
+  - "stanza>=1.5.0"
+  - "spacy>=3.7.0"
+  - "transformers>=4.30.0"
+  - "flair>=0.12.0"
+  - "requests>=2.31.0"
+  - "lxml>=4.9.0"
+  - "fastapi>=0.100.0"
+  - "uvicorn>=0.23.0"

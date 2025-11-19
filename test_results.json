@@ -1,0 +1,64 @@
+{
+  "overall_score": 12.5,
+  "components": [
+    {
+      "name": "Tokenization",
+      "score": 0.0,
+      "status": "Failed",
+      "details": "[Errno 13] Permission denied: 'Z:\\\\models\\\\stanza\\\\resources.json'",
+      "grade": "poor"
+    },
+    {
+      "name": "POS Tagging",
+      "score": 0.0,
+      "status": "Failed",
+      "details": "[Errno 13] Permission denied: 'Z:\\\\models\\\\stanza\\\\resources.json'",
+      "grade": "poor"
+    },
+    {
+      "name": "Lemmatization",
+      "score": 0.0,
+      "status": "Failed",
+      "details": "[Errno 13] Permission denied: 'Z:\\\\models\\\\stanza\\\\resources.json'",
+      "grade": "poor"
+    },
+    {
+      "name": "Morphological Analysis",
+      "score": 0.0,
+      "status": "Failed",
+      "details": "[Errno 13] Permission denied: 'Z:\\\\models\\\\stanza\\\\resources.json'",
+      "grade": "poor"
+    },
+    {
+      "name": "Dependency Parsing",
+      "score": 0.0,
+      "status": "Failed",
+      "details": "[Errno 13] Permission denied: 'Z:\\\\models\\\\stanza\\\\resources.json'",
+      "grade": "poor"
+    },
+    {
+      "name": "PROIEL Generation",
+      "score": 0.0,
+      "status": "Failed",
+      "details": "[Errno 13] Permission denied: 'Z:\\\\models\\\\stanza\\\\resources.json'",
+      "grade": "poor"
+    },
+    {
+      "name": "Valency Extraction",
+      "score": 0.0,
+      "status": "Failed",
+      "details": "[Errno 13] Permission denied: 'Z:\\\\models\\\\stanza\\\\resources.json'",
+      "grade": "poor"
+    },
+    {
+      "name": "Data Quality",
+      "score": 100.0,
+      "status": "Excellent",
+      "details": "4/4 quality checks passed",
+      "grade": "excellent"
+    }
+  ],
+  "timestamp": "2025-11-17T23:02:19.830464",
+  "details": {},
+  "processing_time": 0.33
+}
