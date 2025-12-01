@@ -22,8 +22,9 @@ def check_system_status():
     for db in databases:
         if os.path.exists(db):
             size_mb = os.path.getsize(db) / 1024 / 1024
-            print(".1f"        else:
-            print(f"❌ {db}: Not found")
+            print(f"  {db}: {size_mb:.1f} MB")
+        else:
+            print(f"  {db}: Not found")
 
     # Check monitoring status
     print("\n📈 MONITORING SYSTEM:")
