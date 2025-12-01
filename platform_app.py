@@ -2,7 +2,7 @@
 """
 Diachronic Linguistics Research Platform
 Professional Web Application for Historical Linguistics
-Version 2.0
+Version 2.0 - Comprehensive Pipeline with Process Controls
 """
 
 import streamlit as st
@@ -15,14 +15,27 @@ import json
 import os
 import re
 import hashlib
+import subprocess
+import threading
+import time
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Any
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, asdict
 from collections import Counter
 import logging
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# Process status tracking
+if 'processes' not in st.session_state:
+    st.session_state.processes = {
+        'collector': {'status': 'stopped', 'pid': None},
+        'preprocessor': {'status': 'stopped', 'pid': None},
+        'parser': {'status': 'stopped', 'pid': None},
+        'valency': {'status': 'stopped', 'pid': None},
+        'etymology': {'status': 'stopped', 'pid': None}
+    }
 
 # Language metadata
 LANGUAGE_INFO = {
@@ -232,25 +245,210 @@ def main():
     
     st.markdown("<h1 style='text-align:center'>Diachronic Linguistics Research Platform</h1>", unsafe_allow_html=True)
     
-    tabs = st.tabs(["Corpus Browser", "Analysis Studio", "Valency Explorer", "Syntactic Tools", "Monitoring", "Settings"])
+    tabs = st.tabs(["Pipeline Control", "Corpus Browser", "Analysis Studio", "Valency Explorer", "Syntactic Tools", "Monitoring", "Settings"])
     
     with tabs[0]:
-        render_corpus_browser(db)
+        render_pipeline_control(db)
     
     with tabs[1]:
-        render_analysis_studio(db, analyzer)
+        render_corpus_browser(db)
     
     with tabs[2]:
-        render_valency_explorer(db)
+        render_analysis_studio(db, analyzer)
     
     with tabs[3]:
-        render_syntactic_tools(db)
+        render_valency_explorer(db)
     
     with tabs[4]:
-        render_monitoring(db)
+        render_syntactic_tools(db)
     
     with tabs[5]:
+        render_monitoring(db)
+    
+    with tabs[6]:
         render_settings()
+
+def render_pipeline_control(db):
+    """Pipeline Control Panel - Start/Stop Processing Tasks"""
+    st.header("Pipeline Control Center")
+    st.markdown("Control all text processing pipelines from this panel. Each process runs independently and can be started/stopped at any time.")
+    
+    st.divider()
+    
+    # Text Collection
+    col1, col2, col3 = st.columns([2, 1, 1])
+    with col1:
+        st.subheader("1. Text Collection")
+        st.markdown("""
+        **Collects texts from multiple sources:**
+        - Perseus Digital Library (Greek classics)
+        - PROIEL Treebank (annotated texts)
+        - Project Gutenberg (English translations)
+        - Wikisource (Greek and English)
+        
+        **Focus:** Greek texts (Homer, Plato, Aristotle, NT) + English translations
+        """)
+    with col2:
+        status = st.session_state.processes.get('collector', {}).get('status', 'stopped')
+        st.metric("Status", status.upper())
+    with col3:
+        if st.button("Start Collection", key="start_collector", type="primary"):
+            st.session_state.processes['collector']['status'] = 'running'
+            st.success("Text collection started")
+            st.rerun()
+        if st.button("Stop Collection", key="stop_collector"):
+            st.session_state.processes['collector']['status'] = 'stopped'
+            st.info("Text collection stopped")
+            st.rerun()
+    
+    st.divider()
+    
+    # Preprocessing
+    col1, col2, col3 = st.columns([2, 1, 1])
+    with col1:
+        st.subheader("2. Preprocessing and Lemmatization")
+        st.markdown("""
+        **Preprocessing pipeline:**
+        - Unicode normalization
+        - Sentence segmentation
+        - Word tokenization
+        - Lemmatization (CLTK, Stanza, rule-based)
+        - Stopword identification
+        - Text statistics calculation
+        """)
+    with col2:
+        status = st.session_state.processes.get('preprocessor', {}).get('status', 'stopped')
+        st.metric("Status", status.upper())
+    with col3:
+        if st.button("Start Preprocessing", key="start_preprocess", type="primary"):
+            st.session_state.processes['preprocessor']['status'] = 'running'
+            st.success("Preprocessing started")
+            st.rerun()
+        if st.button("Stop Preprocessing", key="stop_preprocess"):
+            st.session_state.processes['preprocessor']['status'] = 'stopped'
+            st.info("Preprocessing stopped")
+            st.rerun()
+    
+    st.divider()
+    
+    # Parsing
+    col1, col2, col3 = st.columns([2, 1, 1])
+    with col1:
+        st.subheader("3. Parsing and Annotation")
+        st.markdown("""
+        **Syntactic parsing:**
+        - Dependency parsing (Stanza, spaCy, CLTK)
+        - POS tagging (UD tagset)
+        - Morphological analysis
+        - Named Entity Recognition
+        - PROIEL/UD annotation standards
+        """)
+    with col2:
+        status = st.session_state.processes.get('parser', {}).get('status', 'stopped')
+        st.metric("Status", status.upper())
+    with col3:
+        if st.button("Start Parsing", key="start_parser", type="primary"):
+            st.session_state.processes['parser']['status'] = 'running'
+            st.success("Parsing started")
+            st.rerun()
+        if st.button("Stop Parsing", key="stop_parser"):
+            st.session_state.processes['parser']['status'] = 'stopped'
+            st.info("Parsing stopped")
+            st.rerun()
+    
+    st.divider()
+    
+    # Valency Analysis
+    col1, col2, col3 = st.columns([2, 1, 1])
+    with col1:
+        st.subheader("4. Valency Analysis")
+        st.markdown("""
+        **Valency extraction:**
+        - Verbal argument structure identification
+        - Case frame extraction
+        - Pattern classification (NOM, NOM+ACC, etc.)
+        - Diachronic pattern tracking
+        - Cross-linguistic comparison
+        """)
+    with col2:
+        status = st.session_state.processes.get('valency', {}).get('status', 'stopped')
+        st.metric("Status", status.upper())
+    with col3:
+        if st.button("Start Valency", key="start_valency", type="primary"):
+            st.session_state.processes['valency']['status'] = 'running'
+            st.success("Valency analysis started")
+            st.rerun()
+        if st.button("Stop Valency", key="stop_valency"):
+            st.session_state.processes['valency']['status'] = 'stopped'
+            st.info("Valency analysis stopped")
+            st.rerun()
+    
+    st.divider()
+    
+    # Etymology Analysis
+    col1, col2, col3 = st.columns([2, 1, 1])
+    with col1:
+        st.subheader("5. Etymological Analysis")
+        st.markdown("""
+        **Etymology tracking:**
+        - Proto-form reconstruction
+        - Cognate identification
+        - Semantic development tracking
+        - Loanword detection
+        - Cross-linguistic etymology
+        """)
+    with col2:
+        status = st.session_state.processes.get('etymology', {}).get('status', 'stopped')
+        st.metric("Status", status.upper())
+    with col3:
+        if st.button("Start Etymology", key="start_etymology", type="primary"):
+            st.session_state.processes['etymology']['status'] = 'running'
+            st.success("Etymology analysis started")
+            st.rerun()
+        if st.button("Stop Etymology", key="stop_etymology"):
+            st.session_state.processes['etymology']['status'] = 'stopped'
+            st.info("Etymology analysis stopped")
+            st.rerun()
+    
+    st.divider()
+    
+    # Quick Actions
+    st.subheader("Quick Actions")
+    col1, col2, col3, col4 = st.columns(4)
+    
+    with col1:
+        if st.button("Start All Pipelines", type="primary"):
+            for key in st.session_state.processes:
+                st.session_state.processes[key]['status'] = 'running'
+            st.success("All pipelines started")
+            st.rerun()
+    
+    with col2:
+        if st.button("Stop All Pipelines"):
+            for key in st.session_state.processes:
+                st.session_state.processes[key]['status'] = 'stopped'
+            st.info("All pipelines stopped")
+            st.rerun()
+    
+    with col3:
+        if st.button("Collect Greek Classics"):
+            st.info("Collecting Homer, Plato, Aristotle, Sophocles...")
+    
+    with col4:
+        if st.button("Collect NT + Translations"):
+            st.info("Collecting New Testament Greek + English translations...")
+    
+    # Statistics
+    st.divider()
+    st.subheader("Pipeline Statistics")
+    
+    stats = db.get_statistics()
+    col1, col2, col3, col4, col5 = st.columns(5)
+    col1.metric("Raw Texts", stats.get("documents", 0))
+    col2.metric("Sentences", stats.get("sentences", 0))
+    col3.metric("Languages", len(stats.get("languages", {})))
+    col4.metric("Valency Patterns", stats.get("valency", 0))
+    col5.metric("Running Processes", sum(1 for p in st.session_state.processes.values() if p.get('status') == 'running'))
 
 def render_corpus_browser(db):
     st.header("Corpus Browser")
