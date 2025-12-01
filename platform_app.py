@@ -743,6 +743,7 @@ def main():
         "Semantic Roles",
         "Valency Lexicon",
         "ML Tools",
+        "Verification Queue",
         "Analytics",
         "Pipeline Control"
     ])
@@ -766,9 +767,12 @@ def main():
         render_ml_tools(db)
     
     with tabs[6]:
-        render_analytics(db)
+        render_verification_queue(db)
     
     with tabs[7]:
+        render_analytics(db)
+    
+    with tabs[8]:
         render_pipeline_control(db)
 
 
@@ -1208,9 +1212,143 @@ def render_ml_tools(db):
         st.info("LightSide integration would open here")
 
 
+def render_verification_queue(db):
+    """Human verification queue - Anti-hallucination system"""
+    st.markdown("### Verification Queue")
+    st.markdown("**Human expert review required** - All uncertain data must be verified before acceptance.")
+    
+    # Anti-hallucination rules
+    with st.expander("View Anti-Hallucination Rules"):
+        st.markdown("""
+        **STRICT RULES FOR DATA QUALITY**
+        
+        1. **Text Collection**: Only verified sources (Perseus, PROIEL, TLG)
+        2. **Lemmatization**: Threshold 95% - flag unknown lemmas
+        3. **Morphology**: Never guess - list all possibilities
+        4. **Parsing**: Threshold 85% - provide alternatives
+        5. **Semantic Roles**: Threshold 80% - flag complex predicates
+        6. **Etymology**: Threshold 70% - cite dictionaries (Beekes, Chantraine)
+        7. **Valency**: Threshold 85% - cite source sentences
+        8. **General**: When in doubt, flag for human review
+        """)
+    
+    st.markdown("---")
+    
+    # Queue statistics
+    col1, col2, col3, col4 = st.columns(4)
+    col1.metric("Pending Review", 0)
+    col2.metric("Approved Today", 0)
+    col3.metric("Rejected Today", 0)
+    col4.metric("Modified Today", 0)
+    
+    st.markdown("---")
+    
+    # Filter options
+    col1, col2, col3 = st.columns(3)
+    item_type = col1.selectbox("Item Type", [
+        "All", "lemmatization", "pos_tagging", "parsing", 
+        "semantic_role", "etymology", "valency", "text_collection"
+    ])
+    confidence = col2.selectbox("Confidence", ["All", "Low (<50%)", "Medium (50-80%)", "High (80-95%)"])
+    sort_by = col3.selectbox("Sort By", ["Confidence (Low First)", "Date (Oldest First)", "Type"])
+    
+    st.markdown("---")
+    
+    # Review interface
+    st.markdown("#### Items Requiring Your Review")
+    
+    # Sample pending items (would come from database)
+    pending_items = [
+        {
+            "id": "v001",
+            "type": "lemmatization",
+            "target": "ἤγαγεν",
+            "proposed": "ἄγω",
+            "confidence": 0.72,
+            "source": "CLTK Lemmatizer",
+            "evidence": ["Morpheus: ἄγω", "LSJ: ἄγω"]
+        },
+        {
+            "id": "v002", 
+            "type": "etymology",
+            "target": "θάλασσα",
+            "proposed": "Pre-Greek substrate",
+            "confidence": 0.65,
+            "source": "Beekes Etymology",
+            "evidence": ["No PIE etymology", "Possible Minoan origin"]
+        },
+        {
+            "id": "v003",
+            "type": "parsing",
+            "target": "τὸν ἄνδρα εἶδον",
+            "proposed": "OVS word order",
+            "confidence": 0.78,
+            "source": "Stanza Parser",
+            "evidence": ["Alternative: SVO with topicalization"]
+        }
+    ]
+    
+    if not pending_items:
+        st.success("No items pending review. All data verified.")
+    else:
+        for item in pending_items:
+            with st.container():
+                st.markdown(f"**[{item['id']}] {item['type'].upper()}**")
+                
+                col1, col2 = st.columns([3, 1])
+                
+                with col1:
+                    st.markdown(f"**Target:** `{item['target']}`")
+                    st.markdown(f"**Proposed:** `{item['proposed']}`")
+                    st.markdown(f"**Source:** {item['source']}")
+                    st.markdown(f"**Evidence:** {', '.join(item['evidence'])}")
+                
+                with col2:
+                    conf_color = "red" if item['confidence'] < 0.7 else "orange" if item['confidence'] < 0.85 else "green"
+                    st.markdown(f"**Confidence:** :{conf_color}[{item['confidence']:.0%}]")
+                
+                # Action buttons
+                col_a, col_b, col_c, col_d = st.columns(4)
+                
+                with col_a:
+                    if st.button("Approve", key=f"approve_{item['id']}", type="primary"):
+                        st.success(f"Approved: {item['id']}")
+                
+                with col_b:
+                    if st.button("Reject", key=f"reject_{item['id']}"):
+                        st.warning(f"Rejected: {item['id']}")
+                
+                with col_c:
+                    if st.button("Modify", key=f"modify_{item['id']}"):
+                        st.info("Enter corrected value below")
+                
+                with col_d:
+                    if st.button("Skip", key=f"skip_{item['id']}"):
+                        st.info("Skipped for later")
+                
+                st.markdown("---")
+    
+    # Manual entry
+    st.markdown("#### Flag Item for Review")
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        flag_type = st.selectbox("Type", ["lemmatization", "parsing", "etymology", "valency", "other"], key="flag_type")
+        flag_target = st.text_input("Target (word/phrase)", key="flag_target")
+    
+    with col2:
+        flag_issue = st.text_area("Issue Description", key="flag_issue")
+    
+    if st.button("Submit for Review", type="primary"):
+        if flag_target and flag_issue:
+            st.success(f"Flagged for review: {flag_target}")
+        else:
+            st.error("Please fill in all fields")
+
+
 def render_analytics(db):
     """Analytics dashboard"""
-    st.markdown("### 📊 Corpus Analytics")
+    st.markdown("### Corpus Analytics")
     
     # Period distribution
     st.markdown("#### Distribution by Period")
