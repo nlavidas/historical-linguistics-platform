@@ -4,8 +4,8 @@ PROIEL-Syntacticus Style Greek Corpus Platform
 Professional Diachronic Greek Linguistics Research Platform
 University of Athens - Nikolaos Lavidas
 
-Focus: All periods of Greek (Ancient → Byzantine → Medieval → Early Modern)
-Features: PROIEL annotation, Semantic Role Labeling, ML/AI, FAIR principles
+Focus: All periods of Greek (Ancient, Byzantine, Medieval, Early Modern)
+Features: PROIEL annotation, Semantic Role Labeling, ML, FAIR principles
 """
 
 import streamlit as st
@@ -18,6 +18,8 @@ import json
 import os
 import re
 import hashlib
+import secrets
+import hmac
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Any, Tuple
 from dataclasses import dataclass, field, asdict
@@ -28,22 +30,113 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # ============================================================================
-# PAGE CONFIGURATION - Professional Syntacticus-style
+# AUTHENTICATION SYSTEM
+# ============================================================================
+
+# Secure password hash (SHA-256)
+# To generate new hash: hashlib.sha256("your_password".encode()).hexdigest()
+# Default credentials - CHANGE THESE IN PRODUCTION:
+#   nlavidas / GreekCorpus2024!
+#   admin / AdminPass2024!
+ADMIN_USERS = {
+    "nlavidas": hashlib.sha256("GreekCorpus2024!".encode()).hexdigest(),
+    "admin": hashlib.sha256("AdminPass2024!".encode()).hexdigest()
+}
+
+def hash_password(password: str) -> str:
+    """Create SHA-256 hash of password"""
+    return hashlib.sha256(password.encode()).hexdigest()
+
+def verify_password(password: str, stored_hash: str) -> bool:
+    """Verify password against stored hash"""
+    return hmac.compare_digest(hash_password(password), stored_hash)
+
+def check_authentication():
+    """Authentication gate - must pass to access platform"""
+    
+    if "authenticated" not in st.session_state:
+        st.session_state.authenticated = False
+        st.session_state.username = None
+        st.session_state.login_attempts = 0
+        st.session_state.lockout_until = None
+    
+    # Check lockout
+    if st.session_state.lockout_until:
+        if datetime.now() < st.session_state.lockout_until:
+            remaining = (st.session_state.lockout_until - datetime.now()).seconds
+            st.error(f"Account locked. Try again in {remaining} seconds.")
+            st.stop()
+        else:
+            st.session_state.lockout_until = None
+            st.session_state.login_attempts = 0
+    
+    if not st.session_state.authenticated:
+        st.markdown("""
+        <style>
+            .login-container {
+                max-width: 400px;
+                margin: 100px auto;
+                padding: 40px;
+                background: white;
+                border-radius: 10px;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            }
+            .login-header {
+                text-align: center;
+                color: #1e3a5f;
+                margin-bottom: 30px;
+            }
+        </style>
+        """, unsafe_allow_html=True)
+        
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            st.markdown("## Greek Diachronic Corpus Platform")
+            st.markdown("### Secure Login")
+            st.markdown("---")
+            
+            username = st.text_input("Username", key="login_user")
+            password = st.text_input("Password", type="password", key="login_pass")
+            
+            if st.button("Login", type="primary", use_container_width=True):
+                if username in ADMIN_USERS:
+                    if verify_password(password, ADMIN_USERS[username]):
+                        st.session_state.authenticated = True
+                        st.session_state.username = username
+                        st.session_state.login_attempts = 0
+                        logger.info(f"Successful login: {username}")
+                        st.rerun()
+                
+                # Failed login
+                st.session_state.login_attempts += 1
+                logger.warning(f"Failed login attempt {st.session_state.login_attempts} for: {username}")
+                
+                if st.session_state.login_attempts >= 5:
+                    st.session_state.lockout_until = datetime.now() + timedelta(minutes=15)
+                    st.error("Too many failed attempts. Account locked for 15 minutes.")
+                else:
+                    st.error(f"Invalid credentials. {5 - st.session_state.login_attempts} attempts remaining.")
+            
+            st.markdown("---")
+            st.caption("University of Athens - Nikolaos Lavidas")
+        
+        st.stop()
+
+# ============================================================================
+# PAGE CONFIGURATION
 # ============================================================================
 
 st.set_page_config(
     page_title="Greek Diachronic Corpus Platform",
-    page_icon="🏛️",
+    page_icon="G",
     layout="wide",
     initial_sidebar_state="expanded",
     menu_items={
-        'Get Help': 'https://github.com/nlavidas/historical-linguistics-platform',
-        'Report a bug': 'https://github.com/nlavidas/historical-linguistics-platform/issues',
         'About': """
-        ## Greek Diachronic Corpus Platform
-        **Version:** 3.0.0 FAIR  
-        **Institution:** University of Athens  
-        **Principal Investigator:** Nikolaos Lavidas
+        Greek Diachronic Corpus Platform
+        Version: 3.0.0  
+        Institution: University of Athens  
+        Principal Investigator: Nikolaos Lavidas
         
         A PROIEL/Syntacticus-style platform for diachronic Greek linguistics.
         """
@@ -484,12 +577,15 @@ if 'processes' not in st.session_state:
 # ============================================================================
 
 def main():
+    # Authentication check - must pass before accessing platform
+    check_authentication()
+    
     db = get_db()
     
     # Professional Header
     st.markdown("""
     <div class="main-header">
-        <h1>🏛️ Greek Diachronic Corpus Platform</h1>
+        <h1>Greek Diachronic Corpus Platform</h1>
         <div class="subtitle">
             PROIEL-Syntacticus Style Annotation System | University of Athens
         </div>
@@ -501,8 +597,15 @@ def main():
     
     # Sidebar
     with st.sidebar:
-        st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/NKUA_logo.svg/1200px-NKUA_logo.svg.png", width=100)
         st.markdown("### Navigation")
+        st.caption(f"Logged in as: {st.session_state.get('username', 'Unknown')}")
+        
+        if st.button("Logout"):
+            st.session_state.authenticated = False
+            st.session_state.username = None
+            st.rerun()
+        
+        st.markdown("---")
         
         # Quick stats
         stats = db.get_statistics()
@@ -523,14 +626,14 @@ def main():
     
     # Main tabs
     tabs = st.tabs([
-        "🏠 Overview",
-        "📚 Corpus Browser", 
-        "🌳 Treebank Viewer",
-        "🎭 Semantic Roles",
-        "⚡ Valency Lexicon",
-        "🤖 ML & AI Tools",
-        "📊 Analytics",
-        "⚙️ Pipeline Control"
+        "Overview",
+        "Corpus Browser", 
+        "Treebank Viewer",
+        "Semantic Roles",
+        "Valency Lexicon",
+        "ML Tools",
+        "Analytics",
+        "Pipeline Control"
     ])
     
     with tabs[0]:
