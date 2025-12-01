@@ -60,7 +60,12 @@ class RepositoryCatalog:
                     'name': 'First1KGreek',
                     'url': 'https://raw.githubusercontent.com/OpenGreekAndLatin/First1KGreek/master/data/',
                     'texts': ['tlg0012/tlg001', 'tlg0012/tlg002']
-                }
+                },
+                {
+                    'name': 'Greek Tragedies (Agamemnon)',
+                    'url': 'https://www.gutenberg.org/cache/epub/',
+                    'texts': ['39536/pg39536.txt']  # Αγαμέμνων (Greek)
+                },
             ],
             'latin': [
                 {
@@ -72,13 +77,28 @@ class RepositoryCatalog:
                     'name': 'Latin Library',
                     'url': 'http://www.thelatinlibrary.com/',
                     'texts': ['caesar/gall1.shtml', 'caesar/gall2.shtml']
-                }
+                },
+                {
+                    'name': 'Boethius Latin Consolation',
+                    'url': 'https://www.gutenberg.org/cache/epub/',
+                    'texts': ['13316/pg13316.txt']
+                },
             ],
             'english': [
                 {
                     'name': 'Project Gutenberg',
                     'url': 'https://www.gutenberg.org/files/',
                     'texts': ['1342/1342-0.txt', '11/11-0.txt', '1661/1661-0.txt']  # Pride & Prejudice, Alice, Sherlock
+                },
+                {
+                    'name': 'Boethius English Translations',
+                    'url': 'https://www.gutenberg.org/files/',
+                    'texts': ['14328/14328-0.txt', '42083/42083-0.txt']
+                },
+                {
+                    'name': 'Greek Tragedies in English',
+                    'url': 'https://www.gutenberg.org/files/',
+                    'texts': ['14417/14417-0.txt', '35451/35451-0.txt', '27673/27673-0.txt']
                 }
             ]
         }
@@ -282,7 +302,9 @@ class Autonomous247Collector:
                     tokens_count INTEGER DEFAULT 0,
                     lemmas_count INTEGER DEFAULT 0,
                     pos_tags_count INTEGER DEFAULT 0,
-                    dependencies_count INTEGER DEFAULT 0
+                    dependencies_count INTEGER DEFAULT 0,
+                    treebank_quality TEXT,
+                    valency_patterns_count INTEGER DEFAULT 0
                 )
             """)
             
@@ -293,6 +315,7 @@ class Autonomous247Collector:
             dependencies_count = 0
             annotation_score = 0
             metadata_quality = 0
+            valency_patterns_count = 0
             
             if proiel_data:
                 stats = proiel_data.get('statistics', {})
@@ -300,6 +323,7 @@ class Autonomous247Collector:
                 lemmas_count = stats.get('lemmas', 0)
                 pos_tags_count = stats.get('pos_tags', 0)
                 dependencies_count = stats.get('dependencies', 0)
+                valency_patterns_count = len(proiel_data.get('valency_patterns', []))
                 
                 # Calculate annotation score
                 if tokens_count > 0:
@@ -315,14 +339,23 @@ class Autonomous247Collector:
                 if text_data.get('word_count', 0) > 0: quality_checks += 1
                 if text_data.get('date_collected'): quality_checks += 1
                 metadata_quality = (quality_checks / 4) * 100
-            
+
+            treebank_quality = 'none'
+            if tokens_count > 0 and annotation_score > 0:
+                if tokens_count >= 10000 and annotation_score >= 90.0:
+                    treebank_quality = 'excellent'
+                elif tokens_count >= 2000 and annotation_score >= 75.0:
+                    treebank_quality = 'good'
+                else:
+                    treebank_quality = 'partial'
+
             # Insert with all metrics
             cursor.execute("""
                 INSERT OR REPLACE INTO corpus_items
                 (url, title, language, content, proiel_xml, word_count, date_added, status,
                  metadata_quality, annotation_score, tokens_count, lemmas_count, 
-                 pos_tags_count, dependencies_count)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                 pos_tags_count, dependencies_count, treebank_quality, valency_patterns_count)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (
                 text_data['url'],
                 text_data['title'],
@@ -337,7 +370,9 @@ class Autonomous247Collector:
                 tokens_count,
                 lemmas_count,
                 pos_tags_count,
-                dependencies_count
+                dependencies_count,
+                treebank_quality,
+                valency_patterns_count
             ))
             
             conn.commit()
@@ -510,7 +545,7 @@ class Autonomous247Collector:
     def run_247(self, languages: List[str] = None, texts_per_cycle: int = 10, cycle_delay: int = 300):
         """Run 24/7 autonomous collection"""
         if languages is None:
-            languages = ['grc', 'lat', 'en']
+            languages = ['grc', 'lat']
         
         logger.info("="*70)
         logger.info("STARTING 24/7 AUTONOMOUS COLLECTION")
@@ -550,7 +585,7 @@ def main():
     import argparse
     
     parser = argparse.ArgumentParser(description="24/7 Autonomous Collection with PROIEL")
-    parser.add_argument('--languages', nargs='+', default=['grc', 'lat', 'en'],
+    parser.add_argument('--languages', nargs='+', default=['grc', 'lat'],
                         help='Languages to collect (default: grc lat en)')
     parser.add_argument('--texts-per-cycle', type=int, default=10,
                         help='Texts to collect per cycle (default: 10)')

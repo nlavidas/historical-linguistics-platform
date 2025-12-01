@@ -95,7 +95,10 @@ class DiachronicMultilingualCollector:
                     has_treebank BOOLEAN DEFAULT 0,
                     treebank_format TEXT,
                     annotation_date TEXT,
-                    annotation_quality REAL DEFAULT 0
+                    annotation_quality REAL DEFAULT 0,
+                    treebank_quality TEXT,
+                    contact_language TEXT,
+                    valency_patterns_count INTEGER DEFAULT 0
                 )
             """)
             
@@ -118,7 +121,10 @@ class DiachronicMultilingualCollector:
                 ('has_treebank', 'BOOLEAN DEFAULT 0'),
                 ('treebank_format', 'TEXT'),
                 ('annotation_date', 'TEXT'),
-                ('annotation_quality', 'REAL DEFAULT 0')
+                ('annotation_quality', 'REAL DEFAULT 0'),
+                ('treebank_quality', 'TEXT'),
+                ('contact_language', 'TEXT'),
+                ('valency_patterns_count', 'INTEGER DEFAULT 0'),
             ]
             
             for col_name, col_type in new_columns:
@@ -215,6 +221,16 @@ class DiachronicMultilingualCollector:
                     'diachronic_stage': 'Classical Latin (1st century BCE)',
                     'is_classical': True
                 },
+                {
+                    'url': 'https://www.gutenberg.org/cache/epub/13316/pg13316.txt',
+                    'title': 'Boethius - Consolatio Philosophiae (Latin)',
+                    'language': 'lat',
+                    'genre': 'philosophy',
+                    'period': 'Late Antique',
+                    'author': 'Boethius',
+                    'diachronic_stage': 'Late Latin (6th century CE)',
+                    'is_classical': True
+                },
             ],
             
             # CLASSICAL TEXTS - ENGLISH TRANSLATIONS (Multiple periods)
@@ -260,6 +276,73 @@ class DiachronicMultilingualCollector:
                     'is_retranslation': True,
                     'original_language': 'grc',
                     'diachronic_stage': 'Modern English (19th century)'
+                },
+                {
+                    'url': 'https://www.gutenberg.org/cache/epub/14417/pg14417.txt',
+                    'title': 'Aeschylus - Agamemnon (English translation)',
+                    'language': 'en',
+                    'genre': 'tragedy',
+                    'period': 'Modern',
+                    'author': 'Aeschylus',
+                    'translator': 'E. D. A. Morshead',
+                    'is_classical': True,
+                    'is_retranslation': True,
+                    'original_language': 'grc',
+                    'diachronic_stage': 'Modern English (19th century)'
+                },
+                {
+                    'url': 'https://www.gutenberg.org/cache/epub/27673/pg27673.txt',
+                    'title': 'Sophocles - Oedipus King of Thebes (English translation)',
+                    'language': 'en',
+                    'genre': 'tragedy',
+                    'period': 'Modern',
+                    'author': 'Sophocles',
+                    'translator': 'Gilbert Murray',
+                    'is_classical': True,
+                    'is_retranslation': True,
+                    'original_language': 'grc',
+                    'diachronic_stage': 'Modern English (20th century)'
+                },
+                {
+                    'url': 'https://www.gutenberg.org/cache/epub/35451/pg35451.txt',
+                    'title': 'Euripides - Medea (English translation)',
+                    'language': 'en',
+                    'genre': 'tragedy',
+                    'period': 'Modern',
+                    'author': 'Euripides',
+                    'translator': 'Gilbert Murray',
+                    'is_classical': True,
+                    'is_retranslation': True,
+                    'original_language': 'grc',
+                    'diachronic_stage': 'Modern English (20th century)'
+                },
+                {
+                    'url': 'https://www.gutenberg.org/cache/epub/14328/pg14328.txt',
+                    'title': 'Boethius - The Consolation of Philosophy (English)',
+                    'language': 'en',
+                    'genre': 'philosophy',
+                    'period': 'Modern',
+                    'author': 'Boethius',
+                    'translator': 'H. R. James',
+                    'translation_year': 1897,
+                    'is_classical': True,
+                    'is_retranslation': True,
+                    'original_language': 'lat',
+                    'diachronic_stage': 'Modern English (19th century)'
+                },
+                {
+                    'url': 'https://www.gutenberg.org/cache/epub/42083/pg42083.txt',
+                    'title': "Chaucer - Translation of Boethius's 'De Consolatione Philosophiae'",
+                    'language': 'enm',
+                    'genre': 'philosophy',
+                    'period': 'Medieval',
+                    'author': 'Boethius',
+                    'translator': 'Geoffrey Chaucer',
+                    'translation_year': 1380,
+                    'is_classical': True,
+                    'is_retranslation': True,
+                    'original_language': 'lat',
+                    'diachronic_stage': 'Middle English (14th century)'
                 },
             ],
             

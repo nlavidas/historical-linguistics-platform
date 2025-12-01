@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diachronic Corpus – Quality Control Console</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 24px;
+      background: #0f172a;
+      color: #e5e7eb;
+      font-size: 18px;
+      line-height: 1.6;
+    }
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 0.25rem;
+    }
+    .subtitle {
+      font-size: 0.95rem;
+      color: #9ca3af;
+      margin-bottom: 1.5rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+      align-items: flex-start;
+    }
+    .card {
+      background: #020617;
+      border-radius: 14px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.6);
+      padding: 18px 20px 20px;
+      border: 1px solid #1f2937;
+    }
+    .card h2 {
+      font-size: 1.3rem;
+      margin: 0 0 0.75rem;
+    }
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 1rem;
+      margin: 3px 0;
+    }
+    .stat-label { color: #9ca3af; }
+    .stat-value { font-weight: 600; }
+    .big-number {
+      font-size: 2.0rem;
+      font-weight: 700;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+      margin-top: 0.5rem;
+    }
+    th, td {
+      padding: 4px 6px;
+      border-bottom: 1px solid #1f2937;
+    }
+    th {
+      text-align: left;
+      color: #9ca3af;
+      font-weight: 500;
+    }
+    .qc-note {
+      margin-top: 8px;
+      font-size: 0.9rem;
+      color: #9ca3af;
+    }
+    .footer {
+      margin-top: 24px;
+      font-size: 0.85rem;
+      color: #6b7280;
+    }
+    .badge-ok {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: #16a34a33;
+      color: #4ade80;
+      font-size: 0.8rem;
+    }
+    .badge-warn {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: #f9731633;
+      color: #fed7aa;
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Diachronic Corpus – Quality Control Console</h1>
+  <div class="subtitle">Snapshot generated on 2025-11-21 01:31:53. Use this view to supervise metadata and treebank quality, layer by layer.</div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Corpus overview</h2>
+      <div class="stat-row"><span class="stat-label">Total texts</span><span class="stat-value">16</span></div>
+      <div class="stat-row"><span class="stat-label">Total words</span><span class="stat-value">2,725,518</span></div>
+      <div class="stat-row"><span class="stat-label">Avg. metadata quality</span><span class="stat-value">75.0%</span></div>
+      <div class="stat-row"><span class="stat-label">Avg. annotation score</span><span class="stat-value">8.3%</span></div>
+    </div>
+
+    <div class="card">
+      <h2>Processing pipeline coverage</h2>
+      <div class="stat-row"><span class="stat-label">Sentence segmentation</span><span class="stat-value big-number">–</span></div>
+      <div class="stat-row"><span class="stat-label">POS tagging</span><span class="stat-value big-number">–</span></div>
+      <div class="stat-row"><span class="stat-label">Lemmatization</span><span class="stat-value big-number">–</span></div>
+      <div class="stat-row"><span class="stat-label">Dependency parsing</span><span class="stat-value big-number">–</span></div>
+      <p class="qc-note">No evaluation report yet. Run the full professional cycle or evaluate_metadata_and_annotations.py.</p>
+    </div>
+
+    <div class="card">
+      <h2>Texts by language</h2>
+      <table>
+        <thead><tr><th>Language</th><th>Texts</th><th>Words</th></tr></thead>
+        <tbody>
+          <tr><td>en</td><td>12</td><td>1,681,414</td></tr><tr><td>grc</td><td>4</td><td>1,044,104</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>Treebank quality by language</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Lang</th>
+            <th>Excellent</th>
+            <th>Good</th>
+            <th>Partial</th>
+            <th>None</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>en</td><td>0</td><td>0</td><td>2</td><td>10</td></tr><tr><td>grc</td><td>0</td><td>0</td><td>0</td><td>4</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>Texts needing attention</h2>
+      <p class="qc-note">Low metadata quality or weak treebank; Greek and Latin are prioritised to appear first.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Lang</th>
+            <th>Title</th>
+            <th>Words</th>
+            <th>Meta %</th>
+            <th>Annot %</th>
+            <th>Diachronic stage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>64</td><td>grc</td><td>text?doc=Perseus:text:1999.01.0134</td><td style='text-align:right'>4,990</td><td style='text-align:right'>0.0%</td><td style='text-align:right'>0.0%</td><td></td></tr><tr><td>16</td><td>grc</td><td>Homer - Iliad (Greek)</td><td style='text-align:right'>6,204</td><td style='text-align:right'>100.0%</td><td style='text-align:right'>0.0%</td><td>Archaic Greek (8th century BCE)</td></tr><tr><td>17</td><td>grc</td><td>New Testament - Greek (Westcott-Hort)</td><td style='text-align:right'>1,026,945</td><td style='text-align:right'>100.0%</td><td style='text-align:right'>0.0%</td><td>Koine Greek (1st century CE)</td></tr><tr><td>22</td><td>grc</td><td>Homer - Odyssey (Greek)</td><td style='text-align:right'>5,965</td><td style='text-align:right'>100.0%</td><td style='text-align:right'>0.0%</td><td>Archaic Greek (8th century BCE)</td></tr><tr><td>67</td><td>en</td><td>1342-0.txt</td><td style='text-align:right'>16,276</td><td style='text-align:right'>0.0%</td><td style='text-align:right'>0.0%</td><td></td></tr><tr><td>68</td><td>en</td><td>11-0.txt</td><td style='text-align:right'>18,511</td><td style='text-align:right'>0.0%</td><td style='text-align:right'>0.0%</td><td></td></tr><tr><td>70</td><td>en</td><td>1661-0.txt</td><td style='text-align:right'>17,968</td><td style='text-align:right'>0.0%</td><td style='text-align:right'>0.0%</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="footer">
+    This console is generated from corpus_platform.db and the latest evaluation report
+    (if available). It is designed for manual supervision and research decisions,
+    not for any one specific AI provider.
+  </div>
+</body>
+</html>

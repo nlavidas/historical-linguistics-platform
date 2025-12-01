@@ -1,0 +1,283 @@
+#!/usr/bin/env python3
+"""Windsurf-style Control Panel for Diachronic Corpus Platform.
+
+This generates an HTML control panel similar to Windsurf, with clear buttons
+and sections for all major platform functions. Run this to create the HTML,
+then open it in a browser. It's designed for manual supervision and control.
+
+Run:
+    python windsurf_control_panel.py
+
+Outputs:
+    research_exports/visual_reports/windsurf_control_panel.html
+"""
+
+import json
+import logging
+import sqlite3
+from datetime import datetime
+from pathlib import Path
+from typing import Dict, List
+
+ROOT = Path(__file__).parent
+DB_PATH = ROOT / "corpus_platform.db"
+VIS_DIR = ROOT / "research_exports" / "visual_reports"
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+)
+logger = logging.getLogger("windsurf_control_panel")
+
+
+def get_corpus_stats() -> Dict:
+    """Get quick corpus statistics."""
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cur = conn.cursor()
+        cur.execute("SELECT COUNT(*), SUM(word_count) FROM corpus_items")
+        total_texts, total_words = cur.fetchone()
+        cur.execute("SELECT language, COUNT(*) FROM corpus_items GROUP BY language")
+        langs = {row[0]: row[1] for row in cur.fetchall()}
+        conn.close()
+        return {
+            "total_texts": total_texts or 0,
+            "total_words": total_words or 0,
+            "languages": langs,
+        }
+    except Exception as e:
+        logger.warning("Could not get corpus stats: %s", e)
+        return {"total_texts": 0, "total_words": 0, "languages": {}}
+
+
+def get_recent_reports() -> Dict[str, List[str]]:
+    """Get list of recent reports."""
+    reports = {}
+    for subdir, glob_pattern in [
+        ("visual_reports", "quality_control_dashboard_*.html"),
+        ("agent_reports", "agent_report_*.md"),
+        ("night_reports", "cycle_*.txt"),
+    ]:
+        dir_path = ROOT / "research_exports" / subdir
+        if dir_path.exists():
+            files = sorted(dir_path.glob(glob_pattern), reverse=True)[:3]
+            reports[subdir] = [f.name for f in files]
+        else:
+            reports[subdir] = []
+    return reports
+
+
+def generate_html(stats: Dict, reports: Dict[str, List[str]]) -> str:
+    """Generate the Windsurf-style HTML control panel."""
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    lang_rows = []
+    for lang, count in stats["languages"].items():
+        lang_rows.append(f"<tr><td>{lang}</td><td>{count}</td></tr>")
+
+    qc_reports = "\n".join([f"<li><a href='quality_control_dashboard_*.html'>{f}</a></li>" for f in reports["visual_reports"]])
+    agent_reports = "\n".join([f"<li><a href='agent_report_*.md'>{f}</a></li>" for f in reports["agent_reports"]])
+    night_reports = "\n".join([f"<li><a href='cycle_*.txt'>{f}</a></li>" for f in reports["night_reports"]])
+
+    html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diachronic Corpus – Windsurf Control Panel</title>
+  <style>
+    body {{
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 24px;
+      background: #0f172a;
+      color: #e5e7eb;
+      font-size: 18px;
+      line-height: 1.6;
+    }}
+    h1 {{
+      font-size: 2.2rem;
+      margin-bottom: 0.25rem;
+    }}
+    .subtitle {{
+      font-size: 0.95rem;
+      color: #9ca3af;
+      margin-bottom: 1.5rem;
+    }}
+    .grid {{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 24px;
+      align-items: flex-start;
+    }}
+    .card {{
+      background: #020617;
+      border-radius: 14px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.6);
+      padding: 18px 20px 20px;
+      border: 1px solid #1f2937;
+    }}
+    .card h2 {{
+      font-size: 1.3rem;
+      margin: 0 0 0.75rem;
+    }}
+    .stat-row {{
+      display: flex;
+      justify-content: space-between;
+      font-size: 1rem;
+      margin: 3px 0;
+    }}
+    .stat-label {{ color: #9ca3af; }}
+    .stat-value {{ font-weight: 600; }}
+    .big-number {{
+      font-size: 2.0rem;
+      font-weight: 700;
+    }}
+    button {{
+      background: #3b82f6;
+      color: white;
+      border: none;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin: 5px;
+      width: 100%;
+      text-align: left;
+    }}
+    button:hover {{
+      background: #2563eb;
+    }}
+    a {{
+      color: #60a5fa;
+      text-decoration: none;
+    }}
+    a:hover {{
+      text-decoration: underline;
+    }}
+    table {{
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+      margin-top: 0.5rem;
+    }}
+    th, td {{
+      padding: 4px 6px;
+      border-bottom: 1px solid #1f2937;
+    }}
+    th {{
+      text-align: left;
+      color: #9ca3af;
+      font-weight: 500;
+    }}
+    .footer {{
+      margin-top: 24px;
+      font-size: 0.85rem;
+      color: #6b7280;
+    }}
+  </style>
+</head>
+<body>
+  <h1>Diachronic Corpus – Windsurf Control Panel</h1>
+  <div class="subtitle">Control center for autonomous diachronic linguistics platform. Generated on {now}.</div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Corpus Overview</h2>
+      <div class="stat-row"><span class="stat-label">Total Texts</span><span class="stat-value">{stats['total_texts']:,}</span></div>
+      <div class="stat-row"><span class="stat-label">Total Words</span><span class="stat-value">{stats['total_words']:,}</span></div>
+      <table>
+        <thead><tr><th>Language</th><th>Texts</th></tr></thead>
+        <tbody>
+          {''.join(lang_rows)}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>Autonomous Operations</h2>
+      <p>Run these to start the platform's autonomous workflows:</p>
+      <button onclick="runCommand('python3 run_professional_cycle.py')">🚀 Run Full Professional Cycle (Night Mode)</button>
+      <button onclick="runCommand('python3 autonomous_night_operation.py')">🌙 Start Night Supervisor Only</button>
+      <button onclick="runCommand('python3 autonomous_247_collection.py --languages grc lat en --texts-per-cycle 10 --cycle-delay 300')">📚 Start 24/7 Collection</button>
+      <button onclick="runCommand('python3 annotation_worker_247.py')">🧠 Start Annotation Worker</button>
+      <button onclick="runCommand('python3 professional_dashboard.py')">📊 Start HTTP Dashboard</button>
+    </div>
+
+    <div class="card">
+      <h2>Visualization & Reports</h2>
+      <p>Generate and view dashboards:</p>
+      <button onclick="runCommand('python3 generate_quality_control_dashboard.py')">🎛️ Generate QC Dashboard</button>
+      <button onclick="runCommand('python3 generate_annotation_visualizations.py')">📈 Generate Charts Dashboard</button>
+      <button onclick="runCommand('python3 diachronic_research_agent.py')">🤖 Generate Research Agent Report</button>
+      <h3>Recent QC Dashboards</h3>
+      <ul>{qc_reports}</ul>
+      <h3>Recent Agent Reports</h3>
+      <ul>{agent_reports}</ul>
+      <h3>Recent Night Reports</h3>
+      <ul>{night_reports}</ul>
+    </div>
+
+    <div class="card">
+      <h2>Exports & Integrations</h2>
+      <p>Export corpus to external tools:</p>
+      <button onclick="runCommand('python3 export_for_corpusexplorer.py')">📊 Export to CorpusExplorer</button>
+      <button onclick="runCommand('python3 export_for_txm.py')">📖 Export to TXM (TEI)</button>
+      <button onclick="runCommand('python3 export_for_huggingface.py')">🤗 Export to Hugging Face Format</button>
+      <button onclick="runCommand('python3 export_for_obsidian.py')">📝 Export to Obsidian Markdown</button>
+      <button onclick="runCommand('python3 run_multi_ai_on_latest.py')">🤖 Run Multi-AI Annotation</button>
+      <button onclick="runCommand('python3 evaluate_metadata_and_annotations.py')">📊 Run Evaluation</button>
+    </div>
+
+    <div class="card">
+      <h2>Utilities</h2>
+      <p>Maintenance and diagnostics:</p>
+      <button onclick="runCommand('python3 preprocess_texts.py')">🔧 Run Text Preprocessing</button>
+      <button onclick="runCommand('python3 check_results.py')">✅ Check System Status</button>
+      <button onclick="runCommand('python3 generate_daily_summary.py')">📋 Generate Daily Summary</button>
+      <button onclick="runCommand('python3 diagnose_and_fix.py')">🔍 Diagnose & Fix Issues</button>
+    </div>
+
+    <div class="card">
+      <h2>Platform Status</h2>
+      <p>Current state and options:</p>
+      <div class="stat-row"><span class="stat-label">VM Location</span><span class="stat-value">OVH Public Cloud</span></div>
+      <div class="stat-row"><span class="stat-label">Focus Languages</span><span class="stat-value">Greek, Latin, English</span></div>
+      <div class="stat-row"><span class="stat-label">Annotation Priority</span><span class="stat-value">Greek & Latin First</span></div>
+      <div class="stat-row"><span class="stat-label">Railway Worker</span><span class="stat-value">Optional (Paused)</span></div>
+      <div class="stat-row"><span class="stat-label">Night Cycle End</span><span class="stat-value">08:00 Greece Time</span></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    This control panel is for manual supervision of the autonomous diachronic linguistics platform.
+    Built with open-source tools (Python, SQLite, Stanza, PROIEL, Chart.js).
+  </div>
+
+  <script>
+    function runCommand(cmd) {{
+      // For now, just alert the command - in a real web interface, this would call a backend
+      alert('To run: ' + cmd + '\\n\\nCopy this to your terminal on the VM.');
+    }}
+  </script>
+</body>
+</html>
+"""
+    return html
+
+
+def main() -> None:
+    VIS_DIR.mkdir(parents=True, exist_ok=True)
+
+    stats = get_corpus_stats()
+    reports = get_recent_reports()
+
+    html = generate_html(stats, reports)
+    out_path = VIS_DIR / "windsurf_control_panel.html"
+    out_path.write_text(html, encoding="utf-8")
+
+    logger.info("Windsurf control panel generated at %s", out_path)
+
+
+if __name__ == "__main__":
+    main()

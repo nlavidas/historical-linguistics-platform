@@ -46,7 +46,7 @@ logging.basicConfig(
 
 logger = logging.getLogger("annotation_worker")
 
-SUPPORTED_LANGS = {"grc", "lat", "en"}
+SUPPORTED_LANGS = {"grc", "lat"}
 
 
 class AnnotationWorker:
@@ -116,11 +116,28 @@ class AnnotationWorker:
                 ("treebank_format", "TEXT"),
                 ("annotation_date", "TEXT"),
                 ("annotation_quality", "REAL DEFAULT 0"),
+                ("treebank_quality", "TEXT"),
+                ("valency_patterns_count", "INTEGER DEFAULT 0"),
             ]
 
             for name, col_type in extra_cols:
                 if name not in existing_cols:
                     cur.execute(f"ALTER TABLE corpus_items ADD COLUMN {name} {col_type}")
+
+            # Backfill treebank_quality for any existing rows using simple thresholds
+            # on tokens_count and annotation_score so older annotations are classified.
+            cur.execute(
+                """
+                UPDATE corpus_items
+                SET treebank_quality = CASE
+                    WHEN tokens_count >= 10000 AND annotation_score >= 90 THEN 'excellent'
+                    WHEN tokens_count >= 2000 AND annotation_score >= 75 THEN 'good'
+                    WHEN tokens_count > 0 AND annotation_score > 0 THEN 'partial'
+                    ELSE 'none'
+                END
+                WHERE treebank_quality IS NULL OR treebank_quality = ''
+                """
+            )
 
             conn.commit()
             conn.close()
@@ -171,7 +188,7 @@ class AnnotationWorker:
               AND language IN ({placeholders})
               AND content IS NOT NULL
               AND LENGTH(content) > 500
-            ORDER BY date_added DESC
+            ORDER BY word_count ASC, date_added ASC
             LIMIT ?
             """,
             params,
@@ -223,6 +240,16 @@ class AnnotationWorker:
                 dep_cov = (dependencies / tokens) * 100
                 annotation_score = (lemma_cov + pos_cov + dep_cov) / 3
 
+            if tokens > 0 and annotation_score > 0:
+                if tokens >= 10000 and annotation_score >= 90.0:
+                    treebank_quality = "excellent"
+                elif tokens >= 2000 and annotation_score >= 75.0:
+                    treebank_quality = "good"
+                else:
+                    treebank_quality = "partial"
+            else:
+                treebank_quality = "none"
+
             # Simple metadata quality: title + language + word_count + date
             quality_checks = 0
             if title:
@@ -249,6 +276,7 @@ class AnnotationWorker:
                     treebank_format = 'proiel',
                     annotation_date = ?,
                     annotation_quality = ?,
+                    treebank_quality = ?,
                     status = COALESCE(status, 'completed')
                 WHERE id = ?
                 """,
@@ -261,6 +289,7 @@ class AnnotationWorker:
                     dependencies,
                     datetime.now().isoformat(),
                     metadata_quality,
+                    treebank_quality,
                     item_id,
                 ),
             )

@@ -1,0 +1,15 @@
+[Unit]
+Description=Corpus Platform Web Panel
+After=network.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/ubuntu/corpus_platform
+EnvironmentFile=/home/ubuntu/corpus_platform/.env
+ExecStartPre=/usr/bin/find /home/ubuntu/corpus_platform/automation_outputs/ -name '*.json' -mtime +7 -delete
+ExecStartPre=/usr/bin/find /home/ubuntu/panel.log* -mtime +30 -delete
+ExecStart=/usr/bin/python3 /home/ubuntu/corpus_platform/unified_web_panel.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

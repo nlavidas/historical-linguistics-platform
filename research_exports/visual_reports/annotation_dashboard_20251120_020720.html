@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Annotation & Metadata Quality Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f7fb;
+            color: #1f2933;
+        }
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+        .subtitle {
+            font-size: 0.95rem;
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+        .card {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(15,23,42,0.08);
+            padding: 16px 20px 20px;
+        }
+        .card h2 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            margin: 2px 0;
+        }
+        .footer {
+            margin-top: 24px;
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+        canvas {
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Annotation & Metadata Quality Dashboard</h1>
+    <div class="subtitle">Diachronic Multilingual Corpus – generated on 2025-11-20 02:07:20</div>
+
+    <div class="grid">
+        <div class="card">
+            <h2>Corpus Overview</h2>
+            <div class="stat-row"><span>Total texts</span><span id="stat-total"></span></div>
+            <div class="stat-row"><span>Total words</span><span id="stat-words"></span></div>
+            <div class="stat-row"><span>Annotated (PROIEL)</span><span id="stat-annotated"></span></div>
+            <div class="stat-row"><span>Not annotated</span><span id="stat-not-annotated"></span></div>
+            <div class="stat-row"><span>Avg. metadata quality</span><span id="stat-avg-meta"></span></div>
+            <div class="stat-row"><span>Avg. annotation score</span><span id="stat-avg-annot"></span></div>
+        </div>
+
+        <div class="card">
+            <h2>Texts by Language</h2>
+            <canvas id="langChart"></canvas>
+        </div>
+
+        <div class="card">
+            <h2>Status Distribution</h2>
+            <canvas id="statusChart"></canvas>
+        </div>
+
+        <div class="card">
+            <h2>Metadata vs Annotation (by Language)</h2>
+            <canvas id="qualityChart"></canvas>
+        </div>
+
+        <div class="card">
+            <h2>Evaluation Coverage (Multi-AI)</h2>
+            <canvas id="coverageChart"></canvas>
+            <p style="font-size:0.8rem;color:#6b7280;margin-top:8px;" id="coverage-note"></p>
+        </div>
+    </div>
+
+    <div class="footer">
+        Generated from corpus_platform.db .<br>
+        Use this dashboard to decide which languages, periods and texts to improve next.
+    </div>
+
+    <script>
+        const DATA = {"corpus": {"total_texts": 16, "total_words": 2725518, "avg_metadata": 75.0, "avg_annotation": 8.333333333333334, "by_language": [{"language": "en", "count": 12, "avg_metadata": 75.0, "avg_annotation": 11.111111111111112}, {"language": "grc", "count": 4, "avg_metadata": 75.0, "avg_annotation": 0.0}], "by_status": {"collected": 10, "completed": 2, "pending": 4}, "annotated": 2, "not_annotated": 14}, "eval": {"has_eval": false, "avg_meta_completeness": 0.0, "coverage_counts": {}, "total_eval": 0}};
+
+        function formatInt(x) {
+            return x.toLocaleString('en-US');
+        }
+
+        // Overview stats
+        document.getElementById('stat-total').textContent = formatInt(DATA.corpus.total_texts || 0);
+        document.getElementById('stat-words').textContent = formatInt(DATA.corpus.total_words || 0);
+        document.getElementById('stat-annotated').textContent = formatInt(DATA.corpus.annotated || 0);
+        document.getElementById('stat-not-annotated').textContent = formatInt(DATA.corpus.not_annotated || 0);
+        document.getElementById('stat-avg-meta').textContent = (DATA.corpus.avg_metadata || 0).toFixed(1) + '%';
+        document.getElementById('stat-avg-annot').textContent = (DATA.corpus.avg_annotation || 0).toFixed(1) + '%';
+
+        // Language chart
+        const langCtx = document.getElementById('langChart').getContext('2d');
+        const langs = DATA.corpus.by_language.map(x => x.language || 'unknown');
+        const langCounts = DATA.corpus.by_language.map(x => x.count);
+
+        new Chart(langCtx, {
+            type: 'bar',
+            data: {
+                labels: langs,
+                datasets: [{
+                    label: 'Texts',
+                    data: langCounts,
+                    backgroundColor: 'rgba(37, 99, 235, 0.7)'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        // Status chart
+        const statusCtx = document.getElementById('statusChart').getContext('2d');
+        const statusLabels = Object.keys(DATA.corpus.by_status || {});
+        const statusValues = statusLabels.map(k => DATA.corpus.by_status[k]);
+
+        new Chart(statusCtx, {
+            type: 'pie',
+            data: {
+                labels: statusLabels,
+                datasets: [{
+                    data: statusValues,
+                    backgroundColor: [
+                        'rgba(16, 185, 129, 0.8)',
+                        'rgba(59, 130, 246, 0.8)',
+                        'rgba(234, 179, 8, 0.8)',
+                        'rgba(239, 68, 68, 0.8)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { position: 'bottom' } }
+            }
+        });
+
+        // Quality by language
+        const qualCtx = document.getElementById('qualityChart').getContext('2d');
+        const avgMetaByLang = DATA.corpus.by_language.map(x => x.avg_metadata);
+        const avgAnnotByLang = DATA.corpus.by_language.map(x => x.avg_annotation);
+
+        new Chart(qualCtx, {
+            type: 'bar',
+            data: {
+                labels: langs,
+                datasets: [
+                    {
+                        label: 'Metadata %',
+                        data: avgMetaByLang,
+                        backgroundColor: 'rgba(16, 185, 129, 0.7)'
+                    },
+                    {
+                        label: 'Annotation %',
+                        data: avgAnnotByLang,
+                        backgroundColor: 'rgba(239, 68, 68, 0.7)'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true, max: 100 }
+                }
+            }
+        });
+
+        // Evaluation coverage chart
+        const evalData = DATA.eval || {};
+        const covCtx = document.getElementById('coverageChart').getContext('2d');
+
+        if (evalData.has_eval) {
+            const covLabels = Object.keys(evalData.coverage_counts || {});
+            const covValues = covLabels.map(k => evalData.coverage_counts[k]);
+
+            new Chart(covCtx, {
+                type: 'bar',
+                data: {
+                    labels: covLabels,
+                    datasets: [{
+                        label: 'Items with feature',
+                        data: covValues,
+                        backgroundColor: 'rgba(139, 92, 246, 0.8)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+
+            document.getElementById('coverage-note').textContent =
+                'Based on ' + evalData.total_eval + ' evaluated items; avg metadata completeness ' +
+                evalData.avg_meta_completeness.toFixed(2);
+        } else {
+            document.getElementById('coverage-note').textContent =
+                'No evaluation report found yet. Run evaluate_metadata_and_annotations.py first or let the full professional cycle finish.';
+        }
+    </script>
+</body>
+</html>

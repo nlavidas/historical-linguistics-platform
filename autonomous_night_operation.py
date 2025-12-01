@@ -102,8 +102,9 @@ class AutonomousNightManager:
         
         try:
             logger.info("Starting dashboard...")
+            python_exe = sys.executable or 'python3'
             self.dashboard_process = subprocess.Popen(
-                ['python', 'professional_dashboard.py'],
+                [python_exe, 'professional_dashboard.py'],
                 cwd=Path(__file__).parent,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
@@ -127,8 +128,9 @@ class AutonomousNightManager:
         """Start 24/7 collection if not running"""
         try:
             logger.info("Starting 24/7 collection...")
+            python_exe = sys.executable or 'python3'
             self.collection_process = subprocess.Popen(
-                ['python', 'autonomous_247_collection.py', 
+                [python_exe, 'autonomous_247_collection.py', 
                  '--languages', 'grc', 'lat', 'en',
                  '--texts-per-cycle', '10',
                  '--cycle-delay', '300'],
@@ -150,8 +152,9 @@ class AutonomousNightManager:
         """Start 24/7 annotation worker if not running"""
         try:
             logger.info("Starting annotation worker...")
+            python_exe = sys.executable or 'python3'
             self.annotation_process = subprocess.Popen(
-                ['python', 'annotation_worker_247.py'],
+                [python_exe, 'annotation_worker_247.py'],
                 cwd=Path(__file__).parent,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
@@ -490,6 +493,7 @@ class AutonomousNightManager:
         report.append("="*80)
         report.append(f"Dashboard:    {'✓ Running' if health['dashboard_running'] else '✗ Not running'}")
         report.append(f"Collection:   {'✓ Running' if health['collection_running'] else '✗ Not running'}")
+        report.append(f"Annotation:   {'✓ Running' if health.get('annotation_running') else '✗ Not running'}")
         report.append(f"Database:     {'✓ Accessible' if health['database_accessible'] else '✗ Not accessible'}")
         report.append(f"Disk Space:   {'✓ OK' if health['disk_space_ok'] else '✗ Low'}")
         report.append("")

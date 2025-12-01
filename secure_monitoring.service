@@ -1,0 +1,28 @@
+[Unit]
+Description=Secure Corpus Platform Monitoring with SMS Alerts
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/corpus_platform
+ExecStart=/usr/bin/python3 /home/ubuntu/corpus_platform/secure_monitoring_service.py
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+Environment=PYTHONPATH=/home/ubuntu/corpus_platform
+
+# Security settings
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/ubuntu/corpus_platform
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectControlGroups=yes
+
+[Install]
+WantedBy=multi-user.target

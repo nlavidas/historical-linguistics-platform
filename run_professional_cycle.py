@@ -142,14 +142,64 @@ def run_obsidian_export_stage() -> None:
     logger.info("Obsidian export stage finished with return code %s", result_obs.returncode)
 
 
-def run_daily_summary_stage() -> None:
-    """Generate a detailed daily summary report with feedback section."""
-    logger.info("Starting daily summary report stage...")
-    result_daily = subprocess.run(
-        [sys.executable, "generate_daily_summary.py"],
+def run_valency_analysis_stage() -> None:
+    """Run advanced valency analysis with statistical models."""
+    logger.info("Starting advanced valency analysis stage...")
+    result_valency = subprocess.run(
+        [sys.executable, "advanced_valency_analysis.py"],
         cwd=ROOT,
     )
-    logger.info("Daily summary report stage finished with return code %s", result_daily.returncode)
+    logger.info("Advanced valency analysis stage finished with return code %s", result_valency.returncode)
+
+
+def run_api_discovery_stage() -> None:
+    """Run API discovery to find new texts across all periods."""
+    logger.info("Starting API discovery stage...")
+    result_api = subprocess.run(
+        [sys.executable, "api_discovery_collector.py", "--languages", "grc", "lat", "en", "--periods", "all"],
+        cwd=ROOT,
+    )
+    logger.info("API discovery stage finished with return code %s", result_api.returncode)
+
+
+def run_preprocessing_stage() -> None:
+    """Preprocess texts (normalisation + sentence segmentation)."""
+    logger.info("Starting preprocessing stage (sentence segmentation)...")
+    result_pre = subprocess.run(
+        [sys.executable, "preprocess_texts.py"],
+        cwd=ROOT,
+    )
+    logger.info("Preprocessing stage finished with return code %s", result_pre.returncode)
+
+
+def run_research_agent_stage() -> None:
+    """Run the rule-based diachronic research agent to produce an overnight report."""
+    logger.info("Starting diachronic research agent stage...")
+    result_agent = subprocess.run(
+        [sys.executable, "diachronic_research_agent.py"],
+        cwd=ROOT,
+    )
+    logger.info("Research agent stage finished with return code %s", result_agent.returncode)
+
+
+def run_quality_control_dashboard_stage() -> None:
+    """Generate a large-font Windsurf-style HTML quality control console."""
+    logger.info("Starting quality control dashboard stage...")
+    result_qc = subprocess.run(
+        [sys.executable, "generate_quality_control_dashboard.py"],
+        cwd=ROOT,
+    )
+    logger.info("Quality control dashboard stage finished with return code %s", result_qc.returncode)
+
+
+def run_windsurf_control_panel_stage() -> None:
+    """Generate the Windsurf-style control panel HTML."""
+    logger.info("Starting Windsurf control panel generation...")
+    result_cp = subprocess.run(
+        [sys.executable, "windsurf_control_panel.py"],
+        cwd=ROOT,
+    )
+    logger.info("Windsurf control panel generation finished with return code %s", result_cp.returncode)
 
 
 def main() -> None:
@@ -167,7 +217,10 @@ def main() -> None:
     # 4. Multi-AI ensemble annotation stage (open-source community models)
     run_multi_ai_stage()
 
-    # 5. Automatic evaluation of metadata and annotation coverage
+    # 5. Advanced valency analysis (statistical modeling)
+    run_valency_analysis_stage()
+
+    # 6. Automatic evaluation of metadata and annotation coverage
     run_evaluation_stage()
 
     # 6. Local Hugging Face-style dataset export (private on Z:)
@@ -179,7 +232,27 @@ def main() -> None:
     # 8. Detailed daily summary report with feedback section
     run_daily_summary_stage()
 
+    # 9. HTML visualization dashboard (charts for metadata & annotation)
+    run_visualization_stage()
+
+    # 10. Text preprocessing (normalisation + sentence segmentation)
+    run_preprocessing_stage()
+
+    # 11. API discovery for new texts across all periods
+    run_api_discovery_stage()
+
+    # 12. Diachronic research agent report
+    run_research_agent_stage()
+
+    # 13. Quality control console (large-font HTML)
+    run_quality_control_dashboard_stage()
+
+    # 14. Windsurf control panel (main interface)
+    run_windsurf_control_panel_stage()
+
     logger.info("=== PROFESSIONAL RESEARCH CYCLE COMPLETE === %s", datetime.now().isoformat())
+    logger.info("To start the live web control panel, run: python3 windsurf_web_panel.py")
+    logger.info("Then open http://localhost:8000 in your browser")
 
 
 if __name__ == "__main__":
