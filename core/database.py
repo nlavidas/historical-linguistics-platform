@@ -242,7 +242,7 @@ class EtymologyEntry:
     cognates: List[Dict[str, str]] = field(default_factory=list)
     semantic_development: List[str] = field(default_factory=list)
     borrowing_info: Optional[Dict] = None
-    references: List[str] = field(default_factory=list)
+    bibliography: List[str] = field(default_factory=list)
     
     def to_dict(self) -> Dict:
         return asdict(self)
@@ -377,7 +377,7 @@ class DatabaseManager:
                     cognates TEXT,
                     semantic_development TEXT,
                     borrowing_info TEXT,
-                    references TEXT,
+                    bibliography TEXT,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     UNIQUE(lemma, language, pos)
                 )
@@ -908,13 +908,13 @@ class DatabaseManager:
                 cursor.execute("""
                     INSERT OR REPLACE INTO etymology 
                     (lemma, language, pos, proto_form, cognates, semantic_development, 
-                     borrowing_info, references)
+                     borrowing_info, bibliography)
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                 """, (
                     entry.lemma, entry.language, entry.pos, entry.proto_form,
                     json.dumps(entry.cognates), json.dumps(entry.semantic_development),
                     json.dumps(entry.borrowing_info) if entry.borrowing_info else None,
-                    json.dumps(entry.references)
+                    json.dumps(entry.bibliography)
                 ))
                 
                 conn.commit()
@@ -952,7 +952,7 @@ class DatabaseManager:
                     result['cognates'] = json.loads(result['cognates']) if result['cognates'] else []
                     result['semantic_development'] = json.loads(result['semantic_development']) if result['semantic_development'] else []
                     result['borrowing_info'] = json.loads(result['borrowing_info']) if result['borrowing_info'] else None
-                    result['references'] = json.loads(result['references']) if result['references'] else []
+                    result['bibliography'] = json.loads(result['bibliography']) if result['bibliography'] else []
                     results.append(result)
                 
                 return results

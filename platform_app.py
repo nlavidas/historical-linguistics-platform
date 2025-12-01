@@ -96,7 +96,7 @@ class DatabaseManager:
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS etymology (
                 id INTEGER PRIMARY KEY, lemma TEXT, language TEXT, pos TEXT,
-                proto_form TEXT, cognates TEXT, references TEXT
+                proto_form TEXT, cognates TEXT, bibliography TEXT
             )
         """)
         
