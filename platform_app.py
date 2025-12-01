@@ -30,7 +30,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # ============================================================================
-# AUTHENTICATION SYSTEM
+# AUTHENTICATION SYSTEM WITH SMS TWO-FACTOR OPTION
 # ============================================================================
 
 # Secure password hash (SHA-256)
@@ -39,8 +39,29 @@ logger = logging.getLogger(__name__)
 #   nlavidas / GreekCorpus2024!
 #   admin / AdminPass2024!
 ADMIN_USERS = {
-    "nlavidas": hashlib.sha256("GreekCorpus2024!".encode()).hexdigest(),
-    "admin": hashlib.sha256("AdminPass2024!".encode()).hexdigest()
+    "nlavidas": {
+        "password_hash": hashlib.sha256("GreekCorpus2024!".encode()).hexdigest(),
+        "phone": "+306948066777",
+        "two_factor_enabled": True
+    },
+    "admin": {
+        "password_hash": hashlib.sha256("AdminPass2024!".encode()).hexdigest(),
+        "phone": None,
+        "two_factor_enabled": False
+    }
+}
+
+# SMS Configuration (Twilio)
+# Get free account at: https://www.twilio.com/try-twilio
+# Set these environment variables on your server:
+#   TWILIO_ACCOUNT_SID=your_sid
+#   TWILIO_AUTH_TOKEN=your_token
+#   TWILIO_PHONE_NUMBER=your_twilio_number
+SMS_CONFIG = {
+    "enabled": os.environ.get("TWILIO_ACCOUNT_SID") is not None,
+    "account_sid": os.environ.get("TWILIO_ACCOUNT_SID", ""),
+    "auth_token": os.environ.get("TWILIO_AUTH_TOKEN", ""),
+    "from_number": os.environ.get("TWILIO_PHONE_NUMBER", "")
 }
 
 def hash_password(password: str) -> str:
@@ -51,14 +72,48 @@ def verify_password(password: str, stored_hash: str) -> bool:
     """Verify password against stored hash"""
     return hmac.compare_digest(hash_password(password), stored_hash)
 
+def generate_otp() -> str:
+    """Generate 6-digit OTP"""
+    import random
+    return str(random.randint(100000, 999999))
+
+def send_sms_otp(phone_number: str, otp: str) -> bool:
+    """Send OTP via SMS using Twilio"""
+    if not SMS_CONFIG["enabled"]:
+        logger.warning("SMS not configured - Twilio credentials not set")
+        return False
+    
+    try:
+        from twilio.rest import Client
+        client = Client(SMS_CONFIG["account_sid"], SMS_CONFIG["auth_token"])
+        
+        message = client.messages.create(
+            body=f"Greek Corpus Platform - Your verification code is: {otp}",
+            from_=SMS_CONFIG["from_number"],
+            to=phone_number
+        )
+        
+        logger.info(f"SMS sent to {phone_number[-4:]}: {message.sid}")
+        return True
+        
+    except ImportError:
+        logger.error("Twilio library not installed. Run: pip install twilio")
+        return False
+    except Exception as e:
+        logger.error(f"SMS send failed: {e}")
+        return False
+
 def check_authentication():
-    """Authentication gate - must pass to access platform"""
+    """Authentication gate with optional SMS two-factor"""
     
     if "authenticated" not in st.session_state:
         st.session_state.authenticated = False
         st.session_state.username = None
         st.session_state.login_attempts = 0
         st.session_state.lockout_until = None
+        st.session_state.awaiting_otp = False
+        st.session_state.current_otp = None
+        st.session_state.otp_expires = None
     
     # Check lockout
     if st.session_state.lockout_until:
@@ -73,18 +128,13 @@ def check_authentication():
     if not st.session_state.authenticated:
         st.markdown("""
         <style>
-            .login-container {
+            .login-box {
                 max-width: 400px;
-                margin: 100px auto;
+                margin: 50px auto;
                 padding: 40px;
                 background: white;
                 border-radius: 10px;
                 box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            }
-            .login-header {
-                text-align: center;
-                color: #1e3a5f;
-                margin-bottom: 30px;
             }
         </style>
         """, unsafe_allow_html=True)
@@ -95,27 +145,88 @@ def check_authentication():
             st.markdown("### Secure Login")
             st.markdown("---")
             
-            username = st.text_input("Username", key="login_user")
-            password = st.text_input("Password", type="password", key="login_pass")
-            
-            if st.button("Login", type="primary", use_container_width=True):
-                if username in ADMIN_USERS:
-                    if verify_password(password, ADMIN_USERS[username]):
-                        st.session_state.authenticated = True
-                        st.session_state.username = username
-                        st.session_state.login_attempts = 0
-                        logger.info(f"Successful login: {username}")
+            # OTP verification stage
+            if st.session_state.awaiting_otp:
+                st.info("A verification code has been sent to your phone.")
+                
+                otp_input = st.text_input("Enter 6-digit code", max_chars=6, key="otp_input")
+                
+                col_a, col_b = st.columns(2)
+                with col_a:
+                    if st.button("Verify", type="primary", use_container_width=True):
+                        # Check OTP expiry
+                        if st.session_state.otp_expires and datetime.now() > st.session_state.otp_expires:
+                            st.error("Code expired. Please login again.")
+                            st.session_state.awaiting_otp = False
+                            st.session_state.current_otp = None
+                            st.rerun()
+                        
+                        if otp_input == st.session_state.current_otp:
+                            st.session_state.authenticated = True
+                            st.session_state.awaiting_otp = False
+                            st.session_state.current_otp = None
+                            logger.info(f"2FA verified for: {st.session_state.username}")
+                            st.rerun()
+                        else:
+                            st.error("Invalid code. Please try again.")
+                
+                with col_b:
+                    if st.button("Cancel", use_container_width=True):
+                        st.session_state.awaiting_otp = False
+                        st.session_state.current_otp = None
+                        st.session_state.username = None
                         st.rerun()
                 
-                # Failed login
-                st.session_state.login_attempts += 1
-                logger.warning(f"Failed login attempt {st.session_state.login_attempts} for: {username}")
+                st.caption("Code expires in 5 minutes")
+            
+            # Normal login stage
+            else:
+                username = st.text_input("Username", key="login_user")
+                password = st.text_input("Password", type="password", key="login_pass")
                 
-                if st.session_state.login_attempts >= 5:
-                    st.session_state.lockout_until = datetime.now() + timedelta(minutes=15)
-                    st.error("Too many failed attempts. Account locked for 15 minutes.")
-                else:
-                    st.error(f"Invalid credentials. {5 - st.session_state.login_attempts} attempts remaining.")
+                if st.button("Login", type="primary", use_container_width=True):
+                    if username in ADMIN_USERS:
+                        user_data = ADMIN_USERS[username]
+                        
+                        if verify_password(password, user_data["password_hash"]):
+                            st.session_state.username = username
+                            st.session_state.login_attempts = 0
+                            
+                            # Check if 2FA is enabled
+                            if user_data.get("two_factor_enabled") and user_data.get("phone"):
+                                otp = generate_otp()
+                                st.session_state.current_otp = otp
+                                st.session_state.otp_expires = datetime.now() + timedelta(minutes=5)
+                                st.session_state.awaiting_otp = True
+                                
+                                # Try to send SMS
+                                if SMS_CONFIG["enabled"]:
+                                    if send_sms_otp(user_data["phone"], otp):
+                                        logger.info(f"OTP sent to {username}")
+                                    else:
+                                        st.warning("SMS failed. Using backup code display.")
+                                        st.info(f"Backup code (dev mode): {otp}")
+                                else:
+                                    # Development mode - show OTP on screen
+                                    st.warning("SMS not configured. Showing code for testing.")
+                                    st.info(f"Your code: {otp}")
+                                
+                                st.rerun()
+                            else:
+                                # No 2FA - direct login
+                                st.session_state.authenticated = True
+                                logger.info(f"Login successful: {username}")
+                                st.rerun()
+                    
+                    # Failed login
+                    st.session_state.login_attempts += 1
+                    logger.warning(f"Failed login attempt {st.session_state.login_attempts} for: {username}")
+                    
+                    if st.session_state.login_attempts >= 5:
+                        st.session_state.lockout_until = datetime.now() + timedelta(minutes=15)
+                        st.error("Too many failed attempts. Account locked for 15 minutes.")
+                    else:
+                        st.error(f"Invalid credentials. {5 - st.session_state.login_attempts} attempts remaining.")
             
             st.markdown("---")
             st.caption("University of Athens - Nikolaos Lavidas")
