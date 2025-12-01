@@ -1,2 +1,10 @@
+streamlit>=1.28.0
+pandas>=2.0.0
+numpy>=1.24.0
+plotly>=5.15.0
 requests>=2.31.0
+beautifulsoup4>=4.12.0
+lxml>=4.9.0
+stanza>=1.5.0
+cltk>=1.1.0
 pytz>=2023.3
