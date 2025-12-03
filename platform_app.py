@@ -1242,9 +1242,10 @@ def render_research_profile(db):
     # Profile header
     st.markdown("""
     **Nikolaos Lavidas**  
-    Associate Professor of Linguistics  
+    Professor of Diachronic Linguistics, with focus on Greek and English  
     National and Kapodistrian University of Athens  
-    Department of Philology
+    School of Philosophy, Department of English Language and Literature  
+    Division of Language - Linguistics
     """)
     
     st.markdown("---")
