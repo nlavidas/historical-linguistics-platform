@@ -736,7 +736,14 @@ SEMANTIC_ROLES = {
 # ============================================================================
 
 class DatabaseManager:
-    def __init__(self, db_path: str = "greek_corpus.db"):
+    def __init__(self, db_path: str = None):
+        # Use the correct database path based on OS
+        if db_path is None:
+            import platform
+            if platform.system() == 'Windows':
+                db_path = "Z:/corpus_platform/data/corpus_platform.db"
+            else:
+                db_path = "/root/corpus_platform/data/corpus_platform.db"
         self.db_path = db_path
         self.init_database()
     
@@ -838,22 +845,52 @@ class DatabaseManager:
         
         stats = {}
         
-        cursor.execute("SELECT COUNT(*) FROM documents")
-        stats["documents"] = cursor.fetchone()[0]
+        try:
+            cursor.execute("SELECT COUNT(*) FROM documents")
+            stats["documents"] = cursor.fetchone()[0]
+        except:
+            stats["documents"] = 0
         
-        cursor.execute("SELECT SUM(sentence_count) FROM documents")
-        result = cursor.fetchone()[0]
-        stats["sentences"] = result if result else 0
+        try:
+            # Try new schema first (separate sentences table)
+            cursor.execute("SELECT COUNT(*) FROM sentences")
+            stats["sentences"] = cursor.fetchone()[0]
+        except:
+            try:
+                cursor.execute("SELECT SUM(sentence_count) FROM documents")
+                result = cursor.fetchone()[0]
+                stats["sentences"] = result if result else 0
+            except:
+                stats["sentences"] = 0
         
-        cursor.execute("SELECT SUM(token_count) FROM documents")
-        result = cursor.fetchone()[0]
-        stats["tokens"] = result if result else 0
+        try:
+            # Try new schema first (separate tokens table)
+            cursor.execute("SELECT COUNT(*) FROM tokens")
+            stats["tokens"] = cursor.fetchone()[0]
+        except:
+            try:
+                cursor.execute("SELECT SUM(token_count) FROM documents")
+                result = cursor.fetchone()[0]
+                stats["tokens"] = result if result else 0
+            except:
+                stats["tokens"] = 0
         
-        cursor.execute("SELECT period, COUNT(*) FROM documents WHERE period IS NOT NULL GROUP BY period")
-        stats["by_period"] = {row[0]: row[1] for row in cursor.fetchall()}
+        try:
+            cursor.execute("SELECT period, COUNT(*) FROM documents WHERE period IS NOT NULL GROUP BY period")
+            stats["by_period"] = {row[0]: row[1] for row in cursor.fetchall()}
+        except:
+            stats["by_period"] = {}
         
-        cursor.execute("SELECT COUNT(DISTINCT lemma) FROM valency_lexicon")
-        stats["valency_verbs"] = cursor.fetchone()[0]
+        try:
+            # Try new valency_frames table first
+            cursor.execute("SELECT COUNT(DISTINCT lemma) FROM valency_frames")
+            stats["valency_verbs"] = cursor.fetchone()[0]
+        except:
+            try:
+                cursor.execute("SELECT COUNT(DISTINCT lemma) FROM valency_lexicon")
+                stats["valency_verbs"] = cursor.fetchone()[0]
+            except:
+                stats["valency_verbs"] = 0
         
         conn.close()
         return stats
