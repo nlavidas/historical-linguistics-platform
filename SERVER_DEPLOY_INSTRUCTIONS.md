@@ -1,5 +1,34 @@
 # SERVER DEPLOYMENT INSTRUCTIONS
 
+## 🚀 QUICK START - 24/7 AUTONOMOUS SYSTEM
+
+Run this on the server to start the 24/7 collector:
+
+```bash
+ssh ubuntu@54.37.228.155
+sudo su -
+cd /root/corpus_platform
+git pull origin master
+chmod +x SETUP_247_SERVICE.sh
+./SETUP_247_SERVICE.sh
+```
+
+This installs a systemd service that:
+- ✅ Runs **continuously 24/7**
+- ✅ Collects from **12+ Indo-European treebanks**
+- ✅ Extracts **valency frames** automatically
+- ✅ **Auto-restarts** on crash
+- ✅ **Logs** everything
+
+### Monitor the 24/7 System:
+```bash
+journalctl -u corpus-collector -f          # Live logs
+systemctl status corpus-collector          # Status
+tail -f /root/corpus_platform/data/logs/autonomous_*.log
+```
+
+---
+
 ## Current Status
 The platform now has **REAL DATA**:
 - **18 documents** from Universal Dependencies
