@@ -1,0 +1,29 @@
+[Unit]
+Description=Corpus Platform 24/7 Autonomous Collector
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root/corpus_platform
+ExecStart=/usr/bin/python3 /root/corpus_platform/AUTONOMOUS_247_SERVER.py
+Restart=always
+RestartSec=30
+StandardOutput=append:/root/corpus_platform/data/logs/service.log
+StandardError=append:/root/corpus_platform/data/logs/service_error.log
+
+# Environment
+Environment=PYTHONUNBUFFERED=1
+Environment=PYTHONDONTWRITEBYTECODE=1
+
+# Resource limits
+MemoryMax=2G
+CPUQuota=50%
+
+# Watchdog
+WatchdogSec=300
+NotifyAccess=main
+
+[Install]
+WantedBy=multi-user.target
