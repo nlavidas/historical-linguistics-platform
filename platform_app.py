@@ -20,7 +20,139 @@ import re
 import hashlib
 import secrets
 import hmac
+import time
 from datetime import datetime, timedelta
+from collections import defaultdict
+
+# =============================================================================
+# ANTI-HACKING PROTECTION
+# =============================================================================
+
+class AntiHacking:
+    """Anti-hacking protection system"""
+    
+    # Rate limiting storage
+    _request_counts = defaultdict(list)
+    _blocked_ips = {}
+    _failed_logins = defaultdict(list)
+    
+    # Suspicious patterns
+    SQL_INJECTION_PATTERNS = [
+        r"('|\")?\s*(or|and)\s+\d+\s*=\s*\d+",
+        r"union\s+select",
+        r"drop\s+table",
+        r"insert\s+into",
+        r"delete\s+from",
+        r"--",
+        r"/\*.*\*/",
+        r"xp_cmdshell",
+        r"exec\s*\("
+    ]
+    
+    XSS_PATTERNS = [
+        r"<script[^>]*>",
+        r"javascript:",
+        r"on\w+\s*=",
+        r"<iframe",
+        r"<object",
+        r"<embed"
+    ]
+    
+    @classmethod
+    def get_client_ip(cls) -> str:
+        """Get client IP (simplified for Streamlit)"""
+        return "127.0.0.1"  # Streamlit doesn't expose IP directly
+    
+    @classmethod
+    def is_ip_blocked(cls, ip: str) -> bool:
+        """Check if IP is blocked"""
+        if ip in cls._blocked_ips:
+            if datetime.now() < cls._blocked_ips[ip]:
+                return True
+            else:
+                del cls._blocked_ips[ip]
+        return False
+    
+    @classmethod
+    def block_ip(cls, ip: str, minutes: int = 30):
+        """Block an IP for specified minutes"""
+        cls._blocked_ips[ip] = datetime.now() + timedelta(minutes=minutes)
+        logger.warning(f"SECURITY: IP {ip} blocked for {minutes} minutes")
+    
+    @classmethod
+    def check_rate_limit(cls, ip: str, max_requests: int = 60, window_seconds: int = 60) -> bool:
+        """Check if IP exceeds rate limit"""
+        now = time.time()
+        cls._request_counts[ip] = [t for t in cls._request_counts[ip] if now - t < window_seconds]
+        
+        if len(cls._request_counts[ip]) >= max_requests:
+            cls.block_ip(ip, 5)  # Block for 5 minutes
+            return False
+        
+        cls._request_counts[ip].append(now)
+        return True
+    
+    @classmethod
+    def record_failed_login(cls, ip: str, username: str):
+        """Record failed login attempt"""
+        now = time.time()
+        cls._failed_logins[ip].append((now, username))
+        
+        # Clean old entries (last hour)
+        cls._failed_logins[ip] = [(t, u) for t, u in cls._failed_logins[ip] if now - t < 3600]
+        
+        # Check for brute force (10+ failures in an hour)
+        if len(cls._failed_logins[ip]) >= 10:
+            cls.block_ip(ip, 60)  # Block for 1 hour
+            logger.warning(f"SECURITY: Brute force detected from {ip}")
+    
+    @classmethod
+    def sanitize_input(cls, text: str) -> str:
+        """Sanitize user input against SQL injection and XSS"""
+        if not text:
+            return text
+        
+        # Check for SQL injection
+        for pattern in cls.SQL_INJECTION_PATTERNS:
+            if re.search(pattern, text, re.IGNORECASE):
+                logger.warning(f"SECURITY: SQL injection attempt detected: {text[:50]}")
+                return ""  # Return empty string
+        
+        # Check for XSS
+        for pattern in cls.XSS_PATTERNS:
+            if re.search(pattern, text, re.IGNORECASE):
+                logger.warning(f"SECURITY: XSS attempt detected: {text[:50]}")
+                return ""  # Return empty string
+        
+        # Basic sanitization
+        text = text.replace("<", "&lt;").replace(">", "&gt;")
+        return text
+    
+    @classmethod
+    def validate_password_strength(cls, password: str) -> tuple:
+        """Validate password strength, returns (is_valid, message)"""
+        if len(password) < 8:
+            return False, "Password must be at least 8 characters"
+        if not re.search(r"[A-Z]", password):
+            return False, "Password must contain uppercase letter"
+        if not re.search(r"[a-z]", password):
+            return False, "Password must contain lowercase letter"
+        if not re.search(r"\d", password):
+            return False, "Password must contain a number"
+        if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
+            return False, "Password must contain a special character"
+        return True, "Password is strong"
+    
+    @classmethod
+    def generate_secure_token(cls, length: int = 32) -> str:
+        """Generate cryptographically secure token"""
+        return secrets.token_urlsafe(length)
+    
+    @classmethod
+    def log_security_event(cls, event_type: str, details: str):
+        """Log security event"""
+        timestamp = datetime.now().isoformat()
+        logger.warning(f"SECURITY [{event_type}] {timestamp}: {details}")
 from typing import Dict, List, Optional, Any, Tuple
 from dataclasses import dataclass, field, asdict
 from collections import Counter, defaultdict
@@ -52,11 +184,20 @@ SECURITY_CONFIG = {
     "lockout_minutes": 15,
     "session_timeout_hours": 24,
     "require_2fa": True,
-    "master_2fa_code": "301976",  # Backup 2FA code
+    "master_2fa_code": "301976",  # Backup 2FA code - Layer 2
     "admin_password": hashlib.sha256("AdminLayer3!".encode()).hexdigest(),  # Layer 3
     "api_token": hashlib.sha256("GreekCorpusAPI2024!".encode()).hexdigest(),  # Layer 4
     "allowed_ips": [],  # Empty = allow all, add IPs to restrict
-    "rate_limit_per_minute": 60
+    "rate_limit_per_minute": 60,
+    "brute_force_threshold": 10,  # Failed logins before IP ban
+    "brute_force_window_hours": 1,
+    "ip_ban_minutes": 60,
+    "session_token_length": 32,
+    "password_min_length": 8,
+    "enable_sql_injection_protection": True,
+    "enable_xss_protection": True,
+    "enable_rate_limiting": True,
+    "log_all_auth_attempts": True
 }
 
 ADMIN_USERS = {
@@ -139,16 +280,30 @@ def send_sms_otp(phone_number: str, otp: str) -> bool:
         return False
 
 def check_authentication():
-    """Authentication gate with optional SMS two-factor"""
+    """Authentication gate with 4-layer security and anti-hacking"""
+    
+    # Anti-hacking: Check rate limit
+    client_ip = AntiHacking.get_client_ip()
+    if AntiHacking.is_ip_blocked(client_ip):
+        st.error("🚫 Your IP has been temporarily blocked due to suspicious activity.")
+        st.stop()
+    
+    if not AntiHacking.check_rate_limit(client_ip):
+        st.error("🚫 Rate limit exceeded. Please wait a few minutes.")
+        st.stop()
     
     if "authenticated" not in st.session_state:
         st.session_state.authenticated = False
         st.session_state.username = None
+        st.session_state.user_role = None
+        st.session_state.session_token = None
         st.session_state.login_attempts = 0
         st.session_state.lockout_until = None
         st.session_state.awaiting_otp = False
         st.session_state.current_otp = None
         st.session_state.otp_expires = None
+        st.session_state.admin_verified = False  # Layer 3
+        st.session_state.api_verified = False    # Layer 4
     
     # Check lockout
     if st.session_state.lockout_until:
@@ -254,15 +409,18 @@ def check_authentication():
                                 logger.info(f"Login successful: {username}")
                                 st.rerun()
                     
-                    # Failed login
+                    # Failed login - Anti-hacking
                     st.session_state.login_attempts += 1
+                    AntiHacking.record_failed_login(client_ip, username)
+                    AntiHacking.log_security_event("FAILED_LOGIN", f"User: {username}, IP: {client_ip}")
                     logger.warning(f"Failed login attempt {st.session_state.login_attempts} for: {username}")
                     
                     if st.session_state.login_attempts >= 5:
                         st.session_state.lockout_until = datetime.now() + timedelta(minutes=15)
-                        st.error("Too many failed attempts. Account locked for 15 minutes.")
+                        AntiHacking.block_ip(client_ip, 15)
+                        st.error("🚫 Too many failed attempts. Account locked for 15 minutes.")
                     else:
-                        st.error(f"Invalid credentials. {5 - st.session_state.login_attempts} attempts remaining.")
+                        st.error(f"❌ Invalid credentials. {5 - st.session_state.login_attempts} attempts remaining.")
             
             st.markdown("---")
             st.caption("University of Athens - Nikolaos Lavidas")
