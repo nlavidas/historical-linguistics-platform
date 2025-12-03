@@ -2,12 +2,15 @@
 HLP API Routes Corpus - Corpus Management Endpoints
 
 This module provides REST API endpoints for corpus management.
+Uses DatabaseManager for persistent storage.
 
 University of Athens - Nikolaos Lavidas
 """
 
 from __future__ import annotations
 import logging
+import json
+import uuid
 from typing import Dict, List, Optional, Any
 from datetime import datetime
 
@@ -15,14 +18,22 @@ from fastapi import APIRouter, HTTPException, Query, Path, Body, Depends, Upload
 from pydantic import BaseModel, Field
 
 from hlp_core.models import Language, Period, Document, Corpus, Sentence
+from hlp_core.db import DatabaseManager, DatabaseConfig, DatabaseType, get_default_db_manager
 from hlp_api.auth import get_current_user, require_auth, User
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
-_corpora: Dict[str, Corpus] = {}
-_documents: Dict[str, Document] = {}
+_db_manager: Optional[DatabaseManager] = None
+
+
+def get_db() -> DatabaseManager:
+    """Get database manager instance"""
+    global _db_manager
+    if _db_manager is None:
+        _db_manager = get_default_db_manager()
+    return _db_manager
 
 
 class CorpusCreate(BaseModel):
@@ -87,26 +98,47 @@ async def list_corpora(
     limit: int = Query(100, ge=1, le=1000, description="Maximum results"),
     offset: int = Query(0, ge=0, description="Offset for pagination")
 ):
-    """List all corpora"""
-    corpora = list(_corpora.values())
+    """List all corpora from database"""
+    db = get_db()
+    
+    sql = "SELECT id, name, description, language, metadata, created_at FROM corpora"
+    params = []
     
     if language:
-        corpora = [c for c in corpora if c.language and c.language.value == language]
+        sql += " WHERE language = ?"
+        params.append(language)
     
-    corpora = corpora[offset:offset + limit]
+    sql += f" LIMIT {limit} OFFSET {offset}"
     
-    return [
-        CorpusResponse(
-            id=c.id,
-            name=c.name,
-            description=c.metadata.get("description"),
-            language=c.language.value if c.language else "unknown",
-            document_count=len(c.documents),
-            created_at=c.metadata.get("created_at", datetime.now().isoformat()),
-            metadata=c.metadata
-        )
-        for c in corpora
-    ]
+    rows = db.fetch_all(sql, params if params else None)
+    
+    results = []
+    for row in rows:
+        row_dict = dict(row) if hasattr(row, 'keys') else {
+            'id': row[0], 'name': row[1], 'description': row[2],
+            'language': row[3], 'metadata': row[4], 'created_at': row[5]
+        }
+        
+        doc_count = db.count("documents", {"corpus_id": row_dict['id']})
+        
+        metadata = {}
+        if row_dict.get('metadata'):
+            try:
+                metadata = json.loads(row_dict['metadata']) if isinstance(row_dict['metadata'], str) else row_dict['metadata']
+            except:
+                metadata = {}
+        
+        results.append(CorpusResponse(
+            id=row_dict['id'],
+            name=row_dict['name'],
+            description=row_dict.get('description'),
+            language=row_dict.get('language', 'unknown'),
+            document_count=doc_count,
+            created_at=row_dict.get('created_at', datetime.now().isoformat()),
+            metadata=metadata
+        ))
+    
+    return results
 
 
 @router.post("/", response_model=CorpusResponse)
@@ -114,39 +146,35 @@ async def create_corpus(
     corpus_data: CorpusCreate,
     user: Optional[User] = Depends(get_current_user)
 ):
-    """Create a new corpus"""
-    import uuid
+    """Create a new corpus in database"""
+    db = get_db()
     
     corpus_id = str(uuid.uuid4())
+    created_at = datetime.now().isoformat()
     
-    try:
-        language = Language(corpus_data.language)
-    except ValueError:
-        language = Language.ANCIENT_GREEK
+    metadata = {
+        "created_by": user.username if user else "anonymous",
+        **(corpus_data.metadata or {})
+    }
     
-    corpus = Corpus(
-        id=corpus_id,
-        name=corpus_data.name,
-        language=language,
-        documents=[],
-        metadata={
-            "description": corpus_data.description,
-            "created_at": datetime.now().isoformat(),
-            "created_by": user.username if user else "anonymous",
-            **(corpus_data.metadata or {})
-        }
-    )
-    
-    _corpora[corpus_id] = corpus
+    db.insert("corpora", {
+        "id": corpus_id,
+        "name": corpus_data.name,
+        "description": corpus_data.description,
+        "language": corpus_data.language,
+        "metadata": json.dumps(metadata),
+        "created_at": created_at,
+        "updated_at": created_at
+    })
     
     return CorpusResponse(
-        id=corpus.id,
-        name=corpus.name,
+        id=corpus_id,
+        name=corpus_data.name,
         description=corpus_data.description,
-        language=language.value,
+        language=corpus_data.language,
         document_count=0,
-        created_at=corpus.metadata["created_at"],
-        metadata=corpus.metadata
+        created_at=created_at,
+        metadata=metadata
     )
 
 
@@ -154,20 +182,39 @@ async def create_corpus(
 async def get_corpus(
     corpus_id: str = Path(..., description="Corpus ID")
 ):
-    """Get a corpus by ID"""
-    corpus = _corpora.get(corpus_id)
+    """Get a corpus by ID from database"""
+    db = get_db()
     
-    if not corpus:
+    row = db.fetch_one(
+        "SELECT id, name, description, language, metadata, created_at FROM corpora WHERE id = ?",
+        [corpus_id]
+    )
+    
+    if not row:
         raise HTTPException(status_code=404, detail="Corpus not found")
     
+    row_dict = dict(row) if hasattr(row, 'keys') else {
+        'id': row[0], 'name': row[1], 'description': row[2],
+        'language': row[3], 'metadata': row[4], 'created_at': row[5]
+    }
+    
+    doc_count = db.count("documents", {"corpus_id": corpus_id})
+    
+    metadata = {}
+    if row_dict.get('metadata'):
+        try:
+            metadata = json.loads(row_dict['metadata']) if isinstance(row_dict['metadata'], str) else row_dict['metadata']
+        except:
+            metadata = {}
+    
     return CorpusResponse(
-        id=corpus.id,
-        name=corpus.name,
-        description=corpus.metadata.get("description"),
-        language=corpus.language.value if corpus.language else "unknown",
-        document_count=len(corpus.documents),
-        created_at=corpus.metadata.get("created_at", ""),
-        metadata=corpus.metadata
+        id=row_dict['id'],
+        name=row_dict['name'],
+        description=row_dict.get('description'),
+        language=row_dict.get('language', 'unknown'),
+        document_count=doc_count,
+        created_at=row_dict.get('created_at', ''),
+        metadata=metadata
     )
 
 
@@ -177,33 +224,35 @@ async def update_corpus(
     corpus_data: CorpusUpdate = Body(...),
     user: User = Depends(require_auth)
 ):
-    """Update a corpus"""
-    corpus = _corpora.get(corpus_id)
+    """Update a corpus in database"""
+    db = get_db()
     
-    if not corpus:
+    if not db.exists("corpora", {"id": corpus_id}):
         raise HTTPException(status_code=404, detail="Corpus not found")
     
+    update_data = {"updated_at": datetime.now().isoformat()}
+    
     if corpus_data.name:
-        corpus.name = corpus_data.name
+        update_data["name"] = corpus_data.name
     
     if corpus_data.description:
-        corpus.metadata["description"] = corpus_data.description
+        update_data["description"] = corpus_data.description
     
     if corpus_data.metadata:
-        corpus.metadata.update(corpus_data.metadata)
+        row = db.fetch_one("SELECT metadata FROM corpora WHERE id = ?", [corpus_id])
+        existing_metadata = {}
+        if row and row[0]:
+            try:
+                existing_metadata = json.loads(row[0]) if isinstance(row[0], str) else row[0]
+            except:
+                pass
+        existing_metadata.update(corpus_data.metadata)
+        existing_metadata["updated_by"] = user.username
+        update_data["metadata"] = json.dumps(existing_metadata)
     
-    corpus.metadata["updated_at"] = datetime.now().isoformat()
-    corpus.metadata["updated_by"] = user.username
+    db.update("corpora", update_data, {"id": corpus_id})
     
-    return CorpusResponse(
-        id=corpus.id,
-        name=corpus.name,
-        description=corpus.metadata.get("description"),
-        language=corpus.language.value if corpus.language else "unknown",
-        document_count=len(corpus.documents),
-        created_at=corpus.metadata.get("created_at", ""),
-        metadata=corpus.metadata
-    )
+    return await get_corpus(corpus_id)
 
 
 @router.delete("/{corpus_id}")
@@ -211,11 +260,14 @@ async def delete_corpus(
     corpus_id: str = Path(..., description="Corpus ID"),
     user: User = Depends(require_auth)
 ):
-    """Delete a corpus"""
-    if corpus_id not in _corpora:
+    """Delete a corpus from database"""
+    db = get_db()
+    
+    if not db.exists("corpora", {"id": corpus_id}):
         raise HTTPException(status_code=404, detail="Corpus not found")
     
-    del _corpora[corpus_id]
+    db.delete("documents", {"corpus_id": corpus_id})
+    db.delete("corpora", {"id": corpus_id})
     
     return {"message": "Corpus deleted", "id": corpus_id}
 
@@ -226,28 +278,44 @@ async def list_corpus_documents(
     limit: int = Query(100, ge=1, le=1000, description="Maximum results"),
     offset: int = Query(0, ge=0, description="Offset for pagination")
 ):
-    """List documents in a corpus"""
-    corpus = _corpora.get(corpus_id)
+    """List documents in a corpus from database"""
+    db = get_db()
     
-    if not corpus:
+    if not db.exists("corpora", {"id": corpus_id}):
         raise HTTPException(status_code=404, detail="Corpus not found")
     
-    documents = corpus.documents[offset:offset + limit]
+    rows = db.fetch_all(
+        f"SELECT id, title, author, language, period, sentence_count, token_count, metadata FROM documents WHERE corpus_id = ? LIMIT {limit} OFFSET {offset}",
+        [corpus_id]
+    )
     
-    return [
-        DocumentResponse(
-            id=doc.id,
-            title=doc.title,
-            author=doc.author,
-            language=doc.language.value if doc.language else "unknown",
-            text_length=len(doc.text) if doc.text else 0,
-            sentence_count=len(doc.sentences),
-            token_count=sum(len(s.tokens) for s in doc.sentences),
-            period=doc.metadata.get("period"),
-            metadata=doc.metadata
-        )
-        for doc in documents
-    ]
+    results = []
+    for row in rows:
+        row_dict = dict(row) if hasattr(row, 'keys') else {
+            'id': row[0], 'title': row[1], 'author': row[2], 'language': row[3],
+            'period': row[4], 'sentence_count': row[5], 'token_count': row[6], 'metadata': row[7]
+        }
+        
+        metadata = {}
+        if row_dict.get('metadata'):
+            try:
+                metadata = json.loads(row_dict['metadata']) if isinstance(row_dict['metadata'], str) else row_dict['metadata']
+            except:
+                metadata = {}
+        
+        results.append(DocumentResponse(
+            id=row_dict['id'],
+            title=row_dict['title'],
+            author=row_dict.get('author'),
+            language=row_dict.get('language', 'unknown'),
+            text_length=metadata.get('text_length', 0),
+            sentence_count=row_dict.get('sentence_count', 0) or 0,
+            token_count=row_dict.get('token_count', 0) or 0,
+            period=row_dict.get('period'),
+            metadata=metadata
+        ))
+    
+    return results
 
 
 @router.post("/{corpus_id}/documents", response_model=DocumentResponse)
@@ -256,49 +324,45 @@ async def add_document_to_corpus(
     document_data: DocumentCreate = Body(...),
     user: Optional[User] = Depends(get_current_user)
 ):
-    """Add a document to a corpus"""
-    corpus = _corpora.get(corpus_id)
+    """Add a document to a corpus in database"""
+    db = get_db()
     
-    if not corpus:
+    if not db.exists("corpora", {"id": corpus_id}):
         raise HTTPException(status_code=404, detail="Corpus not found")
     
-    import uuid
-    
     doc_id = str(uuid.uuid4())
+    created_at = datetime.now().isoformat()
     
-    try:
-        language = Language(document_data.language)
-    except ValueError:
-        language = corpus.language or Language.ANCIENT_GREEK
+    metadata = {
+        "text_length": len(document_data.text),
+        "created_by": user.username if user else "anonymous",
+        **(document_data.metadata or {})
+    }
     
-    document = Document(
+    db.insert("documents", {
+        "id": doc_id,
+        "corpus_id": corpus_id,
+        "title": document_data.title,
+        "author": document_data.author,
+        "language": document_data.language,
+        "period": document_data.period,
+        "sentence_count": 0,
+        "token_count": 0,
+        "metadata": json.dumps(metadata),
+        "created_at": created_at,
+        "updated_at": created_at
+    })
+    
+    return DocumentResponse(
         id=doc_id,
         title=document_data.title,
         author=document_data.author,
-        language=language,
-        text=document_data.text,
-        sentences=[],
-        metadata={
-            "period": document_data.period,
-            "created_at": datetime.now().isoformat(),
-            "created_by": user.username if user else "anonymous",
-            **(document_data.metadata or {})
-        }
-    )
-    
-    corpus.documents.append(document)
-    _documents[doc_id] = document
-    
-    return DocumentResponse(
-        id=document.id,
-        title=document.title,
-        author=document.author,
-        language=language.value,
-        text_length=len(document.text),
+        language=document_data.language,
+        text_length=len(document_data.text),
         sentence_count=0,
         token_count=0,
         period=document_data.period,
-        metadata=document.metadata
+        metadata=metadata
     )
 
 
@@ -307,31 +371,42 @@ async def get_document(
     corpus_id: str = Path(..., description="Corpus ID"),
     document_id: str = Path(..., description="Document ID")
 ):
-    """Get a document by ID"""
-    corpus = _corpora.get(corpus_id)
+    """Get a document by ID from database"""
+    db = get_db()
     
-    if not corpus:
+    if not db.exists("corpora", {"id": corpus_id}):
         raise HTTPException(status_code=404, detail="Corpus not found")
     
-    document = None
-    for doc in corpus.documents:
-        if doc.id == document_id:
-            document = doc
-            break
+    row = db.fetch_one(
+        "SELECT id, title, author, language, period, sentence_count, token_count, metadata FROM documents WHERE id = ? AND corpus_id = ?",
+        [document_id, corpus_id]
+    )
     
-    if not document:
+    if not row:
         raise HTTPException(status_code=404, detail="Document not found")
     
+    row_dict = dict(row) if hasattr(row, 'keys') else {
+        'id': row[0], 'title': row[1], 'author': row[2], 'language': row[3],
+        'period': row[4], 'sentence_count': row[5], 'token_count': row[6], 'metadata': row[7]
+    }
+    
+    metadata = {}
+    if row_dict.get('metadata'):
+        try:
+            metadata = json.loads(row_dict['metadata']) if isinstance(row_dict['metadata'], str) else row_dict['metadata']
+        except:
+            metadata = {}
+    
     return DocumentResponse(
-        id=document.id,
-        title=document.title,
-        author=document.author,
-        language=document.language.value if document.language else "unknown",
-        text_length=len(document.text) if document.text else 0,
-        sentence_count=len(document.sentences),
-        token_count=sum(len(s.tokens) for s in document.sentences),
-        period=document.metadata.get("period"),
-        metadata=document.metadata
+        id=row_dict['id'],
+        title=row_dict['title'],
+        author=row_dict.get('author'),
+        language=row_dict.get('language', 'unknown'),
+        text_length=metadata.get('text_length', 0),
+        sentence_count=row_dict.get('sentence_count', 0) or 0,
+        token_count=row_dict.get('token_count', 0) or 0,
+        period=row_dict.get('period'),
+        metadata=metadata
     )
 
 
@@ -342,60 +417,64 @@ async def get_document_sentences(
     limit: int = Query(100, ge=1, le=1000, description="Maximum results"),
     offset: int = Query(0, ge=0, description="Offset for pagination")
 ):
-    """Get sentences from a document"""
-    corpus = _corpora.get(corpus_id)
+    """Get sentences from a document from database"""
+    db = get_db()
     
-    if not corpus:
+    if not db.exists("corpora", {"id": corpus_id}):
         raise HTTPException(status_code=404, detail="Corpus not found")
     
-    document = None
-    for doc in corpus.documents:
-        if doc.id == document_id:
-            document = doc
-            break
-    
-    if not document:
+    if not db.exists("documents", {"id": document_id, "corpus_id": corpus_id}):
         raise HTTPException(status_code=404, detail="Document not found")
     
-    sentences = document.sentences[offset:offset + limit]
+    rows = db.fetch_all(
+        f"SELECT id, text FROM sentences WHERE document_id = ? LIMIT {limit} OFFSET {offset}",
+        [document_id]
+    )
     
-    return [
-        SentenceResponse(
-            id=sent.id,
-            text=sent.text,
-            token_count=len(sent.tokens)
-        )
-        for sent in sentences
-    ]
+    results = []
+    for row in rows:
+        row_dict = dict(row) if hasattr(row, 'keys') else {'id': row[0], 'text': row[1]}
+        
+        token_count = db.count("tokens", {"sentence_id": row_dict['id']})
+        
+        results.append(SentenceResponse(
+            id=row_dict['id'],
+            text=row_dict.get('text', ''),
+            token_count=token_count
+        ))
+    
+    return results
 
 
 @router.get("/{corpus_id}/statistics")
 async def get_corpus_statistics(
     corpus_id: str = Path(..., description="Corpus ID")
 ):
-    """Get corpus statistics"""
-    corpus = _corpora.get(corpus_id)
+    """Get corpus statistics from database"""
+    db = get_db()
     
-    if not corpus:
+    if not db.exists("corpora", {"id": corpus_id}):
         raise HTTPException(status_code=404, detail="Corpus not found")
     
-    total_documents = len(corpus.documents)
-    total_sentences = sum(len(doc.sentences) for doc in corpus.documents)
-    total_tokens = sum(
-        sum(len(s.tokens) for s in doc.sentences)
-        for doc in corpus.documents
+    total_documents = db.count("documents", {"corpus_id": corpus_id})
+    
+    sentence_row = db.fetch_one(
+        "SELECT COUNT(*) FROM sentences s JOIN documents d ON s.document_id = d.id WHERE d.corpus_id = ?",
+        [corpus_id]
     )
-    total_characters = sum(
-        len(doc.text) if doc.text else 0
-        for doc in corpus.documents
+    total_sentences = sentence_row[0] if sentence_row else 0
+    
+    token_row = db.fetch_one(
+        "SELECT COUNT(*) FROM tokens t JOIN sentences s ON t.sentence_id = s.id JOIN documents d ON s.document_id = d.id WHERE d.corpus_id = ?",
+        [corpus_id]
     )
+    total_tokens = token_row[0] if token_row else 0
     
     return {
         "corpus_id": corpus_id,
         "total_documents": total_documents,
         "total_sentences": total_sentences,
         "total_tokens": total_tokens,
-        "total_characters": total_characters,
         "average_tokens_per_sentence": total_tokens / total_sentences if total_sentences > 0 else 0,
         "average_sentences_per_document": total_sentences / total_documents if total_documents > 0 else 0
     }
@@ -407,34 +486,39 @@ async def upload_document(
     file: UploadFile = File(..., description="Document file"),
     user: Optional[User] = Depends(get_current_user)
 ):
-    """Upload a document file"""
-    corpus = _corpora.get(corpus_id)
+    """Upload a document file to database"""
+    db = get_db()
     
-    if not corpus:
+    if not db.exists("corpora", {"id": corpus_id}):
         raise HTTPException(status_code=404, detail="Corpus not found")
     
     content = await file.read()
     text = content.decode("utf-8")
     
-    import uuid
     doc_id = str(uuid.uuid4())
+    created_at = datetime.now().isoformat()
     
-    document = Document(
-        id=doc_id,
-        title=file.filename or "Uploaded Document",
-        language=corpus.language or Language.ANCIENT_GREEK,
-        text=text,
-        sentences=[],
-        metadata={
-            "filename": file.filename,
-            "content_type": file.content_type,
-            "created_at": datetime.now().isoformat(),
-            "created_by": user.username if user else "anonymous"
-        }
-    )
+    corpus_row = db.fetch_one("SELECT language FROM corpora WHERE id = ?", [corpus_id])
+    language = corpus_row[0] if corpus_row else "grc"
     
-    corpus.documents.append(document)
-    _documents[doc_id] = document
+    metadata = {
+        "filename": file.filename,
+        "content_type": file.content_type,
+        "text_length": len(text),
+        "created_by": user.username if user else "anonymous"
+    }
+    
+    db.insert("documents", {
+        "id": doc_id,
+        "corpus_id": corpus_id,
+        "title": file.filename or "Uploaded Document",
+        "language": language,
+        "sentence_count": 0,
+        "token_count": 0,
+        "metadata": json.dumps(metadata),
+        "created_at": created_at,
+        "updated_at": created_at
+    })
     
     return {
         "message": "Document uploaded",
