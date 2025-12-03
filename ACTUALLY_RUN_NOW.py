@@ -47,6 +47,12 @@ def init_database():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     
+    # Drop and recreate tables to ensure clean schema
+    cursor.execute("DROP TABLE IF EXISTS tokens")
+    cursor.execute("DROP TABLE IF EXISTS sentences")
+    cursor.execute("DROP TABLE IF EXISTS documents")
+    cursor.execute("DROP TABLE IF EXISTS valency_frames")
+    
     # Documents table
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS documents (
