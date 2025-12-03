@@ -17,8 +17,13 @@ import time
 from pathlib import Path
 from datetime import datetime
 
-# Configuration
-DATA_DIR = Path("/root/corpus_platform/data")
+# Configuration - detect OS
+import platform
+if platform.system() == 'Windows':
+    DATA_DIR = Path("Z:/corpus_platform/data")
+else:
+    DATA_DIR = Path("/root/corpus_platform/data")
+
 DB_PATH = DATA_DIR / "corpus_platform.db"
 CACHE_DIR = DATA_DIR / "cache"
 
@@ -248,10 +253,12 @@ def collect_ud_treebanks():
         treebank_tokens = 0
         
         for split in ["train", "dev", "test"]:
-            filename = f"{treebank_id.replace('_', '-')}-ud-{split}.conllu"
+            # UD filename format: grc_proiel-ud-train.conllu (underscore in lang, hyphen before ud)
+            filename = f"{treebank_id}-ud-{split}.conllu"
             url = f"{info['url']}/{filename}"
             cache_path = CACHE_DIR / f"{treebank_id}_{split}.conllu"
             
+            print(f"  Downloading: {filename}...")
             content = download_file(url, cache_path)
             if not content:
                 continue
