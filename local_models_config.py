@@ -1,49 +1,74 @@
 """
 Local Models Configuration
-Ensures all AI models are loaded from Z:\models\ directory
-No repeated downloads needed - all models stored locally
+Ensures all AI models are loaded from the appropriate directory based on environment.
+Supports both Windows (Z: drive) and Linux/cloud deployments.
+
+This module now uses the centralized config.py for path management.
 """
 
 import os
+import sys
 from pathlib import Path
 
-# Base directory for all models
-MODELS_BASE = Path("Z:/models")
+try:
+    from config import config
+    MODELS_BASE = config.base_models_dir
+    STANZA_DIR = config.stanza_resources_dir
+    NLTK_DIR = config.nltk_data_dir
+    TRANSFORMERS_DIR = config.transformers_cache_dir
+    SPACY_DIR = config.spacy_data_dir
+    OLLAMA_DIR = config.ollama_models_dir
+    _using_centralized_config = True
+except ImportError:
+    _using_centralized_config = False
+    
+    is_windows = sys.platform.startswith('win')
+    z_drive_available = is_windows and Path("Z:/").exists()
+    
+    if z_drive_available:
+        MODELS_BASE = Path("Z:/models")
+    else:
+        MODELS_BASE = Path(__file__).parent / "models"
+    
+    STANZA_DIR = MODELS_BASE / "stanza"
+    NLTK_DIR = MODELS_BASE / "nltk_data"
+    TRANSFORMERS_DIR = MODELS_BASE / "transformers"
+    SPACY_DIR = MODELS_BASE / "spacy"
+    OLLAMA_DIR = MODELS_BASE / "ollama"
 
-# Stanza NLP models
-STANZA_DIR = MODELS_BASE / "stanza"
 os.environ['STANZA_RESOURCES_DIR'] = str(STANZA_DIR)
-
-# NLTK data
-NLTK_DIR = MODELS_BASE / "nltk_data"
 os.environ['NLTK_DATA'] = str(NLTK_DIR)
-
-# Hugging Face / Transformers models
-TRANSFORMERS_DIR = MODELS_BASE / "transformers"
 os.environ['TRANSFORMERS_CACHE'] = str(TRANSFORMERS_DIR)
 os.environ['HF_HOME'] = str(TRANSFORMERS_DIR)
 os.environ['TORCH_HOME'] = str(TRANSFORMERS_DIR)
-
-# spaCy models
-SPACY_DIR = MODELS_BASE / "spacy"
 os.environ['SPACY_DATA'] = str(SPACY_DIR)
-
-# Ollama models (if used)
-OLLAMA_DIR = MODELS_BASE / "ollama"
 os.environ['OLLAMA_MODELS'] = str(OLLAMA_DIR)
 
 
 def ensure_directories():
     """Create model directories if they don't exist"""
-    for directory in [STANZA_DIR, NLTK_DIR, TRANSFORMERS_DIR, SPACY_DIR, OLLAMA_DIR]:
-        directory.mkdir(parents=True, exist_ok=True)
+    directories = [STANZA_DIR, NLTK_DIR, TRANSFORMERS_DIR, SPACY_DIR, OLLAMA_DIR]
+    for directory in directories:
+        try:
+            directory.mkdir(parents=True, exist_ok=True)
+        except PermissionError:
+            pass
+        except Exception:
+            pass
 
 
 def verify_models():
     """Check if models are downloaded"""
+    def dir_has_content(d):
+        try:
+            return d.exists() and any(d.iterdir())
+        except:
+            return False
+    
     status = {
-        'stanza': STANZA_DIR.exists() and any(STANZA_DIR.iterdir()),
-        'nltk': NLTK_DIR.exists() and any(NLTK_DIR.iterdir()),
+        'stanza': dir_has_content(STANZA_DIR),
+        'nltk': dir_has_content(NLTK_DIR),
+        'transformers': TRANSFORMERS_DIR.exists(),
         'models_base': MODELS_BASE.exists()
     }
     return status
@@ -59,12 +84,15 @@ def get_nltk_data_path():
     return str(NLTK_DIR)
 
 
-# Initialize on import
+def get_models_base():
+    """Get base models directory"""
+    return str(MODELS_BASE)
+
+
 ensure_directories()
 
-# Print confirmation when imported
 if __name__ != "__main__":
-    print(f"✓ Local models config loaded - using Z:\\models\\")
-    status = verify_models()
-    if not status['models_base']:
-        print(f"⚠ Warning: Models directory not found. Run SETUP_MODELS_ONCE.bat")
+    if _using_centralized_config:
+        print(f"Local models config loaded - using centralized config: {MODELS_BASE}")
+    else:
+        print(f"Local models config loaded - using fallback: {MODELS_BASE}")

@@ -737,14 +737,18 @@ SEMANTIC_ROLES = {
 
 class DatabaseManager:
     def __init__(self, db_path: str = None):
-        # Use the correct database path based on OS
         if db_path is None:
-            import platform
-            if platform.system() == 'Windows':
-                db_path = "Z:/corpus_platform/data/corpus_platform.db"
-            else:
-                db_path = "/root/corpus_platform/data/corpus_platform.db"
+            try:
+                from config import config
+                db_path = str(config.corpus_db_path)
+            except ImportError:
+                import platform
+                if platform.system() == 'Windows':
+                    db_path = "Z:/corpus_platform/data/corpus_platform.db"
+                else:
+                    db_path = os.path.join(os.path.dirname(__file__), "data", "corpus_platform.db")
         self.db_path = db_path
+        os.makedirs(os.path.dirname(self.db_path), exist_ok=True)
         self.init_database()
     
     def get_connection(self):
@@ -2336,7 +2340,7 @@ def render_infrastructure_funding(db):
             st.caption(contact)
     
     st.markdown("---")
-    st.caption("Full documentation: Z:\\corpus_platform\\FUNDING_INFRASTRUCTURE.md")
+    st.caption("Full documentation: See FUNDING_INFRASTRUCTURE.md in the repository")
 
 
 if __name__ == "__main__":
