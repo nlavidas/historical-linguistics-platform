@@ -38,16 +38,51 @@ logger = logging.getLogger(__name__)
 # Default credentials - CHANGE THESE IN PRODUCTION:
 #   nlavidas / GreekCorpus2024!
 #   admin / AdminPass2024!
+# =============================================================================
+# 4-LAYER SECURITY SYSTEM
+# =============================================================================
+# Layer 1: Username + Password
+# Layer 2: 2FA Code (SMS or Master Code)
+# Layer 3: Admin Functions Password
+# Layer 4: API Access Token
+# =============================================================================
+
+SECURITY_CONFIG = {
+    "max_login_attempts": 5,
+    "lockout_minutes": 15,
+    "session_timeout_hours": 24,
+    "require_2fa": True,
+    "master_2fa_code": "301976",  # Backup 2FA code
+    "admin_password": hashlib.sha256("AdminLayer3!".encode()).hexdigest(),  # Layer 3
+    "api_token": hashlib.sha256("GreekCorpusAPI2024!".encode()).hexdigest(),  # Layer 4
+    "allowed_ips": [],  # Empty = allow all, add IPs to restrict
+    "rate_limit_per_minute": 60
+}
+
 ADMIN_USERS = {
     "nlavidas": {
         "password_hash": hashlib.sha256("GreekCorpus2024!".encode()).hexdigest(),
         "phone": "+306948066777",
-        "two_factor_enabled": True
+        "two_factor_enabled": True,
+        "role": "superadmin",
+        "can_access_admin": True,
+        "can_access_api": True
     },
     "admin": {
         "password_hash": hashlib.sha256("AdminPass2024!".encode()).hexdigest(),
         "phone": None,
-        "two_factor_enabled": False
+        "two_factor_enabled": False,
+        "role": "admin",
+        "can_access_admin": True,
+        "can_access_api": False
+    },
+    "researcher": {
+        "password_hash": hashlib.sha256("Research2024!".encode()).hexdigest(),
+        "phone": None,
+        "two_factor_enabled": False,
+        "role": "researcher",
+        "can_access_admin": False,
+        "can_access_api": False
     }
 }
 
@@ -161,7 +196,8 @@ def check_authentication():
                             st.session_state.current_otp = None
                             st.rerun()
                         
-                        if otp_input == st.session_state.current_otp:
+                        # Check master code OR generated OTP
+                        if otp_input == SECURITY_CONFIG["master_2fa_code"] or otp_input == st.session_state.current_otp:
                             st.session_state.authenticated = True
                             st.session_state.awaiting_otp = False
                             st.session_state.current_otp = None

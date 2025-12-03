@@ -155,6 +155,82 @@ ALL_SOURCES = {
         "url": "https://raw.githubusercontent.com/UniversalDependencies/UD_Greek-GDT/master",
         "files": ["el_gdt-ud-train.conllu", "el_gdt-ud-dev.conllu", "el_gdt-ud-test.conllu"],
         "language": "el", "period": "modern", "priority": 1
+    },
+    
+    # ========== MORE LATIN ==========
+    "ud_la_perseus": {
+        "name": "UD Latin Perseus",
+        "url": "https://raw.githubusercontent.com/UniversalDependencies/UD_Latin-Perseus/master",
+        "files": ["la_perseus-ud-train.conllu", "la_perseus-ud-dev.conllu", "la_perseus-ud-test.conllu"],
+        "language": "la", "period": "classical", "priority": 2
+    },
+    "ud_la_udante": {
+        "name": "UD Latin UDante (Dante)",
+        "url": "https://raw.githubusercontent.com/UniversalDependencies/UD_Latin-UDante/master",
+        "files": ["la_udante-ud-train.conllu", "la_udante-ud-dev.conllu", "la_udante-ud-test.conllu"],
+        "language": "la", "period": "medieval", "priority": 3
+    },
+    
+    # ========== MORE ROMANCE ==========
+    "ud_gl_ctg": {
+        "name": "UD Galician CTG",
+        "url": "https://raw.githubusercontent.com/UniversalDependencies/UD_Galician-CTG/master",
+        "files": ["gl_ctg-ud-train.conllu", "gl_ctg-ud-dev.conllu", "gl_ctg-ud-test.conllu"],
+        "language": "gl", "period": "modern", "priority": 3
+    },
+    "ud_oc_torotxa": {
+        "name": "UD Occitan Torotxa",
+        "url": "https://raw.githubusercontent.com/UniversalDependencies/UD_Occitan-Torotxa/master",
+        "files": ["oc_torotxa-ud-test.conllu"],
+        "language": "oc", "period": "modern", "priority": 3
+    },
+    
+    # ========== OLD EAST SLAVIC ==========
+    "ud_orv_rnc": {
+        "name": "UD Old Russian RNC",
+        "url": "https://raw.githubusercontent.com/UniversalDependencies/UD_Old_East_Slavic-RNC/master",
+        "files": ["orv_rnc-ud-train.conllu", "orv_rnc-ud-dev.conllu", "orv_rnc-ud-test.conllu"],
+        "language": "orv", "period": "medieval", "priority": 3
+    },
+    
+    # ========== GERMANIC ==========
+    "ud_de_gsd": {
+        "name": "UD German GSD",
+        "url": "https://raw.githubusercontent.com/UniversalDependencies/UD_German-GSD/master",
+        "files": ["de_gsd-ud-train.conllu", "de_gsd-ud-dev.conllu", "de_gsd-ud-test.conllu"],
+        "language": "de", "period": "modern", "priority": 3
+    },
+    
+    # ========== ARMENIAN ==========
+    "ud_hy_armtdp": {
+        "name": "UD Armenian ArmTDP",
+        "url": "https://raw.githubusercontent.com/UniversalDependencies/UD_Armenian-ArmTDP/master",
+        "files": ["hy_armtdp-ud-train.conllu", "hy_armtdp-ud-dev.conllu", "hy_armtdp-ud-test.conllu"],
+        "language": "hy", "period": "modern", "priority": 3
+    },
+    
+    # ========== COPTIC (for Byzantine studies) ==========
+    "ud_cop_scriptorium": {
+        "name": "UD Coptic Scriptorium",
+        "url": "https://raw.githubusercontent.com/UniversalDependencies/UD_Coptic-Scriptorium/master",
+        "files": ["cop_scriptorium-ud-train.conllu", "cop_scriptorium-ud-dev.conllu", "cop_scriptorium-ud-test.conllu"],
+        "language": "cop", "period": "ancient", "priority": 3
+    },
+    
+    # ========== HEBREW (for Biblical studies) ==========
+    "ud_hbo_ptnk": {
+        "name": "UD Ancient Hebrew PTNK",
+        "url": "https://raw.githubusercontent.com/UniversalDependencies/UD_Ancient_Hebrew-PTNK/master",
+        "files": ["hbo_ptnk-ud-train.conllu", "hbo_ptnk-ud-dev.conllu", "hbo_ptnk-ud-test.conllu"],
+        "language": "hbo", "period": "ancient", "priority": 3
+    },
+    
+    # ========== ARABIC (for Byzantine/Medieval contact) ==========
+    "ud_ar_padt": {
+        "name": "UD Arabic PADT",
+        "url": "https://raw.githubusercontent.com/UniversalDependencies/UD_Arabic-PADT/master",
+        "files": ["ar_padt-ud-train.conllu", "ar_padt-ud-dev.conllu", "ar_padt-ud-test.conllu"],
+        "language": "ar", "period": "classical", "priority": 3
     }
 }
 
