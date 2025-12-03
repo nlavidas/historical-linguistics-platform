@@ -942,7 +942,8 @@ def main():
         "Pipeline Control",
         "Research Profile",
         "AI Hub",
-        "Diachronic Analysis"
+        "Diachronic Analysis",
+        "🇪🇺 EOSC/CLARIN/ERC"
     ])
     
     with tabs[0]:
@@ -980,6 +981,9 @@ def main():
     
     with tabs[11]:
         render_diachronic_analysis(db)
+    
+    with tabs[12]:
+        render_infrastructure_funding(db)
 
 
 def render_ai_hub(db):
@@ -2076,6 +2080,225 @@ def render_pipeline_control(db):
     with col3:
         if st.button("📥 Collect Byzantine Texts"):
             st.info("Collecting Byzantine Greek texts...")
+
+
+def render_infrastructure_funding(db):
+    """European Research Infrastructure & Funding Hub"""
+    st.markdown("### 🇪🇺 European Research Infrastructure & Funding")
+    st.markdown("**ERC+ Quality** - Integration with EOSC, CLARIN, DARIAH, INESS")
+    
+    st.markdown("---")
+    
+    # Infrastructure Status
+    st.markdown("#### 🏛️ Target Infrastructures")
+    
+    infrastructures = [
+        {
+            "name": "EOSC",
+            "full": "European Open Science Cloud",
+            "url": "https://eosc-portal.eu/",
+            "status": "🟡 Planned",
+            "fit": "FAIR-compliant corpus, open access",
+            "action": "Register as Service Provider"
+        },
+        {
+            "name": "CLARIN",
+            "full": "Common Language Resources & Technology",
+            "url": "https://www.clarin.eu/",
+            "status": "🟡 Planned",
+            "fit": "Linguistic corpora, NLP tools, UD annotation",
+            "action": "Deposit corpus, apply for Centre status"
+        },
+        {
+            "name": "DARIAH",
+            "full": "Digital Research Infrastructure for Arts & Humanities",
+            "url": "https://www.dariah.eu/",
+            "status": "🟡 Planned",
+            "fit": "Historical linguistics, Byzantine studies",
+            "action": "Join as contributing partner"
+        },
+        {
+            "name": "INESS",
+            "full": "Infrastructure for Syntax & Semantics",
+            "url": "http://iness.uib.no/",
+            "status": "🟡 Planned",
+            "fit": "PROIEL-style treebanks",
+            "action": "Submit treebank for inclusion"
+        }
+    ]
+    
+    cols = st.columns(2)
+    for i, infra in enumerate(infrastructures):
+        with cols[i % 2]:
+            st.markdown(f"""
+            <div class="info-card">
+                <h3>{infra['name']} {infra['status']}</h3>
+                <p><strong>{infra['full']}</strong></p>
+                <p><a href="{infra['url']}" target="_blank">{infra['url']}</a></p>
+                <p><em>Fit:</em> {infra['fit']}</p>
+                <p><em>Action:</em> {infra['action']}</p>
+            </div>
+            """, unsafe_allow_html=True)
+    
+    st.markdown("---")
+    
+    # Funding Opportunities
+    st.markdown("#### 💰 Funding Opportunities")
+    
+    funding_tabs = st.tabs(["ERC Grants", "Horizon Europe", "National (Greece)", "Timeline"])
+    
+    with funding_tabs[0]:
+        st.markdown("##### European Research Council")
+        
+        erc_grants = [
+            ("Starting Grant", "€1.5M / 5 years", "2-7 years post-PhD", "October"),
+            ("Consolidator Grant", "€2M / 5 years", "7-12 years post-PhD", "February"),
+            ("Advanced Grant", "€2.5M / 5 years", "Established researchers", "May"),
+            ("Synergy Grant", "€10M / 6 years", "2-4 PIs collaborative", "November")
+        ]
+        
+        for name, budget, eligibility, deadline in erc_grants:
+            col1, col2, col3, col4 = st.columns(4)
+            col1.markdown(f"**{name}**")
+            col2.markdown(budget)
+            col3.markdown(eligibility)
+            col4.markdown(f"Deadline: {deadline}")
+        
+        st.markdown("[ERC Website](https://erc.europa.eu/)")
+    
+    with funding_tabs[1]:
+        st.markdown("##### Horizon Europe Calls")
+        
+        horizon_calls = [
+            ("HORIZON-CL2-HERITAGE", "Cultural heritage", "€2-4M"),
+            ("HORIZON-INFRA-EOSC", "EOSC integration", "€1-3M"),
+            ("HORIZON-CL2-DEMOCRACY", "Democracy & governance", "€2-3M"),
+            ("MSCA Postdoctoral", "Individual fellowships", "€200K")
+        ]
+        
+        for call, topic, budget in horizon_calls:
+            st.markdown(f"- **{call}**: {topic} ({budget})")
+        
+        st.markdown("[Horizon Europe Portal](https://ec.europa.eu/info/funding-tenders/)")
+    
+    with funding_tabs[2]:
+        st.markdown("##### Greek National Funding")
+        
+        st.markdown("""
+        **HFRI (Hellenic Foundation for Research & Innovation)**
+        - URL: https://www.elidek.gr/
+        - Budget: €100K-500K
+        - Focus: Research projects for faculty
+        
+        **GSRT (General Secretariat for Research & Technology)**
+        - URL: http://www.gsrt.gr/
+        - National research programs
+        
+        **IKY (State Scholarships Foundation)**
+        - Postdoctoral fellowships
+        - Research abroad programs
+        """)
+    
+    with funding_tabs[3]:
+        st.markdown("##### Action Timeline")
+        
+        timeline = [
+            ("2025 Q1", "🟢", "Register CLARIN:EL, contact DARIAH-GR"),
+            ("2025 Q2", "🟡", "Prepare corpus metadata (CMDI format)"),
+            ("2025 Q3", "🟡", "Draft ERC proposal, HFRI application"),
+            ("2025 Q4", "🟡", "Submit ERC Consolidator (if eligible)"),
+            ("2026 Q1", "⚪", "EOSC registration, INESS submission"),
+            ("2026 Q2", "⚪", "Horizon Europe consortium building"),
+            ("2026+", "⚪", "Full infrastructure integration")
+        ]
+        
+        for period, status, action in timeline:
+            st.markdown(f"{status} **{period}**: {action}")
+    
+    st.markdown("---")
+    
+    # FAIR Compliance Checklist
+    st.markdown("#### ✅ FAIR Compliance Checklist")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown("**Findable**")
+        st.checkbox("Persistent Identifiers (DOI/Handle)", value=False)
+        st.checkbox("Rich metadata (CMDI format)", value=False)
+        st.checkbox("Indexed in searchable resources", value=True)
+        
+        st.markdown("**Accessible**")
+        st.checkbox("Open protocols (HTTP/HTTPS)", value=True)
+        st.checkbox("Authentication where needed", value=True)
+        st.checkbox("Metadata always available", value=True)
+    
+    with col2:
+        st.markdown("**Interoperable**")
+        st.checkbox("PROIEL/UD standards", value=True)
+        st.checkbox("Formal vocabularies", value=True)
+        st.checkbox("Qualified references", value=True)
+        
+        st.markdown("**Reusable**")
+        st.checkbox("Clear licensing (CC-BY)", value=False)
+        st.checkbox("Detailed provenance", value=True)
+        st.checkbox("Community standards", value=True)
+    
+    st.markdown("---")
+    
+    # Project Proposal Summary
+    st.markdown("#### 📋 Project Proposal: DIACHRONIC-GRC")
+    
+    with st.expander("View Full Proposal Summary"):
+        st.markdown("""
+        **Title**: DIACHRONIC-GRC: A FAIR-Compliant Diachronic Corpus Platform for Greek Linguistics
+        
+        **Abstract**: The Greek language presents a unique opportunity for diachronic linguistic research, 
+        with an unbroken written tradition spanning over 3,000 years. DIACHRONIC-GRC addresses the gap 
+        in comprehensive, FAIR-compliant digital infrastructure covering all periods with consistent 
+        annotation standards.
+        
+        **Work Packages**:
+        - WP1: Corpus Development (10M+ tokens)
+        - WP2: Annotation Infrastructure (PROIEL/UD)
+        - WP3: NLP Tools (ML models)
+        - WP4: OCR & Digitization
+        - WP5: Infrastructure Integration (CLARIN/DARIAH/EOSC)
+        - WP6: Dissemination
+        
+        **Budget** (ERC Consolidator, 5 years):
+        - Personnel: €1.4M
+        - Equipment & Cloud: €150K
+        - Travel & Dissemination: €250K
+        - Indirect Costs: €450K
+        - **Total: €2.25M**
+        
+        **Impact**:
+        1. First comprehensive diachronic Greek corpus
+        2. New standards for historical corpus linguistics
+        3. Open-source NLP tools for historical Greek
+        4. Training materials for digital humanities
+        5. Preservation of Greek linguistic heritage
+        """)
+    
+    # Key Contacts
+    st.markdown("#### 📞 Key Contacts")
+    
+    contacts = {
+        "CLARIN:EL": "contact@clarin.gr",
+        "DARIAH-GR": "Academy of Athens",
+        "EOSC": "eosc-portal.eu",
+        "ERC NCP Greece": "GSRT"
+    }
+    
+    cols = st.columns(4)
+    for i, (org, contact) in enumerate(contacts.items()):
+        with cols[i]:
+            st.markdown(f"**{org}**")
+            st.caption(contact)
+    
+    st.markdown("---")
+    st.caption("Full documentation: Z:\\corpus_platform\\FUNDING_INFRASTRUCTURE.md")
 
 
 if __name__ == "__main__":
