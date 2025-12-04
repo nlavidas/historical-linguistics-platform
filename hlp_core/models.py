@@ -44,6 +44,7 @@ class Language(Enum):
     OLD_CHURCH_SLAVONIC = "chu"
     GOTHIC = "got"
     OLD_ARMENIAN = "xcl"
+    ARMENIAN = "hy"
     OLD_ENGLISH = "ang"
     OLD_NORSE = "non"
     SANSKRIT = "san"
@@ -53,6 +54,13 @@ class Language(Enum):
     TOCHARIAN_A = "xto"
     TOCHARIAN_B = "txb"
     OLD_IRISH = "sga"
+    ENGLISH = "en"
+    GERMAN = "de"
+    FRENCH = "fr"
+    ITALIAN = "it"
+    SPANISH = "es"
+    PORTUGUESE = "pt"
+    RUSSIAN = "ru"
     UNKNOWN = "und"
 
 
@@ -62,13 +70,23 @@ class Period(Enum):
     ARCHAIC = "archaic"
     CLASSICAL = "classical"
     HELLENISTIC = "hellenistic"
+    ROMAN = "roman"
     ROMAN_IMPERIAL = "roman_imperial"
     LATE_ANTIQUE = "late_antique"
+    OLD_LATIN = "old_latin"
+    CLASSICAL_LATIN = "classical_latin"
+    SILVER_LATIN = "silver_latin"
+    LATE_LATIN = "late_latin"
+    MEDIEVAL_LATIN = "medieval_latin"
+    RENAISSANCE_LATIN = "renaissance_latin"
+    BYZANTINE = "byzantine"
     EARLY_BYZANTINE = "early_byzantine"
     MIDDLE_BYZANTINE = "middle_byzantine"
     LATE_BYZANTINE = "late_byzantine"
+    MEDIEVAL = "medieval"
     EARLY_MODERN = "early_modern"
     MODERN = "modern"
+    CUSTOM = "custom"
     UNKNOWN = "unknown"
 
 
@@ -248,11 +266,14 @@ class Degree(Enum):
 class DependencyRelation(Enum):
     """Universal Dependencies relations with PROIEL extensions"""
     ROOT = "root"
+    ACL = "acl"
+    ACL_RELCL = "acl:relcl"
     NSUBJ = "nsubj"
     NSUBJ_PASS = "nsubj:pass"
     OBJ = "obj"
     IOBJ = "iobj"
     CSUBJ = "csubj"
+    CSUBJ_PASS = "csubj:pass"
     CCOMP = "ccomp"
     XCOMP = "xcomp"
     OBL = "obl"
@@ -283,7 +304,7 @@ class DependencyRelation(Enum):
     LIST = "list"
     PARATAXIS = "parataxis"
     ORPHAN = "orphan"
-    GOESWith = "goeswith"
+    GOESWITH = "goeswith"
     REPARANDUM = "reparandum"
     PUNCT = "punct"
     DEP = "dep"
@@ -357,6 +378,14 @@ class NamedEntityType(Enum):
     QUANTITY = "QUANTITY"
     ORDINAL = "ORDINAL"
     CARDINAL = "CARDINAL"
+    NORP = "NORP"
+    FACILITY = "FAC"
+    PRODUCT = "PRODUCT"
+    WORK_OF_ART = "WORK_OF_ART"
+    LAW = "LAW"
+    LANGUAGE = "LANGUAGE"
+    PERCENT = "PERCENT"
+    MISC = "MISC"
     UNKNOWN = "UNK"
 
 
@@ -707,6 +736,56 @@ class SyntacticRelation:
             result["proiel_relation"] = self.proiel_relation
         if self.proiel_slashes:
             result["proiel_slashes"] = self.proiel_slashes
+        return result
+
+
+@dataclass
+class MorphologyAnnotation:
+    """Morphological annotation for a token"""
+    case: Optional[Case] = None
+    number: Optional[str] = None
+    gender: Optional[str] = None
+    person: Optional[str] = None
+    tense: Optional[str] = None
+    mood: Optional[str] = None
+    voice: Optional[str] = None
+    ud_feats: Dict[str, Any] = field(default_factory=dict)
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary representation"""
+        result = {}
+        if self.case:
+            result["case"] = self.case.value if hasattr(self.case, 'value') else str(self.case)
+        if self.number:
+            result["number"] = self.number
+        if self.gender:
+            result["gender"] = self.gender
+        if self.person:
+            result["person"] = self.person
+        if self.tense:
+            result["tense"] = self.tense
+        if self.mood:
+            result["mood"] = self.mood
+        if self.voice:
+            result["voice"] = self.voice
+        if self.ud_feats:
+            result["ud_feats"] = self.ud_feats
+        return result
+
+
+@dataclass
+class SyntaxAnnotation:
+    """Syntactic annotation for a token"""
+    head: Optional[str] = None
+    deprel: Optional[str] = None
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary representation"""
+        result = {}
+        if self.head is not None:
+            result["head"] = self.head
+        if self.deprel:
+            result["deprel"] = self.deprel
         return result
 
 

@@ -49,6 +49,17 @@ from hlp_core.models import (
 logger = logging.getLogger(__name__)
 
 
+@dataclass
+class PROIELConfig:
+    """Configuration for PROIEL XML processing"""
+    validate_schema: bool = True
+    preserve_whitespace: bool = False
+    include_empty_tokens: bool = False
+    normalize_unicode: bool = True
+    default_language: str = "grc"
+    default_period: str = "classical"
+
+
 PROIEL_NAMESPACE = "http://proiel.eu/xml/3.0"
 PROIEL_SCHEMA_LOCATION = "http://proiel.eu/xml/3.0/proiel-3.0.xsd"
 
