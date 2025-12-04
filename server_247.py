@@ -38,6 +38,19 @@ try:
 except ImportError:
     config = None
 
+try:
+    from hlp_collection.collection_agent import CollectionAgent, CollectionConfig, CollectionSource
+    from hlp_collection.arcas_tools import ARCASToolkit, GreekLemmatizer, MorphologicalAnalyzer
+    COLLECTION_AGENT_AVAILABLE = True
+except ImportError:
+    COLLECTION_AGENT_AVAILABLE = False
+
+try:
+    from hlp_citations.citation_manager import CitationManager
+    CITATION_MANAGER_AVAILABLE = True
+except ImportError:
+    CITATION_MANAGER_AVAILABLE = False
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s [SERVER-24/7] %(levelname)s - %(message)s',
@@ -107,12 +120,60 @@ class Server247:
         self._setup_database()
         self._setup_log_file()
         
+        self.collection_agent = None
+        self.arcas_toolkit = None
+        self.citation_manager = None
+        self._init_advanced_modules()
+        
         logger.info("=" * 70)
         logger.info("24/7 SERVER INITIALIZED")
         logger.info("=" * 70)
         logger.info(f"Database: {self.db_path}")
         logger.info(f"Cycle interval: {self.cycle_interval}s")
+        logger.info(f"Collection Agent: {'Available' if self.collection_agent else 'Not available'}")
+        logger.info(f"ARCAS Toolkit: {'Available' if self.arcas_toolkit else 'Not available'}")
+        logger.info(f"Citation Manager: {'Available' if self.citation_manager else 'Not available'}")
         logger.info("=" * 70)
+    
+    def _init_advanced_modules(self):
+        if COLLECTION_AGENT_AVAILABLE:
+            try:
+                collection_config = CollectionConfig(
+                    sources=[
+                        CollectionSource.PERSEUS,
+                        CollectionSource.FIRST1KGREEK,
+                        CollectionSource.GUTENBERG,
+                        CollectionSource.BYZANTINE,
+                        CollectionSource.INTERNET_ARCHIVE,
+                    ],
+                    languages=['grc', 'lat', 'en', 'ang', 'enm'],
+                    max_texts_per_source=50,
+                    collection_interval_hours=6.0,
+                    rate_limit_seconds=3.0,
+                    enable_ocr=True,
+                    database_path=str(Path(self.db_path).parent / "collected_texts.db"),
+                )
+                self.collection_agent = CollectionAgent(collection_config)
+                logger.info("Collection Agent initialized with multi-source support")
+            except Exception as e:
+                logger.warning(f"Failed to initialize Collection Agent: {e}")
+        
+        if COLLECTION_AGENT_AVAILABLE:
+            try:
+                self.arcas_toolkit = ARCASToolkit(language="grc")
+                logger.info("ARCAS Toolkit initialized for Greek analysis")
+            except Exception as e:
+                logger.warning(f"Failed to initialize ARCAS Toolkit: {e}")
+        
+        if CITATION_MANAGER_AVAILABLE:
+            try:
+                self.citation_manager = CitationManager()
+                self.citation_manager.add_lavidas_publications()
+                self.citation_manager.add_proiel_citations()
+                self.citation_manager.add_standard_linguistics_references()
+                logger.info(f"Citation Manager initialized with {len(self.citation_manager.citations)} citations")
+            except Exception as e:
+                logger.warning(f"Failed to initialize Citation Manager: {e}")
     
     def _get_default_db_path(self) -> str:
         if config:
