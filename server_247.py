@@ -335,6 +335,163 @@ class Server247:
                 'original_language': 'grc',
                 'diachronic_stage': 'Modern English (19th century)'
             },
+            {
+                'url': 'https://www.gutenberg.org/cache/epub/6130/pg6130.txt',
+                'title': 'Iliad - Homer (Greek)',
+                'language': 'grc',
+                'genre': 'epic',
+                'period': 'Ancient',
+                'author': 'Homer',
+                'diachronic_stage': 'Ancient Greek (8th century BCE)',
+                'is_classical': True
+            },
+            {
+                'url': 'https://www.gutenberg.org/cache/epub/1999/pg1999.txt',
+                'title': 'Odyssey - Homer (Greek)',
+                'language': 'grc',
+                'genre': 'epic',
+                'period': 'Ancient',
+                'author': 'Homer',
+                'diachronic_stage': 'Ancient Greek (8th century BCE)',
+                'is_classical': True
+            },
+            {
+                'url': 'https://www.gutenberg.org/cache/epub/35899/pg35899.txt',
+                'title': 'Plato - Republic (Greek)',
+                'language': 'grc',
+                'genre': 'philosophy',
+                'period': 'Ancient',
+                'author': 'Plato',
+                'diachronic_stage': 'Classical Greek (4th century BCE)',
+                'is_classical': True
+            },
+            {
+                'url': 'https://www.gutenberg.org/cache/epub/7700/pg7700.txt',
+                'title': 'Aristotle - Poetics (Greek)',
+                'language': 'grc',
+                'genre': 'philosophy',
+                'period': 'Ancient',
+                'author': 'Aristotle',
+                'diachronic_stage': 'Classical Greek (4th century BCE)',
+                'is_classical': True
+            },
+            {
+                'url': 'https://www.gutenberg.org/cache/epub/5827/pg5827.txt',
+                'title': 'Herodotus - Histories (Greek)',
+                'language': 'grc',
+                'genre': 'history',
+                'period': 'Ancient',
+                'author': 'Herodotus',
+                'diachronic_stage': 'Classical Greek (5th century BCE)',
+                'is_classical': True
+            },
+            {
+                'url': 'https://www.gutenberg.org/cache/epub/7142/pg7142.txt',
+                'title': 'Thucydides - History of the Peloponnesian War (Greek)',
+                'language': 'grc',
+                'genre': 'history',
+                'period': 'Ancient',
+                'author': 'Thucydides',
+                'diachronic_stage': 'Classical Greek (5th century BCE)',
+                'is_classical': True
+            },
+            {
+                'url': 'https://www.gutenberg.org/cache/epub/228/pg228.txt',
+                'title': 'Aeschylus - Agamemnon (English)',
+                'language': 'en',
+                'genre': 'drama',
+                'period': 'Modern',
+                'author': 'Aeschylus',
+                'translator': 'E.D.A. Morshead',
+                'is_classical': True,
+                'is_retranslation': True,
+                'original_language': 'grc',
+                'diachronic_stage': 'Modern English (19th century)'
+            },
+            {
+                'url': 'https://www.gutenberg.org/cache/epub/31/pg31.txt',
+                'title': 'Sophocles - Oedipus the King (English)',
+                'language': 'en',
+                'genre': 'drama',
+                'period': 'Modern',
+                'author': 'Sophocles',
+                'is_classical': True,
+                'is_retranslation': True,
+                'original_language': 'grc',
+                'diachronic_stage': 'Modern English (19th century)'
+            },
+            {
+                'url': 'https://www.gutenberg.org/cache/epub/35688/pg35688.txt',
+                'title': 'Euripides - Medea (Greek)',
+                'language': 'grc',
+                'genre': 'drama',
+                'period': 'Ancient',
+                'author': 'Euripides',
+                'diachronic_stage': 'Classical Greek (5th century BCE)',
+                'is_classical': True
+            },
+            {
+                'url': 'https://www.gutenberg.org/cache/epub/2680/pg2680.txt',
+                'title': 'Meditations - Marcus Aurelius (English)',
+                'language': 'en',
+                'genre': 'philosophy',
+                'period': 'Modern',
+                'author': 'Marcus Aurelius',
+                'is_classical': True,
+                'is_retranslation': True,
+                'original_language': 'grc',
+                'diachronic_stage': 'Modern English (19th century)'
+            },
+            {
+                'url': 'https://www.gutenberg.org/cache/epub/2707/pg2707.txt',
+                'title': 'Meditations - Marcus Aurelius (Greek)',
+                'language': 'grc',
+                'genre': 'philosophy',
+                'period': 'Ancient',
+                'author': 'Marcus Aurelius',
+                'diachronic_stage': 'Koine Greek (2nd century CE)',
+                'is_classical': True
+            },
+            {
+                'url': 'https://www.gutenberg.org/cache/epub/5946/pg5946.txt',
+                'title': 'Nicomachean Ethics - Aristotle (English)',
+                'language': 'en',
+                'genre': 'philosophy',
+                'period': 'Modern',
+                'author': 'Aristotle',
+                'is_classical': True,
+                'is_retranslation': True,
+                'original_language': 'grc',
+                'diachronic_stage': 'Modern English (19th century)'
+            },
+            {
+                'url': 'https://www.gutenberg.org/cache/epub/45109/pg45109.txt',
+                'title': 'Septuagint - Genesis (Greek)',
+                'language': 'grc',
+                'genre': 'biblical',
+                'period': 'Ancient',
+                'diachronic_stage': 'Koine Greek (3rd century BCE)',
+                'is_biblical': True,
+                'is_classical': True
+            },
+            {
+                'url': 'https://www.gutenberg.org/cache/epub/1636/pg1636.txt',
+                'title': 'Paradise Lost - Milton',
+                'language': 'en',
+                'genre': 'epic',
+                'period': 'Early Modern',
+                'author': 'John Milton',
+                'diachronic_stage': 'Early Modern English (17th century)'
+            },
+            {
+                'url': 'https://www.gutenberg.org/cache/epub/100/pg100.txt',
+                'title': 'Complete Works of Shakespeare',
+                'language': 'en',
+                'genre': 'drama',
+                'period': 'Renaissance',
+                'author': 'William Shakespeare',
+                'diachronic_stage': 'Early Modern English (16th-17th century)'
+            },
         ]
     
     def _download_text(self, url: str) -> Optional[str]:
