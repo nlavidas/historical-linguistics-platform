@@ -16,6 +16,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 
 logger = logging.getLogger(__name__)
 
@@ -107,6 +108,7 @@ def create_app(config: Optional[APIConfig] = None) -> FastAPI:
     from hlp_api.routes_diachronic import router as diachronic_router
     from hlp_api.routes_ingest import router as ingest_router
     from hlp_api.routes_qa import router as qa_router
+    from hlp_api.routes_ui import router as ui_router
     
     app.include_router(corpus_router, prefix=f"{config.api_prefix}/corpus", tags=["Corpus"])
     app.include_router(annotation_router, prefix=f"{config.api_prefix}/annotation", tags=["Annotation"])
@@ -114,6 +116,7 @@ def create_app(config: Optional[APIConfig] = None) -> FastAPI:
     app.include_router(diachronic_router, prefix=f"{config.api_prefix}/diachronic", tags=["Diachronic"])
     app.include_router(ingest_router, prefix=f"{config.api_prefix}/ingest", tags=["Ingest"])
     app.include_router(qa_router, prefix=f"{config.api_prefix}/qa", tags=["QA"])
+    app.include_router(ui_router, tags=["UI"])
     
     @app.get("/")
     async def root():

@@ -36,7 +36,7 @@ echo ""
 echo "Installing Python dependencies..."
 cd "$PROJECT_DIR"
 pip3 install --upgrade pip
-pip3 install fastapi uvicorn pydantic python-multipart requests stanza
+pip3 install fastapi uvicorn pydantic python-multipart requests stanza jinja2
 
 echo ""
 echo "Installing systemd services..."
