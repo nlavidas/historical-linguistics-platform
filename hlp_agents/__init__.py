@@ -12,6 +12,14 @@ Supported AI Engines (all open-source, community-driven):
 - NLTK
 - Flair
 - UDPipe
+- CLTK (Classical Language Toolkit)
+- Trankit (Multilingual NLP)
+- Gensim (Topic modeling)
+- FastText (Word embeddings)
+- Sentence Transformers (Sentence embeddings)
+- Polyglot (Multilingual NLP)
+- LatinCy (Latin NLP)
+- GreCy (Greek NLP)
 
 Agent Types:
 - AnnotationAgent: POS tagging, dependency parsing, NER
@@ -53,6 +61,27 @@ from hlp_agents.orchestrator import (
     PipelineStep,
 )
 
+from hlp_agents.opensource_engines import (
+    OpenSourceEngine,
+    OpenSourceEngineRegistry,
+    MultiEngineProcessor,
+    CLTKEngine,
+    UDPipeEngine,
+    TrankitEngine,
+    FlairEngine,
+    NLTKEngine,
+    GensimEngine,
+    SentenceTransformersEngine,
+    PolyglotEngine,
+    FastTextEngine,
+    LatinCyEngine,
+    GreCyEngine,
+    HuggingFaceMultilingualEngine,
+    EngineCategory,
+    LanguageSupport,
+    get_best_engines_for_task,
+)
+
 __all__ = [
     'BaseAgent',
     'AgentConfig',
@@ -68,4 +97,22 @@ __all__ = [
     'AgentOrchestrator',
     'Pipeline',
     'PipelineStep',
+    'OpenSourceEngine',
+    'OpenSourceEngineRegistry',
+    'MultiEngineProcessor',
+    'CLTKEngine',
+    'UDPipeEngine',
+    'TrankitEngine',
+    'FlairEngine',
+    'NLTKEngine',
+    'GensimEngine',
+    'SentenceTransformersEngine',
+    'PolyglotEngine',
+    'FastTextEngine',
+    'LatinCyEngine',
+    'GreCyEngine',
+    'HuggingFaceMultilingualEngine',
+    'EngineCategory',
+    'LanguageSupport',
+    'get_best_engines_for_task',
 ]
