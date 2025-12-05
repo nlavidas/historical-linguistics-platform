@@ -1,0 +1,25 @@
+[Unit]
+Description=Historical Linguistics Platform 24/7 Scheduler
+Documentation=https://github.com/nlavidas/historical-linguistics-platform
+After=network.target hlp-api.service
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/historical-linguistics-platform
+Environment="PATH=/home/ubuntu/.local/bin:/usr/local/bin:/usr/bin:/bin"
+Environment="PYTHONPATH=/home/ubuntu/historical-linguistics-platform"
+
+ExecStart=/usr/bin/python3 server_247.py
+
+Restart=always
+RestartSec=30
+StandardOutput=append:/var/log/hlp/scheduler.log
+StandardError=append:/var/log/hlp/scheduler-error.log
+
+TimeoutStartSec=60
+TimeoutStopSec=120
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,25 @@
+[Unit]
+Description=Historical Linguistics Platform API Server
+Documentation=https://github.com/nlavidas/historical-linguistics-platform
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/historical-linguistics-platform
+Environment="PATH=/home/ubuntu/.local/bin:/usr/local/bin:/usr/bin:/bin"
+Environment="PYTHONPATH=/home/ubuntu/historical-linguistics-platform"
+
+ExecStart=/usr/bin/python3 -m uvicorn hlp_api.app:create_app --factory --host 0.0.0.0 --port 8000
+
+Restart=always
+RestartSec=10
+StandardOutput=append:/var/log/hlp/api.log
+StandardError=append:/var/log/hlp/api-error.log
+
+TimeoutStartSec=30
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target

@@ -19,11 +19,12 @@ Date: November 9, 2025
 ═══════════════════════════════════════════════════════════════════════════
 """
 
-# Load local models configuration (use Z:\models\ - no re-downloads)
+# Load centralized configuration (supports Z: drive, local paths, and GitHub)
 try:
-    import local_models_config
+    from config import config
+    config.ensure_directories()
 except ImportError:
-    pass  # Fall back to default model locations if config not available
+    config = None
 
 import asyncio
 import logging
@@ -104,11 +105,26 @@ class CorpusItem:
     error_message: Optional[str]
 
 
+def get_default_db_path() -> str:
+    """Get default database path from config or fallback."""
+    if config:
+        return str(config.corpus_db_path)
+    return "corpus_platform.db"
+
+
+def get_data_dir() -> Path:
+    """Get data directory from config or fallback."""
+    if config:
+        return config.data_dir
+    return Path("data")
+
+
 class UnifiedCorpusDatabase:
     """Unified database for entire corpus pipeline"""
     
-    def __init__(self, db_path: str = "corpus_platform.db"):
-        self.db_path = db_path
+    def __init__(self, db_path: str = None):
+        self.db_path = db_path or get_default_db_path()
+        Path(self.db_path).parent.mkdir(parents=True, exist_ok=True)
         self.init_database()
     
     def init_database(self):
@@ -363,7 +379,8 @@ class AutomaticScraper:
                     
                     # Save to file
                     content_hash = hashlib.sha256(content.encode()).hexdigest()
-                    file_path = Path(f"data/raw/{item_id}_{content_hash[:8]}.txt")
+                    raw_dir = get_data_dir() / "raw"
+                    file_path = raw_dir / f"{item_id}_{content_hash[:8]}.txt"
                     file_path.parent.mkdir(parents=True, exist_ok=True)
                     
                     with open(file_path, 'w', encoding='utf-8') as f:
